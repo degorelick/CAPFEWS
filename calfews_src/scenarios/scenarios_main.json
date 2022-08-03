@@ -22,5 +22,8 @@
   "FKC_CFWB_experiment": {
     "FKC":				"localfile",
     "CFWB":       "localfile"
+  },
+  "CAP_experiment": {
+    "CAP":				"localfile"
   }
 }

@@ -66,7 +66,61 @@ cdef class main_cy():
     self.results_folder = results_folder
 
 
-    
+################################################################################################################################
+### Central Arizona Project model initialization
+################################################################################################################################
+  def initialize_py_cap(self):
+    return self.initialize_cap()
+
+  cdef int initialize_cap(self) except -1:
+    cdef:
+      str demand_type, expected_release_datafile, base_data_file, input_data_file
+
+    # infrastructure scenario file, to be used for all sensitivity samples
+    with open('calfews_src/scenarios/scenarios_main.json') as f:
+      scenarios = json.load(f)
+    scenario = scenarios[self.scenario_name]
+
+    # new scenario file is created and saved to results folder for each experiment (FKC experiment)
+    for k, v in scenario.items():
+      if v == 'localfile':
+        scenario[k] = self.results_folder + '/' + k + '_scenario.json'
+
+    if self.model_mode == 'central_arizona_project':
+      self.flow_input_source = 'LakeMead'
+
+    ### copy runtime file for future use
+    shutil.copy(self.runtime_file, self.results_folder + '/' + self.runtime_file)
+
+    # set random seed
+    if (self.seed > 0):
+      np.random.seed(self.seed)
+
+    # data for actual simulation
+    if self.model_mode == 'central_arizona_project':
+      demand_type = 'historic'
+
+      base_data_file = 'calfews_src/data/input/cap-data.csv'
+      new_inputs = Inputter(base_data_file, expected_release_datafile, self.model_mode, self.results_folder)
+      if new_inputs.has_full_inputs[self.flow_input_type][self.flow_input_source]:
+        input_data_file = new_inputs.flow_input_source[self.flow_input_type][self.flow_input_source]
+      else:
+        # run initialization routine
+        new_inputs.run_initialization('XXX')
+        # end simulation if error has been through within inner cython/c code (i.e. keyboard interrupt)
+        PyErr_CheckSignals()
+        if True:
+          new_inputs.run_routine(self.flow_input_type, self.flow_input_source)
+          input_data_file = self.results_folder + '/' + new_inputs.export_series[self.flow_input_type][self.flow_input_source]  + "_0.csv"
+
+    ### reset seed again to match old code
+    if (self.seed > 0):
+      np.random.seed(self.seed)
+
+    ### setup cap model & run initialization
+    PyErr_CheckSignals()
+    if True:
+      self.modelno = Model(input_data_file, expected_release_datafile, self.model_mode, demand_type)
 
 
 ################################################################################################################################
@@ -172,6 +226,8 @@ cdef class main_cy():
 # ### Main simulation
 # ################################################################################################################################
 
+# WRITE A NEW FUNCTION FOR RUNNING CAP STUFF ALONE
+
   def run_sim_py(self, start_time):
     return self.run_sim(start_time)
     
@@ -189,6 +245,7 @@ cdef class main_cy():
     ### simulation length (days)
     if (self.short_test < 0):
       timeseries_length = min(self.modelno.T, self.modelso.T)
+      # overwrite this for cap
     else:
       timeseries_length = self.short_test
 
