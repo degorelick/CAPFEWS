@@ -35,25 +35,28 @@ cdef class Model():
 
 
     public Reservoir shasta, oroville, folsom, yuba, newmelones, donpedro, exchequer, millerton, sanluisstate, sanluisfederal, \
-                sanluis, isabella, success, kaweah, pineflat
+                sanluis, isabella, success, kaweah, pineflat, mead, pleasant
 
     public Delta delta 
 
     public Canal fkc, madera, xvc, calaqueduct, kwbcanal, aecanal, kerncanal, calloway, lerdo, beardsley, kernriverchannel, \
-                kaweahriverchannel, tuleriverchannel, kingsriverchannel
+                kaweahriverchannel, tuleriverchannel, kingsriverchannel, cap_upper, cap_lower
 
     public District berrenda, belridge, buenavista, cawelo, henrymiller, ID4, kerndelta, losthills, rosedale, semitropic, \
                 tehachapi, tejon, westkern, wheeler, kcwa, bakersfield, northkern, arvin, delano, pixley, exeter, kerntulare, \
                 lindmore, lindsay, lowertule, porterville, saucelito, shaffer, sosanjoaquin, teapot, terra, tulare, fresno, \
                 fresnoid, socal, southbay, centralcoast, dudleyridge, tularelake, westlands, chowchilla, maderairr, othertule,\
                 otherkaweah, otherfriant, othercvp, otherexchange, othercrossvalley, otherswp, consolidated, alta, krwa, \
-                kaweahdelta, sanluiswater, panoche, delpuerto
+                kaweahdelta, sanluiswater, panoche, delpuerto, \
+                phoenix, gric, tucson, akchin, msidd, mesa, scottsdale, caidd, awba, tohono, gilbert, scat, cagrd, peoria # CAP sub-contractors
 
     public Private wonderful, metropolitan, castaic, coachella
 
-    public Waterbank stockdale, kernriverbed, poso, pioneer, kwb, berrendawb, b2800, wkwb, irvineranch, northkernwb, aewb, northfriantwb, centralfriantwb
+    public Waterbank stockdale, kernriverbed, poso, pioneer, kwb, berrendawb, b2800, wkwb, irvineranch, northkernwb, aewb, northfriantwb, centralfriantwb, \
+                grp, gsf # CAP banking options, recharge vs. storage
 
-    public Contract friant1, friant2, swpdelta, cvpdelta, cvpexchange, crossvalley, kernriver, tuleriver, kaweahriver, kingsriver
+    public Contract friant1, friant2, swpdelta, cvpdelta, cvpexchange, crossvalley, kernriver, tuleriver, kaweahriver, kingsriver, \
+                gric1, gric2, others # CAP sub-contractor lease contracts
 
   cdef dict search_canal_demand(self, int dowy, Canal canal, str prev_canal, str contract_canal, str flow_dir, str flow_type, int wateryear, str search_type, dict existing_deliveries, list canals_passed_through)   
 

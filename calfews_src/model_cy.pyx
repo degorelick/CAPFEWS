@@ -6352,3 +6352,37 @@ cdef class Model():
   	
     return newmelonesIndex
 
+  #####################################################################################################################
+  #############################     Main simulation (CAP Model Sys)     ###############################################
+  #####################################################################################################################
+
+  cdef tuple simulate_cap(self, int t):
+    ###Monthly Operations###
+    ##Step forward environmental parameters (snow & flow)
+    ##Water Balance on each reservoir
+    ##Decisions - deliver water to sub-contractors, execute long-term leases, bank water
+    cdef:
+      double fraction_mead_for_cap, mead_available_to_cap, cap_available_to_deliver
+      int d, da, dowy, m, y, wateryear, year_index
+      Reservoir reservoir_obj
+
+    d = self.day_year[t]
+    da = self.day_month[t]
+    dowy = self.dowy[t]
+    m = self.month[t]
+    y = self.year[t]
+    wateryear = self.water_year[t]
+    year_index = y - self.starting_year
+
+    #TOTAL AVAILABLE CAP WATER TO DELIVER OR ADD TO SYSTEM
+    #based on Pleasant, Mead storage, and Colorado River DCP Tier
+    fraction_mead_for_cap = self.mead.dcp_tier_shortage_index[t]
+    mead_available_to_cap = max(self.mead.available_storage[t], 0.0) * fraction_mead_for_cap
+    cap_available_to_deliver = mead_available_to_cap + max(self.pleasant.available_storage[t], 0.0)
+
+    ##RESERVOIR OPERATIONS
+    ##Water Balance
+    for reservoir_obj in [self.mead, self.pleasant]:
+      reservoir_obj.step(t)
+
+    return fraction_mead_for_cap, mead_available_to_cap, cap_available_to_deliver

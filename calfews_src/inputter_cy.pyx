@@ -71,7 +71,13 @@ cdef class Inputter():
     self.generate_relationships_delta(plot_key)
     self.autocorrelate_residuals_delta(plot_key)
 
-   
+  cdef void run_initialization_cap(self, str plot_key) except *:
+    self.initialize_reservoirs_cap()
+    self.generate_relationships(plot_key)
+#    self.autocorrelate_residuals(plot_key)
+#    self.fill_snowpack(plot_key)
+#    self.generate_relationships_delta(plot_key)
+#    self.autocorrelate_residuals_delta(plot_key)
 
   cdef void run_routine(self, str flow_input_type, str flow_input_source) except *:
     cdef:
@@ -193,6 +199,74 @@ cdef class Inputter():
           (self.number_years, self.days_in_month[self.non_leap_year][monthcounter]))
         monthcounter += 1
 
+  cdef void initialize_reservoirs_cap(self) except *:
+    cdef:
+      int monthcounter
+      str data_type, monthname, deltaname
+      Reservoir reservoir_obj
+
+    # CAP System only includes two reservoirs:
+    #   Lake Mead (Colorado River Inflows) and Lake Pleasant
+    self.mead = Reservoir(self, 'mead', 'MED', self.model_mode)
+    self.pleasant = Reservoir(self, 'pleasant', 'PST', self.model_mode)
+
+    self.reservoir_list = [self.mead, self.pleasant]
+
+    for reservoir_obj in self.reservoir_list:
+      reservoir_obj.monthly = {}
+      for data_type in self.data_type_list:
+        reservoir_obj.monthly[data_type] = {}
+        reservoir_obj.monthly[data_type]['flows'] = np.zeros((12, self.number_years))
+        reservoir_obj.monthly[data_type]['coefficients'] = np.zeros((12, 2))
+        reservoir_obj.monthly[data_type]['residuals'] = np.zeros((12, self.number_years))
+        reservoir_obj.monthly[data_type]['whitened'] = np.zeros((12, self.number_years))
+        reservoir_obj.monthly[data_type]['whitened_residuals'] = np.zeros((12, self.number_years))
+        reservoir_obj.monthly[data_type]['AR_coef'] = np.zeros((12, 2))
+        reservoir_obj.monthly[data_type]['AR_residuals'] = np.zeros((12, self.number_years))
+        reservoir_obj.monthly[data_type]['white_mean'] = np.zeros(12)
+        reservoir_obj.monthly[data_type]['white_std'] = np.zeros(12)
+        reservoir_obj.monthly[data_type]['res_mean'] = np.zeros(12)
+        reservoir_obj.monthly[data_type]['res_std'] = np.zeros(12)
+        reservoir_obj.monthly[data_type]['hist_max'] = np.zeros(12)
+        reservoir_obj.monthly[data_type]['hist_min'] = np.zeros(12)
+        reservoir_obj.monthly[data_type]['baseline_value'] = np.zeros((12, self.number_years))
+        reservoir_obj.monthly[data_type]['use_log'] = ['no' for i in range(0, 12)]
+
+        reservoir_obj.monthly[data_type]['daily'] = {}
+        monthcounter = 0
+        for monthname in self.monthlist:
+          reservoir_obj.monthly[data_type]['daily'][monthname] = np.zeros(
+            (self.number_years, self.days_in_month[self.non_leap_year][monthcounter]))
+          monthcounter += 1
+
+    self.monthly = {}
+    for deltaname in self.delta_list:
+      self.monthly[deltaname] = {}
+      self.monthly[deltaname]['gains'] = np.zeros((12, self.number_years))
+      self.monthly[deltaname]['fnf'] = np.zeros((12, self.number_years))
+      self.monthly[deltaname]['coef'] = np.zeros((12, 2))
+      self.monthly[deltaname]['residuals'] = np.zeros((12, self.number_years))
+      self.monthly[deltaname]['whitened'] = np.zeros((12, self.number_years))
+      self.monthly[deltaname]['whitened_fnf'] = np.zeros((12, self.number_years))
+      self.monthly[deltaname]['whitened_residuals'] = np.zeros((12, self.number_years))
+      self.monthly[deltaname]['AR_coef'] = np.zeros((12, 2))
+      self.monthly[deltaname]['AR_residuals'] = np.zeros((12, self.number_years))
+      self.monthly[deltaname]['white_mean'] = np.zeros(12)
+      self.monthly[deltaname]['white_std'] = np.zeros(12)
+      self.monthly[deltaname]['white_fnf_mean'] = np.zeros(12)
+      self.monthly[deltaname]['white_fnf_std'] = np.zeros(12)
+      self.monthly[deltaname]['res_mean'] = np.zeros(12)
+      self.monthly[deltaname]['res_std'] = np.zeros(12)
+      self.monthly[deltaname]['hist_max'] = np.zeros(12)
+      self.monthly[deltaname]['hist_min'] = np.zeros(12)
+      self.monthly[deltaname]['use_log'] = ['no' for i in range(0, 12)]
+      self.monthly[deltaname]['baseline_value'] = np.zeros((12, self.number_years))
+      self.monthly[deltaname]['daily'] = {}
+      monthcounter = 0
+      for monthname in self.monthlist:
+        self.monthly[deltaname]['daily'][monthname] = np.zeros(
+          (self.number_years, self.days_in_month[self.non_leap_year][monthcounter]))
+        monthcounter += 1
 
 
   cdef void generate_relationships(self, str plot_key) except *:
