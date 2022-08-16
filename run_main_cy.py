@@ -68,18 +68,19 @@ if model_mode == 'central_arizona_project':
 
   if run_sim == 1:
     ### main simulation loop
-    a = main_cy_obj.run_sim_py(start_time)
-    print ('Simulation complete,', datetime.now() - start_time)
+    print('Begin simulation of CAPFEWS model...')
+    a = main_cy_obj.run_sim_py_cap(start_time)
+    print('Simulation complete,', datetime.now() - start_time)
     sys.stdout.flush()
 
     if a == 0:
       ### calculate objectives
-      main_cy_obj.calc_objectives()
-      print ('Objective calculation complete,', datetime.now() - start_time)
+      main_cy_obj.calc_objectives_cap()
+      print('Objective calculation complete,', datetime.now() - start_time)
 
       ### output results
       main_cy_obj.output_results()
-      print ('Data output complete,', datetime.now() - start_time)
+      print('Data output complete,', datetime.now() - start_time)
       sys.stdout.flush()
 
 ### else start new initialization routine
@@ -111,17 +112,17 @@ if model_mode == 'simulation' or model_mode == 'validation':
   if run_sim == 1:
     ### main simulation loop
     a = main_cy_obj.run_sim_py(start_time)
-    print ('Simulation complete,', datetime.now() - start_time)
+    print('Simulation complete,', datetime.now() - start_time)
     sys.stdout.flush()
 
     if a == 0:
       ### calculate objectives
       main_cy_obj.calc_objectives()
-      print ('Objective calculation complete,', datetime.now() - start_time)
+      print('Objective calculation complete,', datetime.now() - start_time)
 
       ### output results
       main_cy_obj.output_results()
-      print ('Data output complete,', datetime.now() - start_time)
+      print('Data output complete,', datetime.now() - start_time)
       sys.stdout.flush()
 
 elif model_mode == 'climate_ensemble':
@@ -158,17 +159,17 @@ elif model_mode == 'climate_ensemble':
       if run_sim == 1:
         ### main simulation loop
         a = main_cy_obj.run_sim_py(start_time)
-        print ('Simulation complete,', datetime.now() - start_time)
+        print('Simulation complete,', datetime.now() - start_time)
         sys.stdout.flush()
 
         if a == 0:
           ### calculate objectives
           main_cy_obj.calc_objectives()
-          print ('Objective calculation complete,', datetime.now() - start_time)
+          print('Objective calculation complete,', datetime.now() - start_time)
 
           ### output results
           main_cy_obj.output_results()
-          print ('Data output complete,', datetime.now() - start_time)
+          print('Data output complete,', datetime.now() - start_time)
           sys.stdout.flush()
 
 

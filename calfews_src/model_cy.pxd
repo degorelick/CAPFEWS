@@ -104,6 +104,11 @@ cdef class Model():
 
   cdef (int, int, double, double, double) find_pumping_release(self, int m, int da, int year_index, int start_storage, dict month_demand, dict month_demand_must_fill, dict expected_pumping, double projected_carryover, double current_carryover, str wyt, int t, str key)
 
+######### cap functions
+
+  cdef tuple simulate_cap(self, int t)
+
+
 ######### init
   cdef tuple northern_initialization_routine(self, scenario=*)
 

@@ -13,5 +13,8 @@ cdef class main_cy():
 
   cdef int initialize(self) except -1
 
+  cdef int initialize_cap(self) except -1
+
   cdef int run_sim(self, start_time) except -1
 
+  cdef int run_sim_cap(self, start_time) except -1

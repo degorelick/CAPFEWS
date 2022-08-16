@@ -77,14 +77,21 @@ cdef class Model():
   #####################################################################################################################
   #############################     Object Creation     ###############################################################
   #####################################################################################################################
-  # cdef void initialize_cap_system(self) except *:
-  #     #########################################################################################
-  #     #reservoir initialization for the central arizona project
-  #     #########################################################################################
-  #     cdef:
-  #       list reservoir_list
-  #       Reservoir reservoir_obj
-  #
+  cdef void initialize_cap(self) except *:
+      #########################################################################################
+      #reservoir initialization for the central arizona project
+      #########################################################################################
+      cdef:
+        list reservoir_list
+        Reservoir reservoir_obj
+
+      # CAP System Reservoirs of relevance - Lake Mead and Lake Pleasant
+      self.mead = Reservoir(self, 'mead', 'MED', self.model_mode)
+      self.pleasant = Reservoir(self, 'pleasant', 'PST', self.model_mode)
+
+      self.reservoir_list = [self.mead, self.pleasant]
+
+
   cdef tuple northern_initialization_routine(self, scenario='baseline'):
     ######################################################################################
     ######################################################################################
@@ -6374,11 +6381,16 @@ cdef class Model():
     wateryear = self.water_year[t]
     year_index = y - self.starting_year
 
-    #TOTAL AVAILABLE CAP WATER TO DELIVER OR ADD TO SYSTEM
+    ##PULL TOTAL AVAILABLE CAP WATER TO DELIVER OR ADD TO SYSTEM
     #based on Pleasant, Mead storage, and Colorado River DCP Tier
     fraction_mead_for_cap = self.mead.dcp_tier_shortage_index[t]
     mead_available_to_cap = max(self.mead.available_storage[t], 0.0) * fraction_mead_for_cap
     cap_available_to_deliver = mead_available_to_cap + max(self.pleasant.available_storage[t], 0.0)
+
+#    ##DETERMINE DELIVERIES TO CONTRACTORS
+#    #based on contractor demand, existing rights priorities, leases, and available water
+#    for district_obj in [self.gric, self.phoenix, ...]:
+#      district_obj.get_urban_demand()
 
     ##RESERVOIR OPERATIONS
     ##Water Balance

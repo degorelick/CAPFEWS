@@ -236,12 +236,11 @@ cdef int run_sim_cap(self, start_time) except -1:
     dict mead_surplus
     str wyt
 
-
   # # reset seed the same each sample k
   # if (self.seed > 0):
   #   np.random.seed(self.seed)
   ### simulation length (days)
-  if (self.short_test < 0):
+  if self.short_test < 0:
     timeseries_length = min(self.modelno.T, self.modelso.T)
     # overwrite this for cap
   else:
@@ -263,7 +262,7 @@ cdef int run_sim_cap(self, start_time) except -1:
       sys.stdout.flush()
 
     # simulate CAP system
-    cap_variable = self.modelso.simulate_cap(t, self.modelno.delta.forecastSJWYT)
+    fraction_mead_for_cap, mead_available_to_cap, cap_available_to_deliver = self.modelso.simulate_cap(t)
 
     # end simulation if error has been through within inner cython/c code (i.e. keyboard interrupt)
     PyErr_CheckSignals()
