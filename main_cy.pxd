@@ -9,7 +9,7 @@ cdef class main_cy():
     public bint print_log, clean_output, save_full, parallel_mode
     public str scenario_name, model_mode, flow_input_type, flow_input_source, results_folder, output_list, runtime_file
     public dict objs
-    public Model modelno, modelso
+    public Model modelno, modelso, modelcap
 
   cdef int initialize(self) except -1
 

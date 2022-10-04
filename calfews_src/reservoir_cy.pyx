@@ -161,6 +161,58 @@ cdef class Reservoir():
     self.reclaimed_carryover = [0.0 for _ in range(self.T)]
     self.contract_flooded = [0.0 for _ in range(self.T)]
 
+    self.elevation = {}
+    self.cap_allocation = [0.0 for _ in range(self.T)]
+    self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+
+  cdef double available_pleasant_storage_for_cap(self, int t, double mead_elevation):
+    ## this function returns the available storage that Lake Pleasant has to deliver
+    ## at a given time
+    cdef double pleasant_free_storage, required_pleasant_storage_floor
+    required_pleasant_storage_floor = 50000.0
+
+    pleasant_free_storage = 0
+    if mead_elevation > 1075.0: # Tier 1
+      pleasant_free_storage = max(self.available_storage(t) - required_pleasant_storage_floor, 0)
+
+    return pleasant_free_storage
+
+
+  cdef void calc_cap_allocation(self, int t):
+    ##this function is for lake mead ONLY, to calculate the CAP allocation
+    cdef float cap_baseline_lower_basin_allocation, cap_system_losses
+    cap_baseline_lower_basin_allocation = 1490000.0  # AF/yr allocation for CAP, without cuts
+    cap_system_losses = 75000.0 # annual system losses, AF (5% of allocation to CAP)
+
+    cdef double az_curtailment
+    az_curtailment = self.calc_az_mead_curtailment(t)
+
+    self.cap_allocation[t] = cap_baseline_lower_basin_allocation - az_curtailment - cap_system_losses
+
+
+  cdef double calc_az_mead_curtailment(self, int t):
+    cdef double curtailment, guidelines_curtailment, dcp_curtailment
+    if self.elevation[t] < 1025.0: # Tier 3
+      guidelines_curtailment = 480000.0
+      dcp_curtailment = 240000.0
+    elif self.elevation[t] < 1045.0: # Tier 2b
+      guidelines_curtailment = 400000.0
+      dcp_curtailment = 240000.0
+    elif self.elevation[t] < 1050.0: # Tier 2a
+      guidelines_curtailment = 400000.0
+      dcp_curtailment = 192000.0
+    elif self.elevation[t] < 1075.0: # Tier 1
+      guidelines_curtailment = 320000.0
+      dcp_curtailment = 192000.0
+    elif self.elevation[t] < 1090.0: # Tier 0
+      guidelines_curtailment = 0.0
+      dcp_curtailment = 192000.0
+    else:
+      guidelines_curtailment = 0.0
+      dcp_curtailment = 0.0
+
+    curtailment = guidelines_curtailment + dcp_curtailment
+    return curtailment
 
   cdef void find_available_storage(self, int t, int m, int da, int dowy):
     ##this function uses the linear regression variables calculated in find_release_func (called before simulation loop) to figure out how

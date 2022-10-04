@@ -1,7 +1,11 @@
 {
-  "flow_input_type": ["observations", "downscaled_19952005", "downscaled_20062016", "downscaled_20402050", "downscaled_20902100", "downscaled_19502100"],
+  "flow_input_type": ["cap", "observations", "downscaled_19952005", "downscaled_20062016", "downscaled_20402050", "downscaled_20902100", "downscaled_19502100"],
     
   "flow_input_source":{
+    "cap": {
+      "historic": "calfews_src/data/input/cap-data.csv",
+      "crss": "calfews_src/data/input/cap-data.csv"
+    },
     "observations":{
       "CDEC": "calfews_src/data/input/calfews_src-data-sim.csv", 
       "CDEC_wet_dry": "calfews_src/data/input/calfews_src-data-wet-dry.csv",
@@ -409,6 +413,10 @@
     }
   },
   "has_full_inputs":{
+    "cap": {
+      "historic": true,
+      "crss": true
+    },
     "observations":{
       "CDEC": false,
       "CDEC_wet_dry": false,

@@ -98,14 +98,19 @@ cdef class main_cy():
 
     # data for actual simulation
     if self.model_mode == 'central_arizona_project':
-      demand_type = 'historic'
+      demand_type = 'historic' # or crss projections
 
+      # FIRST COLUMN OF DATA NEEDS TO BE DATETIME
+      # if i dont need to generate syntethic data, or i have everything in this initial csv
+      # then set input_data_file = base_data_file
       base_data_file = 'calfews_src/data/input/cap-data.csv'
+      expected_release_datafile = 'calfews_src/data/input/cap-data.csv'
       new_inputs = Inputter(base_data_file, expected_release_datafile, self.model_mode, self.results_folder)
       if new_inputs.has_full_inputs[self.flow_input_type][self.flow_input_source]:
         input_data_file = new_inputs.flow_input_source[self.flow_input_type][self.flow_input_source]
       else:
         # run initialization routine
+        # this only happens if we are doing synthetic generation
         new_inputs.run_initialization('XXX')
         # end simulation if error has been through within inner cython/c code (i.e. keyboard interrupt)
         PyErr_CheckSignals()
@@ -120,7 +125,7 @@ cdef class main_cy():
     ### setup cap model & run initialization
     PyErr_CheckSignals()
     if True:
-      self.modelno = Model(input_data_file, expected_release_datafile, self.model_mode, demand_type)
+      self.modelcap = Model(input_data_file, expected_release_datafile, self.model_mode, demand_type)
 
 
 ################################################################################################################################
@@ -241,8 +246,7 @@ cdef int run_sim_cap(self, start_time) except -1:
   #   np.random.seed(self.seed)
   ### simulation length (days)
   if self.short_test < 0:
-    timeseries_length = min(self.modelno.T, self.modelso.T)
-    # overwrite this for cap
+    timeseries_length = min(self.modelcap.T)
   else:
     timeseries_length = self.short_test
 
@@ -262,7 +266,7 @@ cdef int run_sim_cap(self, start_time) except -1:
       sys.stdout.flush()
 
     # simulate CAP system
-    fraction_mead_for_cap, mead_available_to_cap, cap_available_to_deliver = self.modelso.simulate_cap(t)
+    output_results = self.modelcap.simulate_cap(t)
 
     # end simulation if error has been through within inner cython/c code (i.e. keyboard interrupt)
     PyErr_CheckSignals()

@@ -77,19 +77,76 @@ cdef class Model():
   #####################################################################################################################
   #############################     Object Creation     ###############################################################
   #####################################################################################################################
-  cdef void initialize_cap(self) except *:
+  cdef void initialize_cap(self, scenario = 'historic') except *:
       #########################################################################################
       #reservoir initialization for the central arizona project
       #########################################################################################
       cdef:
-        list reservoir_list
-        Reservoir reservoir_obj
+        list reservoir_list, district_list, canal_list, contract_list, bank_list
 
       # CAP System Reservoirs of relevance - Lake Mead and Lake Pleasant
       self.mead = Reservoir(self, 'mead', 'MED', self.model_mode)
       self.pleasant = Reservoir(self, 'pleasant', 'PST', self.model_mode)
 
       self.reservoir_list = [self.mead, self.pleasant]
+
+      # CAP System Sub-contractors - top-20 historical users and everyone else
+      self.gric = District(self, 'GRIC', 'GRC', self.model_mode)
+      self.akchin = District(self, 'Ak-Chin IC', 'AKC', self.model_mode)
+      self.tohono = District(self, 'Tohono Oodham IC', 'TOH', self.model_mode)
+      self.scat = District(self, 'SCAT', 'SCT', self.model_mode)
+      self.fmyn = District(self, 'FMYN', 'FYN', self.model_mode)
+      self.srpmic = District(self, 'SRPMIC', 'SIC', self.model_mode)
+      self.wmat = District(self, 'WMAT', 'WMT', self.model_mode)
+
+      self.phoenix = District(self, 'City of Phoenix', 'PHX', self.model_mode)
+      self.mesa = District(self, 'City of Mesa', 'MSA', self.model_mode)
+      self.tucson = District(self, 'City of Tucson', 'TUC', self.model_mode)
+      self.scottsdale = District(self, 'City of Scottsdale', 'SDL', self.model_mode)
+      self.gilbert = District(self, 'Town of Gilbert', 'GIL', self.model_mode)
+      self.peoria = District(self, 'City of Peoria', 'PEO', self.model_mode)
+      self.glendale = District(self, 'City of Glendale', 'GLN', self.model_mode)
+      self.chandler = District(self, 'Town of Chandler', 'CHD', self.model_mode)
+      self.surprise = District(self, 'City of Surprise', 'SUR', self.model_mode)
+      self.azwc = District(self, 'AZ Water Company', 'AWC', self.model_mode)
+      self.tempe = District(self, 'City of Tempe', 'TPE', self.model_mode)
+      self.goodyear = District(self, 'Town of Goodyear', 'GYR', self.model_mode)
+
+      self.msidd = District(self, 'Maricopa Stanfield IDD', 'MSD', self.model_mode)
+      self.caidd = District(self, 'Central AZ IDD', 'CAD', self.model_mode)
+      self.hvid = District(self, 'Harquahala Valley IDD', 'HVI', self.model_mode)
+      self.hidd = District(self, 'Hohokam IDD', 'HIDD', self.model_mode)
+      self.cagrd = District(self, 'Central AZ GRD', 'CGD', self.model_mode)
+      self.asarco = District(self, 'ASARCO', 'ASR', self.model_mode)
+      self.awba = District(self, 'AZ Water Banking Authority', 'AWB', self.model_mode)
+      self.asld = District(self, 'AZ State Land Department', 'ALD', self.model_mode)
+
+      self.other = District(self, 'Other Subcontractors', 'OTH', self.model_mode)
+
+      self.district_list = [self.gric, self.akchin, self.scat, self.tohono, self.fmyn, self.wmat, self.srpmic, \
+                            self.phoenix, self.tucson, self.mesa, self.scottsdale, self.gilbert, self.peoria, \
+                            self.chandler, self.surprise, self.tempe, self.goodyear, self.azwc, self.asarco, \
+                            self.msidd, self.caidd, self.hvid, self.hidd, self.asld, self.cagrd, self.awba, self.other]
+
+      # CAP System Canal
+      self.capcanal = Canal(self, 'CAP Canal', 'CAP', self.model_mode)
+
+      self.canal_list = [self.capcanal]
+
+      # CAP System Water Contracts - Split by Priority Class
+      self.pthree = Contract(self, 'P3', 'PTR', self.model_mode)
+      self.municipal = Contract(self, 'Municipal and Industrial', 'MUI', self.model_mode)
+      self.tribal = Contract(self, 'Tribal', 'FED', self.model_mode)
+      self.nia = Contract(self, 'Non Indian Agriculture', 'NIA', self.model_mode)
+
+      self.contract_list = [self.pthree, self.municipal, self.tribal, self.nia]
+
+      # CAP System Recharge Facilities ("Banks") - grouped as AMA regions...
+      self.amaphoenix = Waterbank(self, 'Phoenix AMA', 'PXA', self.model_mode)
+      self.amapinal = Waterbank(self, 'Pinal AMA', 'PNA', self.model_mode)
+      self.amatucson = Waterbank(self, 'Tucson AMA', 'TSA', self.model_mode)
+
+      self.waterbank_list = [self.amaphoenix, self.amapinal, self.amatucson]
 
 
   cdef tuple northern_initialization_routine(self, scenario='baseline'):
@@ -2666,6 +2723,9 @@ cdef class Model():
 
     ###June 1st, determine who is buying/selling into 'turnback pools' for the SWP.
     ###Note: look into other contract types to determine if this happens in CVP, Friant, local source contracts too
+
+    ### LIKE TURNBACK POOL PROCESS, DO ONE FUNCTION TO SET LEASES AMONG DISTRICTS TO UPDATE PAPER VALUES
+    ### PAPER TRADES MUST SUM TO ZERO ACROSS DISTRICTS
     if m == 6 and da == 1:
       for contract_obj in self.contract_list:
         seller_total = 0.0
@@ -6369,9 +6429,10 @@ cdef class Model():
     ##Water Balance on each reservoir
     ##Decisions - deliver water to sub-contractors, execute long-term leases, bank water
     cdef:
-      double fraction_mead_for_cap, mead_available_to_cap, cap_available_to_deliver
+      double mead_available_for_cap_delivery, pleasant_available_for_cap_delivery
+      list nia_mitigation_partners, nia_mitigation_tier_percents
       int d, da, dowy, m, y, wateryear, year_index
-      Reservoir reservoir_obj
+      District district_obj
 
     d = self.day_year[t]
     da = self.day_month[t]
@@ -6381,20 +6442,54 @@ cdef class Model():
     wateryear = self.water_year[t]
     year_index = y - self.starting_year
 
-    ##PULL TOTAL AVAILABLE CAP WATER TO DELIVER OR ADD TO SYSTEM
-    #based on Pleasant, Mead storage, and Colorado River DCP Tier
-    fraction_mead_for_cap = self.mead.dcp_tier_shortage_index[t]
-    mead_available_to_cap = max(self.mead.available_storage[t], 0.0) * fraction_mead_for_cap
-    cap_available_to_deliver = mead_available_to_cap + max(self.pleasant.available_storage[t], 0.0)
+    ## STEP 0: IDENTIFY TOTAL AVAILABLE COLORADO RIVER WATER FOR CAP
+    if d == 0:
+      self.mead.calc_cap_allocation(t)
+      mead_available_for_cap_delivery = self.mead.cap_allocation[t]
+      pleasant_available_for_cap_delivery = self.pleasant.available_pleasant_storage_for_cap(t, self.mead.elevation(t))
 
-#    ##DETERMINE DELIVERIES TO CONTRACTORS
-#    #based on contractor demand, existing rights priorities, leases, and available water
-#    for district_obj in [self.gric, self.phoenix, ...]:
-#      district_obj.get_urban_demand()
+    ## STEP 1: SUBCONTRACTORS REQUEST DELIVERIES FOR UPCOMING YEAR
+    #based on contractor demand, existing rights priorities, leases, and available water
+    for district_obj in [self.gric, self.phoenix, ...]:
+      # factor in whether NIA and/or Ag Mitigation is active
+      # https://waterbank.az.gov/sites/default/files/NIA%20Mitigation%20Agreement%20Completed%207-18-2019.pdf
+      # https://new.azwater.gov/sites/default/files/Exhibit-5.1-Ag-Mitigation-Agreement.pdf
+      if district_obj.in_nia_mitigation_agreement():
+        district_obj.set_demand_projection()
+        nia_mitigation_partners = []; nia_mitigation_tier_percents = []
+      if district_obj.in_ag_mitigation_agreement():
+        district_obj.set_demand_projection()
+        district_obj.get_cap_on_ag_mitigation_delivery()
+        ag_mitigation_partners = [];
+        ag_mitigation_tier_percents = []
 
-    ##RESERVOIR OPERATIONS
-    ##Water Balance
-    for reservoir_obj in [self.mead, self.pleasant]:
-      reservoir_obj.step(t)
 
-    return fraction_mead_for_cap, mead_available_to_cap, cap_available_to_deliver
+    ## STEP 2a: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
+
+
+    ## STEP 2b: SET EXISTING AND NEW FEDERAL LEASES FOR UPCOMING YEAR
+
+
+    ## STEP 3: CAP BUDGET, RESERVE FUND USE, AND WATER RATE SET FOR UPCOMING YEAR
+
+
+    ## STEP 4: RUN MONTHLY WATER BALANCE FOR DELIVERIES
+    if da == 0:
+      ## STEP 4a: LAKE PLEASANT RESERVOIR OPERATIONS
+      self.pleasant.step(t)
+
+      ## STEP 4b: DELIVERIES TO SUBCONTRACTORS AND RECHARGE
+      for district_obj in [self.gric, self.phoenix, ...]:
+        district_obj.get_delivery_request(t)
+        district_obj.bank_deliveries(t)
+
+    ## STEP 5: CALCULATE WATER AND POWER REVENUES
+    for district_obj in [self.gric, self.phoenix, ...]:
+      # factor in whether NIA and/or Ag Mitigation is active
+      if district_obj.in_nia_mitigation_agreement():
+        district_obj.get_compensated_mitigation()
+
+
+    ## STEP 6: IMPLEMENT RECONCILIATION OF THE BUDGET
+
+    return mead_available_for_cap_delivery

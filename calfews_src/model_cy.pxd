@@ -40,7 +40,8 @@ cdef class Model():
     public Delta delta 
 
     public Canal fkc, madera, xvc, calaqueduct, kwbcanal, aecanal, kerncanal, calloway, lerdo, beardsley, kernriverchannel, \
-                kaweahriverchannel, tuleriverchannel, kingsriverchannel, cap_upper, cap_lower
+                kaweahriverchannel, tuleriverchannel, kingsriverchannel, \
+                capcanal
 
     public District berrenda, belridge, buenavista, cawelo, henrymiller, ID4, kerndelta, losthills, rosedale, semitropic, \
                 tehachapi, tejon, westkern, wheeler, kcwa, bakersfield, northkern, arvin, delano, pixley, exeter, kerntulare, \
@@ -56,7 +57,7 @@ cdef class Model():
                 grp, gsf # CAP banking options, recharge vs. storage
 
     public Contract friant1, friant2, swpdelta, cvpdelta, cvpexchange, crossvalley, kernriver, tuleriver, kaweahriver, kingsriver, \
-                gric1, gric2, others # CAP sub-contractor lease contracts
+                municipal, tribal, nia, pthree
 
   cdef dict search_canal_demand(self, int dowy, Canal canal, str prev_canal, str contract_canal, str flow_dir, str flow_type, int wateryear, str search_type, dict existing_deliveries, list canals_passed_through)   
 
