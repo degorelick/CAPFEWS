@@ -54,7 +54,7 @@ cdef class Model():
     public Private wonderful, metropolitan, castaic, coachella
 
     public Waterbank stockdale, kernriverbed, poso, pioneer, kwb, berrendawb, b2800, wkwb, irvineranch, northkernwb, aewb, northfriantwb, centralfriantwb, \
-                grp, gsf # CAP banking options, recharge vs. storage
+                amaphoenix, amapinal, amatucson # CAP banking recharge areas
 
     public Contract friant1, friant2, swpdelta, cvpdelta, cvpexchange, crossvalley, kernriver, tuleriver, kaweahriver, kingsriver, \
                 municipal, tribal, nia, pthree
@@ -108,6 +108,9 @@ cdef class Model():
 ######### cap functions
 
   cdef tuple simulate_cap(self, int t)
+
+  cdef void initialize_cap(self, scenario = 'historic')
+
 
 
 ######### init

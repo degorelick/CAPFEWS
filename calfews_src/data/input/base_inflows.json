@@ -5,7 +5,7 @@
     "cap": {
       "historic": "calfews_src/data/input/cap-data.csv",
       "crss": "calfews_src/data/input/cap-data.csv"
-    },
+      },
     "observations":{
       "CDEC": "calfews_src/data/input/calfews_src-data-sim.csv", 
       "CDEC_wet_dry": "calfews_src/data/input/calfews_src-data-wet-dry.csv",
@@ -74,6 +74,10 @@
   },
 
   "export_series":{
+    "cap": {
+      "historic": "calfews_src/data/input/cap-data.csv",
+      "crss": "calfews_src/data/input/cap-data.csv"
+      },
     "observations":{
       "CDEC": "calfews_src-data-CDEC_19052016",
       "CDEC_wet_dry": "calfews_src-data-CDEC_wet_dry",
@@ -142,6 +146,10 @@
     },
   
   "simulation_period_start":{
+    "cap": {
+      "historic": 2014,
+      "crss": 2023
+      },
     "observations":{
       "CDEC": 1905, 
       "CDEC_wet_dry": 1996,
@@ -210,6 +218,10 @@
   },
   
   "simulation_period_end":{
+    "cap": {
+      "historic": 2021,
+      "crss": 2054
+      },
     "observations":{
       "CDEC": 2016,
       "CDEC_wet_dry": 1998,
@@ -278,6 +290,10 @@
   },
   
   "file_start":{
+    "cap": {
+      "historic": "1/1/2008",
+      "crss": "1/1/2023"
+      },
     "observations":{
       "CDEC": "10/1/1905",
       "CDEC_wet_dry": "10/1/1996",
@@ -346,6 +362,10 @@
   },
   
   "file_end":{
+    "cap": {
+      "historic": "12/1/2021",
+      "crss": "12/1/2054"
+      },
     "observations":{
       "CDEC": "9/30/2016",
       "CDEC_wet_dry": "9/30/1998",
@@ -485,6 +505,10 @@
   },
   
   "has_leap":{
+    "cap": {
+      "historic": false,
+      "crss": false
+      },
     "observations":{
       "CDEC": true,
       "CDEC_wet_dry": true,
@@ -553,6 +577,10 @@
   },
 
   "inflow_unit":{
+    "cap":{
+      "historic": "af",
+      "crss": "af"
+      },
     "observations":{
       "CDEC": "af",
       "CDEC_wet_dry": "af"

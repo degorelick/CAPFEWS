@@ -161,9 +161,14 @@ cdef class Reservoir():
     self.reclaimed_carryover = [0.0 for _ in range(self.T)]
     self.contract_flooded = [0.0 for _ in range(self.T)]
 
-    self.elevation = {}
+    self.elevation = [0.0 for _ in range(self.T)]
     self.cap_allocation = [0.0 for _ in range(self.T)]
     self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+
+
+  cdef void initialize_elevation(self, int t):
+    ## sets the elevation of the reservoir
+    self.elevation[t]
 
   cdef double available_pleasant_storage_for_cap(self, int t, double mead_elevation):
     ## this function returns the available storage that Lake Pleasant has to deliver

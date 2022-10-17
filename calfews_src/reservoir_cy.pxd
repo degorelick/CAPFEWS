@@ -21,13 +21,12 @@ cdef class Reservoir():
                 raininf_stds, snowinf_stds, baseinf_stds, rainflood_fnf, snowflood_fnf, short_rainflood_fnf, short_snowflood_fnf, \
                 rainflood_inf, snowflood_inf, baseline_inf, rainflood_forecast, snowflood_forecast, baseline_forecast, \
                 max_direct_recharge, downstream_short, fnf_short, fnf_new, total_available_storage, outflow_release, \
-                reclaimed_carryover, contract_flooded, snow_new, dcp_guidelines, cap_allocation
+                reclaimed_carryover, contract_flooded, snow_new, dcp_guidelines, cap_allocation, elevation
 
     public dict env_min_flow, temp_releases, tocs_rule, sj_restoration_proj, carryover_target, sodd_curtail_pct, exceedence, \
                 cum_min_release, oct_nov_min_release, aug_sept_min_release, monthly_demand, monthly_demand_full, \
                 monthly_demand_must_fill, numdays_fillup, flow_shape_regression, dry_year_carryover, env_min_flow_ya, \
-                temp_releases_ya, monthly, daily_df_data, snowpack, daily_output_data, k_close_wateryear, monthly_new, \
-                elevation
+                temp_releases_ya, monthly, daily_df_data, snowpack, daily_output_data, k_close_wateryear, monthly_new
 
   cdef (double, double) current_tocs(self, int dowy, int ix)
 
@@ -52,6 +51,8 @@ cdef class Reservoir():
   cdef double calc_az_mead_curtailment(self, int t)
 
   cdef double available_pleasant_storage_for_cap(self, int t, double mead_elevation)
+
+  cdef void initialize_elevation(self, int t)
 
   
 

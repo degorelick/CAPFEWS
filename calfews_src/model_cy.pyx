@@ -78,75 +78,81 @@ cdef class Model():
   #############################     Object Creation     ###############################################################
   #####################################################################################################################
   cdef void initialize_cap(self, scenario = 'historic') except *:
-      #########################################################################################
-      #reservoir initialization for the central arizona project
-      #########################################################################################
-      cdef:
-        list reservoir_list, district_list, canal_list, contract_list, bank_list
+    #########################################################################################
+    #reservoir initialization for the central arizona project
+    #########################################################################################
+    cdef:
+      list reservoir_list, district_list, canal_list, contract_list, bank_list
 
-      # CAP System Reservoirs of relevance - Lake Mead and Lake Pleasant
-      self.mead = Reservoir(self, 'mead', 'MED', self.model_mode)
-      self.pleasant = Reservoir(self, 'pleasant', 'PST', self.model_mode)
+    # CAP System Reservoirs of relevance - Lake Mead and Lake Pleasant
+    self.mead = Reservoir(self, 'mead', 'MED', self.model_mode)
+    self.pleasant = Reservoir(self, 'pleasant', 'PST', self.model_mode)
 
-      self.reservoir_list = [self.mead, self.pleasant]
+    self.reservoir_list = [self.mead, self.pleasant]
 
-      # CAP System Sub-contractors - top-20 historical users and everyone else
-      self.gric = District(self, 'GRIC', 'GRC', self.model_mode)
-      self.akchin = District(self, 'Ak-Chin IC', 'AKC', self.model_mode)
-      self.tohono = District(self, 'Tohono Oodham IC', 'TOH', self.model_mode)
-      self.scat = District(self, 'SCAT', 'SCT', self.model_mode)
-      self.fmyn = District(self, 'FMYN', 'FYN', self.model_mode)
-      self.srpmic = District(self, 'SRPMIC', 'SIC', self.model_mode)
-      self.wmat = District(self, 'WMAT', 'WMT', self.model_mode)
+    # CAP System Sub-contractors - top-20 historical users and everyone else
+    self.gric = District(self, 'GRIC', 'GRC', self.model_mode)
+    self.akchin = District(self, 'Ak-Chin IC', 'AKC', self.model_mode)
+    self.tohono = District(self, 'Tohono Oodham IC', 'TOH', self.model_mode)
+    self.scat = District(self, 'SCAT', 'SCT', self.model_mode)
+    self.fmyn = District(self, 'FMYN', 'FYN', self.model_mode)
+    self.srpmic = District(self, 'SRPMIC', 'SIC', self.model_mode)
+    self.wmat = District(self, 'WMAT', 'WMT', self.model_mode)
 
-      self.phoenix = District(self, 'City of Phoenix', 'PHX', self.model_mode)
-      self.mesa = District(self, 'City of Mesa', 'MSA', self.model_mode)
-      self.tucson = District(self, 'City of Tucson', 'TUC', self.model_mode)
-      self.scottsdale = District(self, 'City of Scottsdale', 'SDL', self.model_mode)
-      self.gilbert = District(self, 'Town of Gilbert', 'GIL', self.model_mode)
-      self.peoria = District(self, 'City of Peoria', 'PEO', self.model_mode)
-      self.glendale = District(self, 'City of Glendale', 'GLN', self.model_mode)
-      self.chandler = District(self, 'Town of Chandler', 'CHD', self.model_mode)
-      self.surprise = District(self, 'City of Surprise', 'SUR', self.model_mode)
-      self.azwc = District(self, 'AZ Water Company', 'AWC', self.model_mode)
-      self.tempe = District(self, 'City of Tempe', 'TPE', self.model_mode)
-      self.goodyear = District(self, 'Town of Goodyear', 'GYR', self.model_mode)
+    self.phoenix = District(self, 'City of Phoenix', 'PHX', self.model_mode)
+    self.mesa = District(self, 'City of Mesa', 'MSA', self.model_mode)
+    self.tucson = District(self, 'City of Tucson', 'TUC', self.model_mode)
+    self.scottsdale = District(self, 'City of Scottsdale', 'SDL', self.model_mode)
+    self.gilbert = District(self, 'Town of Gilbert', 'GIL', self.model_mode)
+    self.peoria = District(self, 'City of Peoria', 'PEO', self.model_mode)
+    self.glendale = District(self, 'City of Glendale', 'GLN', self.model_mode)
+    self.chandler = District(self, 'Town of Chandler', 'CHD', self.model_mode)
+    self.surprise = District(self, 'City of Surprise', 'SUR', self.model_mode)
+    self.azwc = District(self, 'AZ Water Company', 'AWC', self.model_mode)
+    self.tempe = District(self, 'City of Tempe', 'TPE', self.model_mode)
+    self.goodyear = District(self, 'Town of Goodyear', 'GYR', self.model_mode)
 
-      self.msidd = District(self, 'Maricopa Stanfield IDD', 'MSD', self.model_mode)
-      self.caidd = District(self, 'Central AZ IDD', 'CAD', self.model_mode)
-      self.hvid = District(self, 'Harquahala Valley IDD', 'HVI', self.model_mode)
-      self.hidd = District(self, 'Hohokam IDD', 'HIDD', self.model_mode)
-      self.cagrd = District(self, 'Central AZ GRD', 'CGD', self.model_mode)
-      self.asarco = District(self, 'ASARCO', 'ASR', self.model_mode)
-      self.awba = District(self, 'AZ Water Banking Authority', 'AWB', self.model_mode)
-      self.asld = District(self, 'AZ State Land Department', 'ALD', self.model_mode)
+    self.msidd = District(self, 'Maricopa Stanfield IDD', 'MSD', self.model_mode)
+    self.caidd = District(self, 'Central AZ IDD', 'CAD', self.model_mode)
+    self.hvid = District(self, 'Harquahala Valley IDD', 'HVI', self.model_mode)
+    self.hidd = District(self, 'Hohokam IDD', 'HIDD', self.model_mode)
+    self.cagrd = District(self, 'Central AZ GRD', 'CGD', self.model_mode)
+    self.asarco = District(self, 'ASARCO', 'ASR', self.model_mode)
+    self.awba = District(self, 'AZ Water Banking Authority', 'AWB', self.model_mode)
+    self.asld = District(self, 'AZ State Land Department', 'ALD', self.model_mode)
 
-      self.other = District(self, 'Other Subcontractors', 'OTH', self.model_mode)
+    self.other = District(self, 'Other Subcontractors', 'OTH', self.model_mode)
 
-      self.district_list = [self.gric, self.akchin, self.scat, self.tohono, self.fmyn, self.wmat, self.srpmic, \
-                            self.phoenix, self.tucson, self.mesa, self.scottsdale, self.gilbert, self.peoria, \
-                            self.chandler, self.surprise, self.tempe, self.goodyear, self.azwc, self.asarco, \
-                            self.msidd, self.caidd, self.hvid, self.hidd, self.asld, self.cagrd, self.awba, self.other]
+    self.district_list = [self.gric, self.akchin, self.scat, self.tohono, self.fmyn, self.wmat, self.srpmic, \
+                          self.phoenix, self.tucson, self.mesa, self.scottsdale, self.gilbert, self.peoria, \
+                          self.chandler, self.surprise, self.tempe, self.goodyear, self.azwc, self.asarco, \
+                          self.msidd, self.caidd, self.hvid, self.hidd, self.asld, self.cagrd, self.awba, self.other]
 
-      # CAP System Canal
-      self.capcanal = Canal(self, 'CAP Canal', 'CAP', self.model_mode)
+    # CAP System Canal
+    self.capcanal = Canal(self, 'CAP Canal', 'CAP', self.model_mode)
 
-      self.canal_list = [self.capcanal]
+    self.canal_list = [self.capcanal]
 
-      # CAP System Water Contracts - Split by Priority Class
-      self.pthree = Contract(self, 'P3', 'PTR', self.model_mode)
-      self.municipal = Contract(self, 'Municipal and Industrial', 'MUI', self.model_mode)
-      self.tribal = Contract(self, 'Tribal', 'FED', self.model_mode)
-      self.nia = Contract(self, 'Non Indian Agriculture', 'NIA', self.model_mode)
+    # CAP System Water Contracts - Split by Priority Class
+    self.pthree = Contract(self, 'P3', 'PTR', self.model_mode)
+    self.municipal = Contract(self, 'Municipal and Industrial', 'MUI', self.model_mode)
+    self.tribal = Contract(self, 'Tribal', 'FED', self.model_mode)
+    self.nia = Contract(self, 'Non Indian Agriculture', 'NIA', self.model_mode)
 
-      self.contract_list = [self.pthree, self.municipal, self.tribal, self.nia]
+    self.contract_list = [self.pthree, self.municipal, self.tribal, self.nia]
 
-      # CAP System Recharge Facilities ("Banks") - grouped as AMA regions...
-      self.amaphoenix = Waterbank(self, 'Phoenix AMA', 'PXA', self.model_mode)
-      self.amapinal = Waterbank(self, 'Pinal AMA', 'PNA', self.model_mode)
-      self.amatucson = Waterbank(self, 'Tucson AMA', 'TSA', self.model_mode)
+    # CAP System Recharge Facilities ("Banks") - grouped as AMA regions...
+    self.amaphoenix = Waterbank(self, 'Phoenix AMA', 'PXA', self.model_mode)
+    self.amapinal = Waterbank(self, 'Pinal AMA', 'PNA', self.model_mode)
+    self.amatucson = Waterbank(self, 'Tucson AMA', 'TSA', self.model_mode)
 
-      self.waterbank_list = [self.amaphoenix, self.amapinal, self.amatucson]
+    self.waterbank_list = [self.amaphoenix, self.amapinal, self.amatucson]
+
+    ##################################################################################
+    self.mead.initialize_elevation()
+
+
+
 
 
   cdef tuple northern_initialization_routine(self, scenario='baseline'):

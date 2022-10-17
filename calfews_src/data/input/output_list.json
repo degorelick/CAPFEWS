@@ -1,4 +1,51 @@
 {
+  "cap": {
+    "reservoirs": {
+      "mead": {
+        "elevation": true
+      },
+      "pleasant": {
+        "elevation": true,
+        "S": true,
+        "outflow_release": true,
+        "available_storage": true,
+        "Q": true
+      }
+    },
+    "contracts": {
+      "pthree": {
+        "allocation": true,
+        "available_water": true
+      },
+      "municipal": {
+        "allocation": true,
+        "available_water": true
+      },
+      "tribal": {
+        "allocation": true,
+        "available_water": true
+      },
+      "nia": {
+        "allocation": true,
+        "available_water": true
+      }
+    },
+    "districts": {
+
+    },
+    "waterbanks": {
+      "amaphoenix": {
+
+      },
+      "amapinal" : {
+
+      },
+      "amatucson": {
+
+      }
+    }
+  },
+
   "north": {
     "reservoirs": {
       "shasta": {

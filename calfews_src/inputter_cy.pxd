@@ -8,7 +8,7 @@ cdef class Inputter():
 
     str model_mode
 
-    public Reservoir shasta, oroville, folsom, yuba, newmelones, donpedro, exchequer, millerton, sanluisstate, sanluisfederal, sanluis, isabella, success, kaweah, pineflat
+    public Reservoir shasta, oroville, folsom, yuba, newmelones, donpedro, exchequer, millerton, sanluisstate, sanluisfederal, sanluis, isabella, success, kaweah, pineflat, mead, pleasant
 
   cdef void run_initialization(self, str plot_key) except *
 
