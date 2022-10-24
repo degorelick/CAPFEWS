@@ -115,7 +115,7 @@ cdef class Model():
     self.msidd = District(self, 'Maricopa Stanfield IDD', 'MSD', self.model_mode)
     self.caidd = District(self, 'Central AZ IDD', 'CAD', self.model_mode)
     self.hvid = District(self, 'Harquahala Valley IDD', 'HVI', self.model_mode)
-    self.hidd = District(self, 'Hohokam IDD', 'HIDD', self.model_mode)
+    self.hidd = District(self, 'Hohokam IDD', 'HID', self.model_mode)
     self.cagrd = District(self, 'Central AZ GRD', 'CGD', self.model_mode)
     self.asarco = District(self, 'ASARCO', 'ASR', self.model_mode)
     self.awba = District(self, 'AZ Water Banking Authority', 'AWB', self.model_mode)
@@ -147,6 +147,9 @@ cdef class Model():
     self.amatucson = Waterbank(self, 'Tucson AMA', 'TSA', self.model_mode)
 
     self.waterbank_list = [self.amaphoenix, self.amapinal, self.amatucson]
+
+    ##################################################################################
+    self.create_object_associations_cap()
 
     ##################################################################################
     self.mead.initialize_elevation()
@@ -6499,3 +6502,13 @@ cdef class Model():
     ## STEP 6: IMPLEMENT RECONCILIATION OF THE BUDGET
 
     return mead_available_for_cap_delivery
+
+
+  ## LINK CAP OBJECTS
+  def create_object_associations_cap(self):
+    cdef Private private_obj
+    cdef District district_obj
+    cdef Canal canal_obj, canal_obj2
+    cdef Contract contract_obj
+    cdef Reservoir reservoir_obj
+
