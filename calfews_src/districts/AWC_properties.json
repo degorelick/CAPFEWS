@@ -1,0 +1,18 @@
+{
+  "name": "AZWC",
+  "MDD": 17.648,
+  "contract_list": ["PTR", "MUI", "FED", "NIA"],
+  "turnout_list": "CAP",
+  "urban_profile": [0.0244, 0.0123, 0.0239, 0.1358, 0.1936, 0.2, 0.1295, 0.0917, 0.0756, 0.0696, 0.0315, 0.0119],
+  "recharge_profile": [0.676, 0.0746, 0.1973, 0.7844, 0.8027, 0.7839, 0.6604, 0.574, 0.5836, 0.5092, 0.3833, 0.1271],
+  "project_contract": {
+    "PTR": 0,
+    "MUI": 0.0292,
+    "FED": 0,
+    "NIA": 0
+  },
+  "lease_partner": "none",
+  "lease_quantity": 0,
+  "lease_priority": "none",
+  "priority_to_recharge": 0
+}

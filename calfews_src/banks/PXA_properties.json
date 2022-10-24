@@ -1,0 +1,29 @@
+{
+  "name": "Phoenix AMA",
+  "canal_rights": "CAP",
+  "participant_list": ["AKC", "ASR", "AWB", "AWC", "CGD", "CHD", "EPC", "GIL", "GLN", "GYR", "GRC", "OTH", "PEO", "PHX", "SDL", "SUR", "TPE", "TOH"],
+  "initial_recharge": 999999,
+  "tot_storage": 99999,
+  "recovery": 0,
+  "recharge_decline": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  "ownership": {
+    "AKC": 0.0556,
+    "ASR": 0.0556,
+    "AWB": 0.0556,
+    "AWC": 0.0556,
+    "CGD": 0.0556,
+    "CHD": 0.0556,
+    "EPC": 0.0556,
+    "GIL": 0.0556,
+    "GLN": 0.0556,
+    "GYR": 0.0556,
+    "GRC": 0.0556,
+    "OTH": 0.0556,
+    "PEO": 0.0556,
+    "PHX": 0.0556,
+    "SDL": 0.0556,
+    "SUR": 0.0556,
+    "TPE": 0.0556,
+    "TOH": 0.0556
+  }
+}

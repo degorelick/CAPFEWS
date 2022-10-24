@@ -1,0 +1,19 @@
+{
+  "name": "Tucson AMA",
+  "canal_rights": "CAP",
+  "participant_list": ["AKC", "AWB", "CGD", "ORO", "OTH", "PHX", "TOH", "TUC"],
+  "initial_recharge": 999999,
+  "tot_storage": 99999,
+  "recovery": 0,
+  "recharge_decline": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  "ownership": {
+    "AKC": 0.125,
+    "AWB": 0.125,
+    "CGD": 0.125,
+    "ORO": 0.125,
+    "OTH": 0.125,
+    "PHX": 0.125,
+    "TOH": 0.125,
+    "TUC": 0.125
+  }
+}
