@@ -7,10 +7,11 @@
   "allocation_priority": 1,
   "storage_priority": 1,
   "reduction": {
-    "I": 1,
-    "IIa": 1,
-    "IIb": 1,
-    "III": 1,
-    "IV": 1
+    "T0": 1,
+    "T1": 1,
+    "T2a": 1,
+    "T2b": 1,
+    "T3": 1,
+    "DP": 1
   }
 }

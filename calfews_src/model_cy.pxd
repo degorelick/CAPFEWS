@@ -49,7 +49,9 @@ cdef class Model():
                 fresnoid, socal, southbay, centralcoast, dudleyridge, tularelake, westlands, chowchilla, maderairr, othertule,\
                 otherkaweah, otherfriant, othercvp, otherexchange, othercrossvalley, otherswp, consolidated, alta, krwa, \
                 kaweahdelta, sanluiswater, panoche, delpuerto, \
-                phoenix, gric, tucson, akchin, msidd, mesa, scottsdale, caidd, awba, tohono, gilbert, scat, cagrd, peoria # CAP sub-contractors
+                phoenix, gric, tucson, akchin, msidd, mesa, scottsdale, caidd, awba, tohono, gilbert, scat, cagrd, peoria, \
+                tempe, hidd, hvid, surprise, fmyn, srpmic, glendale, other, goodyear, mwd, epcor, asarco, asld, azwc, \
+                orovalley, wmat
 
     public Private wonderful, metropolitan, castaic, coachella
 

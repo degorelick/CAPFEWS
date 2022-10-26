@@ -53,63 +53,97 @@ cdef class Reservoir():
     self.days_til_full = [0.0 for _ in range(self.T)]
     self.flood_spill = [0.0 for _ in range(self.T)]
     self.flood_deliveries = [0.0 for _ in range(self.T)]
-    if self.key == "SLS":
-      #San Luis - State portion
-      #San Luis Reservoir is off-line so it doesn't need the full reservoir class parameter set contained in the KEY_properties.json files
-      #self.Q = model.df[0]'HRO_pump'] * cfs_tafd
-      self.dead_pool = 40
-      self.S[0] = 740.4
-    elif self.key == "SLF":
-      #San Luis - Federal portion
-      #self.Q = model.df[0]'TRP_pump'] * cfs_tafd
-      self.dead_pool = 40
-      self.S[0] = 174.4
-    elif self.key != "SNL":
-      #for remaining reservoirs, load parameters from KEY_properties.json file (see reservoir\readme.txt
-      for k,v in json.load(open('calfews_src/reservoir/%s_properties.json' % key)).items():
-          setattr(self,k,v)
-      #load timeseries inputs from calfews_src-data.csv input file
-      self.Q = [_ * cfs_tafd for _ in model.df[0]['%s_inf'% key].values]
-      self.E = [_ * cfs_tafd for _ in model.df[0]['%s_evap'% key].values]
-      ####Note - Shasta FCI values are not right - the original calculation units are in AF, but it should be in CFS
-	    ####so the actual values are high.  Just recalculate here instead of changing input files
-      if self.key == "SHA":
-        self.fci = [0.0 for _ in range(self.T)]
-        self.fci[0] = 100000
-        for x in range(1, self.T):
-          dowy = model.dowy[x]
-          if dowy > 260:
-            self.fci[x] = 0
-          elif dowy == 0:
-            self.fci[x] = 100000
-          else:
-            self.fci[x] = self.fci[x-1]*0.95 + self.Q[x]*tafd_cfs
-      else:
-        self.fci = [_ for _ in model.df[0]['%s_fci' % key].values]
-      self.SNPK = [_ for _ in model.df[0]['%s_snow' % key].values]
-      self.precip = [_ * cfs_tafd for _ in model.df[0]['%s_precip'% key].values]
-      self.downstream = [_ * cfs_tafd for _ in model.df[0]['%s_gains'% key].values]
-      self.fnf = [_ / 1000000.0 for _ in model.df[0]['%s_fnf'% key].values]
-      self.R[0] = 0
-      use_capacity = False
-      storage_start_date = model.df[0].index[0]
-      if storage_start_date in model.df_short[0].index: 
-        storage_start_index = model.df_short[0].index.get_loc(storage_start_date)
-      else:
-        use_capacity = True
-      if use_capacity:
-        self.S[0] = self.capacity
-        self.EOS_target = (self.capacity - 1000.0)/2 + 1000.0
-        self.lastYearEOS_target = (self.capacity - 1000.0)/2 + 1000.0
-      else:
-        self.S[0] = model.df_short[0]['%s_storage' % key].iloc[storage_start_index] / 1000.0
-        self.EOS_target = model.df_short[0]['%s_storage' % key].iloc[storage_start_index] / 1000.0
-        self.lastYearEOS_target = model.df_short[0]['%s_storage' % key].iloc[storage_start_index] / 1000.0
+
+    # new parameters, useful for CAP model only
+    self.cap_allocation_capacity = 0.0
+    self.az_on_river_demand = 0.0
+    self.az_capacity = 0.0
+    self.pump_inflow_capacity = 0.0
+    self.hydropower_generation_capacity = 0.0
+    self.elevation = [0.0 for _ in range(self.T)]
+    self.cap_allocation = [0.0 for _ in range(self.T)]
+    self.gaged_inflow = [0.0 for _ in range(12)]
+    self.seepage = [0.0 for _ in range(12)]
+    self.MWD_inflow = [0.0 for _ in range(12)]
+    self.evap = [0.0 for _ in range(12)]
+    self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+
+    # initialization for CAP model here
+    # Lake Mead is a special case because we really only care about elevation
+    if self.key == "MDE":
+      for k, v in json.load(open('calfews_src/reservoir/%s_properties.json' % key)).items():
+        setattr(self, k, v)
+      self.elevation = [_ for _ in model.df[0]['%s_ele'% key].values]
+      self.calculate_cap_mead_allocation(0)
+
+    elif self.key == "PLS":
+      for k, v in json.load(open('calfews_src/reservoir/%s_properties.json' % key)).items():
+        setattr(self, k, v)
+      self.elevation[0] = 1701.0 # assume full start for Lake Pleasant, in ft of elevation
+      self.S[0] = self.calculate_pleasant_storage(0)
+      self.cap_allocation[0] = self.cap_allocation_capacity # assume full start for CAP pool, in kAF
+
+    else:
+      # otherwise, do all the other calfews stuff
+      if self.key == "SLS":
+        #San Luis - State portion
+        #San Luis Reservoir is off-line so it doesn't need the full reservoir class parameter set contained in the KEY_properties.json files
+        #self.Q = model.df[0]'HRO_pump'] * cfs_tafd
+        self.dead_pool = 40
+        self.S[0] = 740.4
+      elif self.key == "SLF":
+        #San Luis - Federal portion
+        #self.Q = model.df[0]'TRP_pump'] * cfs_tafd
+        self.dead_pool = 40
+        self.S[0] = 174.4
+      elif self.key != "SNL":
+        #for remaining reservoirs, load parameters from KEY_properties.json file (see reservoir\readme.txt
+        for k,v in json.load(open('calfews_src/reservoir/%s_properties.json' % key)).items():
+            setattr(self,k,v)
+        #load timeseries inputs from calfews_src-data.csv input file
+        self.Q = [_ * cfs_tafd for _ in model.df[0]['%s_inf'% key].values]
+        self.E = [_ * cfs_tafd for _ in model.df[0]['%s_evap'% key].values]
+        ####Note - Shasta FCI values are not right - the original calculation units are in AF, but it should be in CFS
+          ####so the actual values are high.  Just recalculate here instead of changing input files
+        if self.key == "SHA":
+          self.fci = [0.0 for _ in range(self.T)]
+          self.fci[0] = 100000
+          for x in range(1, self.T):
+            dowy = model.dowy[x]
+            if dowy > 260:
+              self.fci[x] = 0
+            elif dowy == 0:
+              self.fci[x] = 100000
+            else:
+              self.fci[x] = self.fci[x-1]*0.95 + self.Q[x]*tafd_cfs
+        else:
+          self.fci = [_ for _ in model.df[0]['%s_fci' % key].values]
+        self.SNPK = [_ for _ in model.df[0]['%s_snow' % key].values]
+        self.precip = [_ * cfs_tafd for _ in model.df[0]['%s_precip'% key].values]
+        self.downstream = [_ * cfs_tafd for _ in model.df[0]['%s_gains'% key].values]
+        self.fnf = [_ / 1000000.0 for _ in model.df[0]['%s_fnf'% key].values]
+        self.R[0] = 0
+        use_capacity = False
+        storage_start_date = model.df[0].index[0]
+        if storage_start_date in model.df_short[0].index:
+          storage_start_index = model.df_short[0].index.get_loc(storage_start_date)
+        else:
+          use_capacity = True
+        if use_capacity:
+          self.S[0] = self.capacity
+          self.EOS_target = (self.capacity - 1000.0)/2 + 1000.0
+          self.lastYearEOS_target = (self.capacity - 1000.0)/2 + 1000.0
+        else:
+          self.S[0] = model.df_short[0]['%s_storage' % key].iloc[storage_start_index] / 1000.0
+          self.EOS_target = model.df_short[0]['%s_storage' % key].iloc[storage_start_index] / 1000.0
+          self.lastYearEOS_target = model.df_short[0]['%s_storage' % key].iloc[storage_start_index] / 1000.0
 	  
     #Environmental release requirements
     #environmental rules are dependent on the water year type	
     if self.key == "YRS":
       self.wytlist = ['W', 'AN', 'BN', 'D', 'C', 'EC']
+    elif self.key == "MDE" or self.key == "PLS":
+      self.wytlist = self.dcp_guidelines
     else:
       self.wytlist = ['W', 'AN', 'BN', 'D', 'C']
     #dictionnaries containing expected remaining environmental releases from reservoir (as a function of day-of-the-wateryear)
@@ -161,29 +195,47 @@ cdef class Reservoir():
     self.reclaimed_carryover = [0.0 for _ in range(self.T)]
     self.contract_flooded = [0.0 for _ in range(self.T)]
 
-    self.elevation = [0.0 for _ in range(self.T)]
-    self.cap_allocation = [0.0 for _ in range(self.T)]
-    self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+  cdef void step_pleasant(self, int t, double cap_demand_on_pleasant):
+    ## this function handles the water balance for Lake Pleasant, CAP system
+    ## for total storage, elevation, and CAP pool storage.
+    ## Will be adjusted based on (1) what fraction of water deliveries are met via Waddell releases and
+    ## (2) how much CAP water from Lake Mead is pumped into Pleasant for a given timestep
 
-
-  cdef void initialize_elevation(self, int t):
-    ## sets the elevation of the reservoir
-    self.elevation[t]
-
-  cdef double available_pleasant_storage_for_cap(self, int t, double mead_elevation):
     ## this function returns the available storage that Lake Pleasant has to deliver
-    ## at a given time
-    cdef double pleasant_free_storage, required_pleasant_storage_floor
-    required_pleasant_storage_floor = 50000.0
+    ## to the CAP system at a given time
+    cdef double pleasant_storage, pleasant_area
 
-    pleasant_free_storage = 0
-    if mead_elevation > 1075.0: # Tier 1
-      pleasant_free_storage = max(self.available_storage(t) - required_pleasant_storage_floor, 0)
-
-    return pleasant_free_storage
+    # first, get current pleasant storage conditions
+    pleasant_storage = self.calculate_pleasant_storage(t)
+    pleasant_area = self.calculate_pleasant_area(t)
 
 
-  cdef void calc_cap_allocation(self, int t):
+
+
+
+  cdef double calculate_pleasant_storage(self, int t):
+    ## based on elevation, calculate lake pleasant total storage
+    cdef double pleasant_total_storage
+    pleasant_total_storage = \
+      28846633.0 + \
+      -18579.4 * self.elevation[t] + \
+      -12.8222 * (self.elevation[t])^2 + \
+      0.008269 * (self.elevation[t])^3
+    return pleasant_total_storage
+
+
+  cdef double calculate_pleasant_area(self, int t):
+    ## based on elevation, calculate lake pleasant total area (for evap estimation)
+    cdef double pleasant_total_area
+    pleasant_total_area = \
+      -3580975.0 + \
+      6574.7 * self.elevation[t] + \
+      -4.0501 * (self.elevation[t])^2 + \
+      0.0008383 * (self.elevation[t])^3
+    return pleasant_total_area
+
+
+  cdef void calculate_cap_mead_allocation(self, int t):
     ##this function is for lake mead ONLY, to calculate the CAP allocation
     cdef float cap_baseline_lower_basin_allocation, cap_system_losses
     cap_baseline_lower_basin_allocation = 1490000.0  # AF/yr allocation for CAP, without cuts

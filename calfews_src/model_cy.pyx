@@ -120,12 +120,16 @@ cdef class Model():
     self.asarco = District(self, 'ASARCO', 'ASR', self.model_mode)
     self.awba = District(self, 'AZ Water Banking Authority', 'AWB', self.model_mode)
     self.asld = District(self, 'AZ State Land Department', 'ALD', self.model_mode)
+    self.orovalley = District(self, 'Oro Valley', 'ORO', self.model_mode)
+    self.mwd = District(self, 'Maricopa Water District', 'MWD', self.model_mode)
+    self.epcor = District(self, 'EPCOR', 'EPC', self.model_mode)
 
     self.other = District(self, 'Other Subcontractors', 'OTH', self.model_mode)
 
     self.district_list = [self.gric, self.akchin, self.scat, self.tohono, self.fmyn, self.wmat, self.srpmic, \
                           self.phoenix, self.tucson, self.mesa, self.scottsdale, self.gilbert, self.peoria, \
                           self.chandler, self.surprise, self.tempe, self.goodyear, self.azwc, self.asarco, \
+                          self.orovalley, self.mwd, self.epcor, \
                           self.msidd, self.caidd, self.hvid, self.hidd, self.asld, self.cagrd, self.awba, self.other]
 
     # CAP System Canal
@@ -152,7 +156,7 @@ cdef class Model():
     self.create_object_associations_cap()
 
     ##################################################################################
-    self.mead.initialize_elevation()
+
 
 
 
@@ -6508,7 +6512,170 @@ cdef class Model():
   def create_object_associations_cap(self):
     cdef Private private_obj
     cdef District district_obj
-    cdef Canal canal_obj, canal_obj2
+    cdef Canal canal_obj
     cdef Contract contract_obj
     cdef Reservoir reservoir_obj
 
+    ##Canal Structure Dictionary
+    # This is the dictionary that holds the structure of the canal system.
+    # The dictionary is made up of lists, with the objects in the lists representing delivery nodes on the canal (canal is denoted by dictionary key)
+    # Objects can be districts, waterbanks, or other canals.
+    # Canal objects show an intersection with the canal represented by the dictionary 'key' that holds the list.
+    # Dictionary keys are all canal keys.  If a canal is located on a list,
+    # the canal associated with that list's key will also be on the list associated with the canal of the first key
+    # (i.e., if self.fkc is on the list with the key 'self.canal_district['xvc'],
+    # then the object self.xvc will be on the list with the key self.canal_district['fkc'] -
+    # these intersections help to organize these lists into a structure that models the interconnected canal structure
+    # The first object on each list is either a reservoir or another canal
+    self.canal_district = {}
+    self.canal_district['CAP'] = [self.mead,  # cap canal starts with lake mead input
+                                  self.hvid,  # little harquahala
+                                  self.pleasant, # lake pleasant
+                                  self.phoenix, self.scottsdale, self.glendale, self.mwd, self.peoria, self.asld, self.fmyn, self.goodyear, self.surprise, self.wmat, self.srpmic, self.scat, self.epcor, self.tempe, self.amaphoenix,  # hassayampa
+                                  self.gric, self.akchin, self.mesa, self.azwc, self.chandler, self.gilbert, self.msidd, self.hidd, self.caidd, self.awba, self.cagrd, self.other, self.amapinal,  # salt gila
+                                  self.orovalley,  # picacho
+                                  self.amatucson, self.tucson, self.tohono,  # brawley
+                                  self.asarco] # black mountain
+
+    self.canal_district_len = {}
+    for key in ['CAP']:
+      self.canal_district_len[key] = len(self.canal_district[key])
+
+    ### After the canal structure is defined, each of the nodes on the list
+    ### has a demand initialized.  There are many different types of demands
+    ### depending on the surface water availabilities
+    self.canal_by_name = {}
+    for canal_obj in self.canal_list:
+      self.canal_by_name[canal_obj.name] = canal_obj
+      canal_obj.num_sites = self.canal_district_len[canal_obj.name]
+      canal_obj.turnout_use = [0.0 for _ in range(canal_obj.num_sites)]  ##how much water diverted at a node
+      canal_obj.flow = [0.0 for _ in
+                        range(canal_obj.num_sites + 1)]  ##how much water passing through a node (inc. diversions)
+      canal_obj.demand = {}
+      canal_obj.turnout_frac = {}
+      canal_obj.recovery_flow_frac = {}
+      canal_obj.daily_flow = {}
+      canal_obj.daily_turnout = {}
+      for i in range(len(self.canal_district[canal_obj.name])):
+        canal_obj.daily_flow[self.canal_district[canal_obj.name][i].key] = np.zeros(self.T)
+        canal_obj.daily_turnout[self.canal_district[canal_obj.name][i].key] = np.zeros(self.T)
+      for z in ['contractor', 'turnout', 'excess', 'priority', 'secondary', 'initial', 'supplemental']:
+        canal_obj.demand[z] = np.zeros(canal_obj.num_sites)
+        canal_obj.turnout_frac[z] = np.zeros(canal_obj.num_sites)
+        canal_obj.recovery_flow_frac[z] = np.ones(canal_obj.num_sites)
+
+    ##There is 1 canal (CAP) directly connected to surface water storage
+    ##It has priority (obviously
+    self.canal_priority = {}
+    self.canal_priority['cap'] = [self.capcanal]
+
+    ##Linkages between reservoirs, canals, and surface water contracts
+    ##Reservoir-Contract Relationships (reservoirs are dictionary key, contracts are list objects)
+    self.reservoir_contract = {}
+    self.reservoir_contract['MDE'] = [self.pthree, self.municipal, self.tribal, self.nia]
+    self.reservoir_contract['PLS'] = [self.pthree, self.municipal, self.tribal, self.nia]
+
+    # no private objects in cap canal so this part is simplified relative to calfews
+    for district_obj in self.district_list:
+      district_obj.carryover_rights = {}
+      for contract_obj in self.contract_list:
+          district_obj.carryover_rights[contract_obj.name] = 0.0
+    for private_obj in self.private_list:
+      private_obj.carryover_rights = {}
+      for district_key in private_obj.district_list:
+        district_obj = self.district_keys[district_key]
+        private_obj.carryover_rights[district_key] = {}
+        for contract_obj in self.contract_list:
+            private_obj.carryover_rights[district_key][contract_obj.name] = 0.0
+    for private_obj in self.city_list:
+      private_obj.carryover_rights = {}
+      for district_key in private_obj.district_list:
+        district_obj = self.district_keys[district_key]
+        private_obj.carryover_rights[district_key] = {}
+        for contract_obj in self.contract_list:
+            private_obj.carryover_rights[district_key][contract_obj.name] = 0.0
+
+    ##Use reservoir/contract dictionary to develop
+    ##a list linking individual districts to reservoirs,
+    ##based on their individual contracts
+    for district_obj in self.district_list:
+      district_obj.reservoir_contract = {}
+      for reservoir_obj in self.reservoir_list:
+        use_reservoir = 0
+        for contract_obj in self.reservoir_contract[reservoir_obj.key]:
+          for contract_key_dis in district_obj.contract_list:
+            if contract_obj.name == contract_key_dis:
+              use_reservoir = 1
+              break
+        if use_reservoir == 1:
+          district_obj.reservoir_contract[reservoir_obj.key] = 1
+        else:
+          district_obj.reservoir_contract[reservoir_obj.key] = 0
+
+    for private_obj in self.private_list:
+      private_obj.reservoir_contract = {}
+      for reservoir_obj in self.reservoir_list:
+        use_reservoir = 0
+        for contract_obj in self.reservoir_contract[reservoir_obj.key]:
+          for district_key in private_obj.district_list:
+            district_obj = self.district_keys[district_key]
+            for contract_key_dis in district_obj.contract_list:
+              if contract_obj.name == contract_key_dis:
+                use_reservoir = 1
+                break
+        if use_reservoir == 1:
+          private_obj.reservoir_contract[reservoir_obj.key] = 1
+        else:
+          private_obj.reservoir_contract[reservoir_obj.key] = 0
+
+    for private_obj in self.city_list:
+      private_obj.reservoir_contract = {}
+      for reservoir_obj in self.reservoir_list:
+        use_reservoir = 0
+        for contract_obj in self.reservoir_contract[reservoir_obj.key]:
+          for district_key in private_obj.district_list:
+            district_obj = self.district_keys[district_key]
+            for contract_key_dis in district_obj.contract_list:
+              if contract_obj.name == contract_key_dis:
+                use_reservoir = 1
+                break
+        if use_reservoir == 1:
+          private_obj.reservoir_contract[reservoir_obj.key] = 1
+        else:
+          private_obj.reservoir_contract[reservoir_obj.key] = 0
+
+    ##Contract-Reservoir Relationships (contracts are dictionary key, reservoirs are list objects)
+    self.contract_reservoir = {}
+    self.contract_reservoir['PTR'] = [self.mead, self.pleasant]
+    self.contract_reservoir['MUI'] = [self.mead, self.pleasant]
+    self.contract_reservoir['FED'] = [self.mead, self.pleasant]
+    self.contract_reservoir['NIA'] = [self.mead, self.pleasant]
+
+    ##Canal-Contract Relationships (canals are dictionary key, contracts are list objects)
+    self.canal_contract = {}
+    self.canal_contract['CAP'] = [self.pthree, self.municipal, self.tribal, self.nia]
+
+    ##Contracts-Canal Relationships (which canals can be physically reached with contracts)
+    self.contract_turnouts = {}
+    self.contract_turnouts['PTR'] = ['CAP']
+    self.contract_turnouts['MUI'] = ['CAP']
+    self.contract_turnouts['FED'] = ['CAP']
+    self.contract_turnouts['NIA'] = ['CAP']
+
+    ##Reservoir-Canal Relationships (reservoirs are dictionary key, canals are list objects)
+    self.reservoir_canal = {}
+    self.reservoir_canal['MDE'] = [self.capcanal]
+    self.reservoir_canal['PLS'] = [self.capcanal]
+
+    self.canal_reservoir = {}
+    self.canal_reservoir['CAP'] = [self.mead, self.pleasant]
+    for reservoir_obj in self.reservoir_list:
+      reservoir_obj.total_capacity = 0.0
+      for canal_obj in self.reservoir_canal[reservoir_obj.key]:
+        reservoir_obj.total_capacity += canal_obj.capacity['normal'][0]
+
+    self.pumping_turnback = {}
+    self.allocation_losses = {}
+    for z in ['CAP']:
+      self.pumping_turnback[z] = 0.0
+      self.allocation_losses[z] = 0.0

@@ -7,7 +7,9 @@ cdef class Reservoir():
                 EOS_target, lastYearEOS_target, din, dout, envmin, sodd, basinuse, consumed_releases, sjrr_release, \
                 evap_forecast, lastYearRainflood, variable_min_flow, min_daily_overflow, min_daily_uncontrolled, fcr, max_fcr, \
                 gains_to_delta, rainflood_flows, baseline_flows, max_daily_uncontrolled, uncontrolled_available, force_spill, \
-                snowflood_flows, saved_water, total_capacity, flood_flow_min, epsilon
+                snowflood_flows, saved_water, total_capacity, flood_flow_min, epsilon, \
+                cap_allocation_capacity, az_on_river_demand, az_capacity, pump_inflow_capacity, \
+                hydropower_generation_capacity
 
     public int is_Canal, is_District, is_Private, is_Waterbank, is_Reservoir, T, T_short, melt_start, exceedence_level, \
                 iter_count, eos_day, has_snow_new
@@ -21,7 +23,8 @@ cdef class Reservoir():
                 raininf_stds, snowinf_stds, baseinf_stds, rainflood_fnf, snowflood_fnf, short_rainflood_fnf, short_snowflood_fnf, \
                 rainflood_inf, snowflood_inf, baseline_inf, rainflood_forecast, snowflood_forecast, baseline_forecast, \
                 max_direct_recharge, downstream_short, fnf_short, fnf_new, total_available_storage, outflow_release, \
-                reclaimed_carryover, contract_flooded, snow_new, dcp_guidelines, cap_allocation, elevation
+                reclaimed_carryover, contract_flooded, snow_new, dcp_guidelines, cap_allocation, elevation, \
+                gaged_inflow, MWD_inflow, seepage, evap
 
     public dict env_min_flow, temp_releases, tocs_rule, sj_restoration_proj, carryover_target, sodd_curtail_pct, exceedence, \
                 cum_min_release, oct_nov_min_release, aug_sept_min_release, monthly_demand, monthly_demand_full, \
@@ -46,13 +49,17 @@ cdef class Reservoir():
 
   cdef double sj_riv_res_flows(self, int t, int dowy, int toggle_short_series=*)
 
-  cdef void calc_cap_allocation(self, int t)
+  ################## CAP FUNCTIONS ##################
+
+  cdef void step_pleasant(self, int t, double cap_demand_on_pleasant)
+
+  cdef void calculate_cap_mead_allocation(self, int t)
 
   cdef double calc_az_mead_curtailment(self, int t)
 
-  cdef double available_pleasant_storage_for_cap(self, int t, double mead_elevation)
+  cdef double calculate_pleasant_area(self, int t)
 
-  cdef void initialize_elevation(self, int t)
+  cdef double calculate_pleasant_storage(self, int t)
 
   
 
