@@ -1,0 +1,13 @@
+{
+  "name": "Lake Mead",
+  "capacity": 999999,
+  "az_capacity": 2800,
+  "az_availability": {
+    "I": 2288,
+    "IIa": 2208,
+    "IIb": 2160,
+    "III": 2080,
+    "IV": 1400
+  },
+  "az_on_river_demand": 1300
+}
