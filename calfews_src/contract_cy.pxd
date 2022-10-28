@@ -9,7 +9,7 @@ cdef class Contract():
 
     public str key, name, type
 
-    public list allocation, storage_pool, available_water, annual_deliveries, flood_deliveries, contractors
+    public list allocation, storage_pool, available_water, annual_deliveries, flood_deliveries, contractors, dcp_guidelines
 
     public dict reduction, daily_supplies
 
@@ -21,6 +21,8 @@ cdef class Contract():
   cdef void adjust_accounts(self, double contract_deliveries, str search_type, int wateryear)
 
   cdef void accounting(self, int t, double deliveries, double carryover, double turnback, double flood)
+
+  cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier)
 
 
   

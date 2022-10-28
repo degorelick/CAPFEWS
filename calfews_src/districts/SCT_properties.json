@@ -1,6 +1,7 @@
 {
   "name": "SCAT",
   "MDD": 0,
+  "AFY": 0,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": "CAP",
   "urban_profile": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

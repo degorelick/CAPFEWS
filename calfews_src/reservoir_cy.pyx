@@ -67,6 +67,7 @@ cdef class Reservoir():
     self.MWD_inflow = [0.0 for _ in range(12)]
     self.evap = [0.0 for _ in range(12)]
     self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+    self.mead_shortage_tier = 'T0'
 
     # initialization for CAP model here
     # Lake Mead is a special case because we really only care about elevation
@@ -252,21 +253,27 @@ cdef class Reservoir():
     if self.elevation[t] < 1025.0: # Tier 3
       guidelines_curtailment = 480000.0
       dcp_curtailment = 240000.0
+      self.mead_shortage_tier = 'T3'
     elif self.elevation[t] < 1045.0: # Tier 2b
       guidelines_curtailment = 400000.0
       dcp_curtailment = 240000.0
+      self.mead_shortage_tier = 'T2b'
     elif self.elevation[t] < 1050.0: # Tier 2a
       guidelines_curtailment = 400000.0
       dcp_curtailment = 192000.0
+      self.mead_shortage_tier = 'T2a'
     elif self.elevation[t] < 1075.0: # Tier 1
       guidelines_curtailment = 320000.0
       dcp_curtailment = 192000.0
+      self.mead_shortage_tier = 'T1'
     elif self.elevation[t] < 1090.0: # Tier 0
       guidelines_curtailment = 0.0
       dcp_curtailment = 192000.0
+      self.mead_shortage_tier = 'T0'
     else:
       guidelines_curtailment = 0.0
       dcp_curtailment = 0.0
+      self.mead_shortage_tier = 'T0'
 
     curtailment = guidelines_curtailment + dcp_curtailment
     return curtailment

@@ -1,6 +1,7 @@
 {
   "name": "Tohono O'odham",
-  "MDD": 62.713,
+  "MDD": 0,
+  "AFY": 62.713,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": "CAP",
   "urban_profile": [0.0291, 0.0386, 0.0774, 0.1287, 0.102, 0.1039, 0.1014, 0.0994, 0.0931, 0.0762, 0.0574, 0.0928],

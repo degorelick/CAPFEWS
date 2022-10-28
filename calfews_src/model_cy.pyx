@@ -6438,7 +6438,6 @@ cdef class Model():
 
   cdef tuple simulate_cap(self, int t):
     ###Monthly Operations###
-    ##Step forward environmental parameters (snow & flow)
     ##Water Balance on each reservoir
     ##Decisions - deliver water to sub-contractors, execute long-term leases, bank water
     cdef:
@@ -6455,55 +6454,52 @@ cdef class Model():
     wateryear = self.water_year[t]
     year_index = y - self.starting_year
 
-    ## STEP 0: IDENTIFY TOTAL AVAILABLE COLORADO RIVER WATER FOR CAP
+    ## STEP 0: IDENTIFY TOTAL AVAILABLE COLORADO RIVER WATER FOR CAP AT START OF YEAR
     if d == 0:
-      self.mead.calc_cap_allocation(t)
+      # How much water can CAP get from Mead? Based on Mead elevation and AZ on-river demands
+      self.mead.calculate_cap_mead_allocation(t)
       mead_available_for_cap_delivery = self.mead.cap_allocation[t]
-      pleasant_available_for_cap_delivery = self.pleasant.available_pleasant_storage_for_cap(t, self.mead.elevation(t))
 
-    ## STEP 1: SUBCONTRACTORS REQUEST DELIVERIES FOR UPCOMING YEAR
-    #based on contractor demand, existing rights priorities, leases, and available water
-    for district_obj in [self.gric, self.phoenix, ...]:
-      # factor in whether NIA and/or Ag Mitigation is active
+    # How much water does CAP have in Lake Pleasant? Water balance is updated monthly
+    if da == 0:
+      pleasant_available_for_cap_delivery = self.pleasant.cap_allocation[t]
+
+    ## STEP 1a: ACCOUNT FOR EXISTING ENTITLEMENTS
+    for contract_obj in self.contract_list:
+      contract_obj.calc_allocation_cap(t, self.mead.mead_shortage_tier)
+
+    for district_obj in self.district_list:
+      ## STEP 1b: SUBCONTRACTORS REQUEST DELIVERIES FOR UPCOMING MONTH
+      # factor in whether NIA and/or Ag Mitigation is active, and current long-term leases
       # https://waterbank.az.gov/sites/default/files/NIA%20Mitigation%20Agreement%20Completed%207-18-2019.pdf
       # https://new.azwater.gov/sites/default/files/Exhibit-5.1-Ag-Mitigation-Agreement.pdf
-      if district_obj.in_nia_mitigation_agreement():
-        district_obj.set_demand_projection()
-        nia_mitigation_partners = []; nia_mitigation_tier_percents = []
-      if district_obj.in_ag_mitigation_agreement():
-        district_obj.set_demand_projection()
-        district_obj.get_cap_on_ag_mitigation_delivery()
-        ag_mitigation_partners = [];
-        ag_mitigation_tier_percents = []
+      district_obj.set_district_request(t, m, self.mead.mead_shortage_tier)
 
-
-    ## STEP 2a: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
-
-
-    ## STEP 2b: SET EXISTING AND NEW FEDERAL LEASES FOR UPCOMING YEAR
+    ## STEP 2: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
 
 
     ## STEP 3: CAP BUDGET, RESERVE FUND USE, AND WATER RATE SET FOR UPCOMING YEAR
 
 
     ## STEP 4: RUN MONTHLY WATER BALANCE FOR DELIVERIES
-    if da == 0:
-      ## STEP 4a: LAKE PLEASANT RESERVOIR OPERATIONS
-      self.pleasant.step(t)
 
-      ## STEP 4b: DELIVERIES TO SUBCONTRACTORS AND RECHARGE
-      for district_obj in [self.gric, self.phoenix, ...]:
-        district_obj.get_delivery_request(t)
-        district_obj.bank_deliveries(t)
+
+    ## STEP 4a: LAKE PLEASANT RESERVOIR OPERATIONS
+    self.pleasant.step_pleasant(t, cap_releases_from_pleasant)
+
+    ## STEP 4b: DELIVERIES TO SUBCONTRACTORS AND RECHARGE
+    for district_obj in self.district_list:
+      district_obj.get_delivery_request(t)
+      district_obj.bank_deliveries(t)
 
     ## STEP 5: CALCULATE WATER AND POWER REVENUES
-    for district_obj in [self.gric, self.phoenix, ...]:
-      # factor in whether NIA and/or Ag Mitigation is active
-      if district_obj.in_nia_mitigation_agreement():
-        district_obj.get_compensated_mitigation()
 
 
-    ## STEP 6: IMPLEMENT RECONCILIATION OF THE BUDGET
+    ## STEP 6: TRIGGER POTENTIAL MITIGATION - NEW SHORT-TERM LEASES, ETC.
+
+
+    ## STEP 7: IMPLEMENT RECONCILIATION OF THE BUDGET
+
 
     return mead_available_for_cap_delivery
 
@@ -6567,7 +6563,7 @@ cdef class Model():
     ##There is 1 canal (CAP) directly connected to surface water storage
     ##It has priority (obviously
     self.canal_priority = {}
-    self.canal_priority['cap'] = [self.capcanal]
+    self.canal_priority['CAP'] = [self.capcanal]
 
     ##Linkages between reservoirs, canals, and surface water contracts
     ##Reservoir-Contract Relationships (reservoirs are dictionary key, contracts are list objects)

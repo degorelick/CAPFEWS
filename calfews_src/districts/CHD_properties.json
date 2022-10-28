@@ -1,6 +1,7 @@
 {
   "name": "Chandler",
-  "MDD": 32.001,
+  "MDD": 0,
+  "AFY": 32.001,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": "CAP",
   "urban_profile": [0.0609, 0.077, 0.0687, 0.1044, 0.0917, 0.1281, 0.1072, 0.1056, 0.0866, 0.0688, 0.0564, 0.0448],

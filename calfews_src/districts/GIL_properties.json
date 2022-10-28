@@ -1,6 +1,7 @@
 {
   "name": "Gilbert",
-  "MDD": 62.577,
+  "MDD": 0,
+  "AFY": 62.577,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": "CAP",
   "urban_profile": [0.034, 0.0347, 0.0715, 0.1094, 0.1077, 0.1657, 0.1423, 0.1332, 0.0775, 0.0574, 0.0368, 0.0299],

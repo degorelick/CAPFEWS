@@ -60,8 +60,10 @@ cdef class District():
     self.irrdemand = Crop(self.zone)
 	  #initialize dictionary to hold different delivery types
     self.deliveries = {}
-    self.contract_list_all = ['tableA', 'cvpdelta', 'exchange', 'cvc', 'friant1', 'friant2','kaweah', 'tule', 'kern','kings']
+    self.contract_list_all = ['tableA', 'cvpdelta', 'exchange', 'cvc', 'friant1', 'friant2','kaweah', 'tule', 'kern','kings',
+                              'PTR', 'MUI', 'FED', 'NIA']
     self.non_contract_delivery_list = ['recover_banked','inleiu_irrigation','inleiu_recharge','leiupumping','exchanged_GW','exchanged_SW','undelivered_trades']
+    self.contract_list_cap = ['PTR', 'MUI', 'FED', 'NIA']
 
     for x in self.contract_list_all:
       #normal contract deliveries
@@ -184,6 +186,21 @@ cdef class District():
         self.direct_storage[x] = 0.0
         self.bank_timeseries[x] = np.zeros(self.T)
         self.contract_exchange[x] = np.zeros(self.T)
+
+    # define base monthly demands for each district based on water year type
+    # for now, assume no conservation applied unless constrained by entitlement shortage
+    self.monthlydemand = {}
+    self.dcp_shortage_tiers = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+    for wyt in zip(self.dcp_shortage_tiers):
+      self.monthlydemand[wyt] = np.zeros(12)
+      for monthloop in range(0, 12):
+        self.monthlydemand[wyt][monthloop] += self.urban_profile[monthloop] * self.AFY
+
+  def set_district_request(self, int t, int month, str mead_shortage_tier):
+    ## in the CAP model, first runs have urban demands only for districts
+    ## so we just want to collect those
+    self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month]
+
 
 
   def normalize_ownership_shares(self):

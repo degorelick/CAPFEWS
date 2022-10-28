@@ -1,7 +1,7 @@
 {
   "name": "PTR",
   "total": 68.4,
-  "maxForecastValue": 999999,
+  "maxForecastValue": 68.4,
   "carryover": 0,
   "type": "contract",
   "allocation_priority": 1,

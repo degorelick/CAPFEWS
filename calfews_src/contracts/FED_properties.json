@@ -1,17 +1,17 @@
 {
   "name": "FED",
   "total": 369.206,
-  "maxForecastValue": 999999,
+  "maxForecastValue": 369.206,
   "carryover": 0,
   "type": "contract",
   "allocation_priority": 1,
   "storage_priority": 1,
   "reduction": {
     "T0": 1,
-    "T1": 1,
-    "T2a": 1,
-    "T2b": 1,
-    "T3": 1,
-    "DP": 1
+    "T1": 0.8384,
+    "T2a": 0.7575,
+    "T2b": 0.7091,
+    "T3": 0.6282,
+    "DP": 0.5
   }
 }

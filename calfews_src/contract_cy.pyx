@@ -44,13 +44,20 @@ cdef class Contract():
     self.projected_carryover = 0.0#projecting the carryover storage for next year (based on individual district storage accounts)
     self.max_allocation = self.total#full allocation for the contract
     self.tot_new_alloc = 0.0#carryover water that is transferred to next year's allocation (rather than district carryover)
-	
+
 	#dictionaries to keep track of data for output
     self.daily_supplies = {}
     supply_types = ['contract', 'carryover', 'turnback', 'flood', 'total_carryover']
     for x in supply_types:
       self.daily_supplies[x] = np.zeros(model.T)
 
+
+  cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier):
+    # this function calculates the contract allocation based on Lake mead elevation shortage tier
+    # no cuts are taken by P3 priority rights, so they are bypassed
+    # only P3 rights are unaffected. M&I and FED rights hit a bit, NIA a lot
+    # this can be adjusted if NIA or Ag Pool mitigation occurs
+    self.allocation[t] = self.total * self.reduction[dcp_shortage_tier]
 
   cdef void calc_allocation(self, int t, int dowy, double forecast_available, double priority_contract, double secondary_contract, str wyt):
     #this function calculates the contract allocation based on snowpack-based flow forecast

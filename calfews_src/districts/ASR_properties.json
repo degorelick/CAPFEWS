@@ -1,6 +1,7 @@
 {
   "name": "ASARCO",
-  "MDD": 21,
+  "MDD": 0,
+  "AFY": 21,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": "CAP",
   "urban_profile": [0, 0, 0, 0.0488, 0.1073, 0.2039, 0.2022, 0.2482, 0.1665, 0.0178, 0.0053, 0],
