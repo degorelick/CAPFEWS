@@ -16,5 +16,10 @@
   "lease_quantity": [17371, 4088],
   "lease_priority": ["FED", "FED"],
   "priority_to_recharge": 0,
-  "must_take_mead": false
+  "must_take_mead": false,
+  "ag_mitigation_triggers": ["T1", "T2a", "T2b"],
+  "ag_mitigation_donor": false,
+  "ag_mitigation_taker": false,
+  "ama_used": "PXA",
+  "ama_share": 1
 }

@@ -60,7 +60,7 @@ cdef class Model():
     self.short_days_in_month = days_in_month(short_year_list, short_leap)
 
     self.epsilon = 1e-13
-    
+    self.kAFtoAF = 1000.0
 
     if sensitivity_sample_number == -1:
       self.use_sensitivity = False
@@ -6441,7 +6441,8 @@ cdef class Model():
     ##Water Balance on each reservoir
     ##Decisions - deliver water to sub-contractors, execute long-term leases, bank water
     cdef:
-      double mead_available_for_cap_delivery, pleasant_available_for_cap_delivery, all_cap_requests_to_deliver, excess_for_delivery, total_excess_demand
+      double mead_available_for_cap_delivery, pleasant_available_for_cap_delivery, all_cap_requests_to_deliver, \
+        excess_for_delivery, total_excess_demand, mead_delivered_diversion, pleasant_delivered_releases
       list nia_mitigation_partners, nia_mitigation_tier_percents
       dict excess_demand
       int d, da, dowy, m, y, wateryear, year_index
@@ -6478,8 +6479,9 @@ cdef class Model():
 
     ## STEP 1c: DETERMINE IF ANY TAKERS FOR EXCESS WATER
     ## Assume any excess is proportionally split among those who still have unmet demand
-    excess_for_delivery = max(0.0, mead_available_for_cap_delivery - all_cap_requests_to_deliver)
-    mead_available_for_cap_delivery -= all_cap_requests_to_deliver # update throughout the year as months progress
+    excess_for_delivery = max(0.0,
+                              mead_available_for_cap_delivery - all_cap_requests_to_deliver, # remaining diversion water this year
+                              self.capcanal.annual_diversion_capacity * self.kAFtoAF - all_cap_requests_to_deliver) # constrain by canal capacity
     for district_obj in self.district_list:
       if district_obj.request_curtailment[t] > 0.0:
         district_obj.deliveries['EXCESS'][year_index] += min(district_obj.request_curtailment[t],
@@ -6489,24 +6491,33 @@ cdef class Model():
         district_obj.request_curtailment[t] -= min(district_obj.request_curtailment[t],
                                                    excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
 
-    # How much water does CAP have in Lake Pleasant for delivery?
+    # What is the storage target for Lake Pleasant?
     # This factors in seasonality (i.e. in winter, CAP is filling Pleasant rather than draining)
     if da == 0:
-      self.pleasant.set_pleasant_pumping_target(t, m)
-      pleasant_available_for_cap_delivery = self.pleasant.cap_allocation[t]
+      self.pleasant.set_pleasant_pumping(t, m, self.capcanal.annual_diversion_capacity * self.kAFtoAF - all_cap_requests_to_deliver)
 
-    for district_obj in self.district_list:
-      ## STEP 1c: DELIVERIES TO SUBCONTRACTORS, ACCOUNTING FOR AVAILABLE EXCESS WATER AFTER REQUESTS FILLED
-      district_obj.make_water_delivery(t)
-      all_cap_requests_to_deliver += district_obj.deliveries[t]
+      # Based on Lake Pleasant operating goals, determine what fraction of water to-be-delivered
+      # comes from Pleasant as releases vs. comes from Mead directly as Colorado diversion
+      # if net pleasant deliveries are negative, this means water is delivered from pleasant to subcontractors
+      pleasant_delivered_releases = 0.0
+      if self.pleasant.net_pleasant_pumping[t] < 0.0:
+        # determine releases for delivery from pleasant, based on constraints of existing demand/supply
+        pleasant_delivered_releases = min(-1.0 * self.pleasant.net_pleasant_pumping[t],
+                                          all_cap_requests_to_deliver,
+                                          self.pleasant.cap_allocation[t])
+        self.pleasant.net_pleasant_pumping[t] = -1.0 * pleasant_delivered_releases # re-set this if corrected
+      mead_delivered_diversion = all_cap_requests_to_deliver - pleasant_delivered_releases
+      mead_available_for_cap_delivery -= mead_delivered_diversion # update throughout the year as months progress
 
     ## STEP 1d: DELIVERIES MARKED FOR RECHARGE ARE SENT TO AMA BANKING FOR STORAGE CREDIT
-    for ama_obj in self.waterbank_list:
-      for district_key in ama_obj.participant_list:
-        district_obj = self.district_list[district_key]
-#         num_districts = self.district_keys_len[district_key]
-        district_obj.bank_deliveries(t)
-
+    for district_obj in self.district_list:
+      for ama_obj in self.waterbank_list:
+        if district_obj.key in ama_obj.participant_list:
+          # if demand was already curtailed significantly because of Colorado shortage
+          # then (in most cases) recharge is the first use to be curtailed by subcontractors
+          district_obj.calculate_recharge_delivery(t, ama_obj.key)
+          ama_obj.storage[district_obj.key] += district_obj.recharge_contribution[ama_obj.key][t]
+          ama_obj.bank_timeseries[district_obj.key][t] += district_obj.recharge_contribution[ama_obj.key][t]
 
     ## STEP 2: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
 
@@ -6515,11 +6526,8 @@ cdef class Model():
 
 
     ## STEP 4: RUN MONTHLY WATER BALANCE FOR DELIVERIES
-
-
-    ## STEP 4a: LAKE MEAD AND PLEASANT RESERVOIR OPERATIONS
-    # determine what portion of deliveries are satisfied from each source
-    self.pleasant.step_pleasant(t, cap_releases_from_pleasant, cap_pumping_to_pleasant)
+    # no formal water balance process for Lake Mead
+    self.pleasant.step_pleasant(t, self.pleasant.net_pleasant_pumping[t])
 
     ## STEP 5: CALCULATE ANNUAL WATER AND POWER REVENUES
 

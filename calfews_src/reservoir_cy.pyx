@@ -198,6 +198,8 @@ cdef class Reservoir():
     self.reclaimed_carryover = [0.0 for _ in range(self.T)]
     self.contract_flooded = [0.0 for _ in range(self.T)]
 
+    self.net_pleasant_pumping = [0.0 for _ in range(self.T)]
+
   cdef void step_pleasant(self, int t, double cap_demand_on_pleasant):
     ## this function handles the water balance for Lake Pleasant, CAP system
     ## for total storage, elevation, and CAP pool storage.
@@ -213,14 +215,12 @@ cdef class Reservoir():
     pleasant_area = self.calculate_pleasant_area(t)
 
 
-  cdef double set_pleasant_pumping_target(self, int t, int m):
+  cdef void set_pleasant_pumping(self, int t, int m, double available_pumping_volume):
     ## based on elevation target and current storage, determine
     ## how much water to pump in/out of pleasant ideally
-    cdef double pleasant_pumping_target
-    pleasant_pumping_target = self.calculate_pleasant_storage(self.pleasant_target_elev[m]) - \
-                              self.calculate_pleasant_storage(self.elevation[t])
-
-    return pleasant_pumping_target
+    ## This will be negative if water "should" be released for deliveries/hydro
+    self.net_pleasant_pumping[t] = min(self.calculate_pleasant_storage(self.pleasant_target_elev[m]) - self.calculate_pleasant_storage(self.elevation[t]),
+                                       available_pumping_volume)
 
 
   cdef double calculate_pleasant_storage(self, double elev):

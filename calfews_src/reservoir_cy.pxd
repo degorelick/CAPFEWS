@@ -24,7 +24,7 @@ cdef class Reservoir():
                 rainflood_inf, snowflood_inf, baseline_inf, rainflood_forecast, snowflood_forecast, baseline_forecast, \
                 max_direct_recharge, downstream_short, fnf_short, fnf_new, total_available_storage, outflow_release, \
                 reclaimed_carryover, contract_flooded, snow_new, dcp_guidelines, cap_allocation, elevation, \
-                gaged_inflow, MWD_inflow, seepage, evap, pleasant_target_elev, cap_diversion_pump_frac
+                gaged_inflow, MWD_inflow, seepage, evap, pleasant_target_elev, cap_diversion_pump_frac, net_pleasant_pumping
 
     public dict env_min_flow, temp_releases, tocs_rule, sj_restoration_proj, carryover_target, sodd_curtail_pct, exceedence, \
                 cum_min_release, oct_nov_min_release, aug_sept_min_release, monthly_demand, monthly_demand_full, \
@@ -61,7 +61,7 @@ cdef class Reservoir():
 
   cdef double calculate_pleasant_storage(self, double elev)
 
-  cdef double set_pleasant_pumping_target(self, int t, int m)
+  cdef void set_pleasant_pumping(self, int t, int m, double available_pumping_volume)
 
   
 

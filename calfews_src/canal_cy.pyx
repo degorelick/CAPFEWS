@@ -33,6 +33,8 @@ cdef class Canal():
     self.locked = 0 #toggle used to 'lock' the direction of canal flow for the entire time-step (in bi-directional canals)
     self.epsilon = 1e-13
 
+    self.annual_diversion_capacity = 0.0
+
     for k,v in json.load(open('calfews_src/canals/%s_properties.json' % key)).items():
       setattr(self,k,v)
     # check if using infrastructure scenario for this canal

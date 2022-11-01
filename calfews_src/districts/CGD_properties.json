@@ -16,5 +16,10 @@
   "lease_quantity": 18185,
   "lease_priority": "NIA",
   "priority_to_recharge": 1,
-  "must_take_mead": false
+  "must_take_mead": false,
+  "ag_mitigation_triggers": ["T1", "T2a", "T2b"],
+  "ag_mitigation_donor": false,
+  "ag_mitigation_taker": false,
+  "ama_used": ["PXA", "PNA", "TSA"],
+  "ama_share": [0.8, 0.1, 0.1]
 }

@@ -47,6 +47,9 @@ cdef class District():
     self.lease_quantity = [0.0]
     self.lease_priority = ["none"]
     self.recharge_profile = np.zeros(12)
+    self.ama_used = ["none"]
+    self.ama_share = [0.0]
+    self.recharge_contribution = {}
 
     for k, v in json.load(open('calfews_src/districts/%s_properties.json' % key)).items():
       setattr(self, k, v)
@@ -59,6 +62,9 @@ cdef class District():
         print(self.infrastructure_shares)
     except:
       pass
+
+    for x in self.ama_used:
+      self.recharge_contribution[x] = np.zeros(self.T)
 
     # if inleiu bank, make sure ownership shares sum to 1
     if self.in_leiu_banking == True:
@@ -210,6 +216,12 @@ cdef class District():
 
     self.request_curtailment = np.zeros(self.T)
 
+  def calculate_recharge_delivery(self, int t, str ama_key):
+    ## in the CAP model, allocate fraction of subcontractor delivery request for recharge
+    ## depending on the AMA, fraction of demands sent for recharge overall, and shortage
+    for i in range(0,len(self.ama_used)):
+      if self.ama_used[i] == ama_key:
+        self.recharge_contribution[ama_key][t] = self.ama_share[i] * self.dailydemand[t]
 
   def get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction):
     ## in the CAP model, districts/subcontractors may hold leases from Tribes. This will add them all up,

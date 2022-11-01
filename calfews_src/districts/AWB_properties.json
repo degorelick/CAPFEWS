@@ -16,5 +16,10 @@
   "lease_quantity": 0,
   "lease_priority": "none",
   "priority_to_recharge": 0,
-  "must_take_mead": false
+  "must_take_mead": false,
+  "ag_mitigation_triggers": ["T1", "T2a", "T2b"],
+  "ag_mitigation_donor": false,
+  "ag_mitigation_taker": false,
+  "ama_used": ["PXA", "PNA", "TSA"],
+  "ama_share": [0.5, 0.3, 0.2]
 }

@@ -12,7 +12,7 @@ cdef class Model():
  
   cdef:
 
-    public double epsilon
+    public double epsilon, kAFtoAF
     
     public int T, starting_year, ending_year, number_years, T_short, short_starting_year, short_ending_year, short_number_years, \
                 sensitivity_sample_number, omr_rule_start, non_leap_year

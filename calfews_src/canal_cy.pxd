@@ -2,7 +2,7 @@ cdef class Canal():
      
   cdef:
 
-    public double epsilon
+    public double epsilon, annual_diversion_capacity
     
     public int is_Canal, is_District, is_Private, is_Waterbank, is_Reservoir, locked, num_sites, has_expansion, unrestricted_access, open_for_delivery
 

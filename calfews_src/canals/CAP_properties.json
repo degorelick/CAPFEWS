@@ -1,5 +1,6 @@
 {
   "name": "CAP",
+  "annual_diversion_capacity": 1600,
   "capacity": {
     "node": ["LHQ", "WAD", "HSY", "SGL", "BRD", "PIC", "RED", "SAN", "BRW", "SND", "BLK", "none"],
     "normal": [999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 0],
