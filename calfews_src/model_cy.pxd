@@ -35,7 +35,8 @@ cdef class Model():
 
 
     public Reservoir shasta, oroville, folsom, yuba, newmelones, donpedro, exchequer, millerton, sanluisstate, sanluisfederal, \
-                sanluis, isabella, success, kaweah, pineflat, mead, pleasant
+                sanluis, isabella, success, kaweah, pineflat, \
+                mead, pleasant
 
     public Delta delta 
 

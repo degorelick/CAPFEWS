@@ -15,5 +15,6 @@
   "lease_partner": "none",
   "lease_quantity": 0,
   "lease_priority": "none",
-  "priority_to_recharge": 0
+  "priority_to_recharge": 0,
+  "must_take_mead": true
 }

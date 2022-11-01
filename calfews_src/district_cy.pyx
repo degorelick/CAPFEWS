@@ -39,7 +39,15 @@ cdef class District():
     self.key = key
     self.name = name
     self.epsilon = 1e-13
-    
+
+    self.priority_to_recharge = 0
+    self.must_take_mead = False
+    self.AFY = 0.0
+    self.lease_partner = ["none"]
+    self.lease_quantity = [0.0]
+    self.lease_priority = ["none"]
+    self.recharge_profile = np.zeros(12)
+
     for k, v in json.load(open('calfews_src/districts/%s_properties.json' % key)).items():
       setattr(self, k, v)
     # check if using infrastructure scenario for this district
@@ -64,6 +72,7 @@ cdef class District():
                               'PTR', 'MUI', 'FED', 'NIA']
     self.non_contract_delivery_list = ['recover_banked','inleiu_irrigation','inleiu_recharge','leiupumping','exchanged_GW','exchanged_SW','undelivered_trades']
     self.contract_list_cap = ['PTR', 'MUI', 'FED', 'NIA']
+    self.non_contract_list_cap = ['EXCESS']
 
     for x in self.contract_list_all:
       #normal contract deliveries
@@ -87,6 +96,9 @@ cdef class District():
     #recorded when a district recieves water from a bank owned by another district (district gives a surface water 'paper' credit)
     self.deliveries['exchanged_SW'] = np.zeros(model.number_years)
     self.deliveries['undelivered_trades'] = np.zeros(model.number_years)
+
+    # for CAP subcontractors taking excess, non-contracted water
+    self.deliveries['EXCESS'] = np.zeros(model.number_years)
 	
     #set dictionaries to keep track of different 'color' water for each contract
     self.current_balance = {}#contract water currently available in surface water storage
@@ -196,11 +208,69 @@ cdef class District():
       for monthloop in range(0, 12):
         self.monthlydemand[wyt][monthloop] += self.urban_profile[monthloop] * self.AFY
 
-  def set_district_request(self, int t, int month, str mead_shortage_tier):
+    self.request_curtailment = np.zeros(self.T)
+
+
+  def get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction):
+    ## in the CAP model, districts/subcontractors may hold leases from Tribes. This will add them all up,
+    ## applying shortage factors to them as necessary
+    cdef double nia_leases, fed_leases
+    nia_leases = 0.0
+    fed_leases = 0.0
+    for i in range(0, len(self.lease_priority)):
+      if self.lease_priority[i] == "NIA":
+        nia_leases += self.lease_quantity[i] * nia_shortage_fraction
+      else:
+        fed_leases += self.lease_quantity[i] * fed_shortage_fraction
+
+    return nia_leases + fed_leases
+
+
+  def set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list):
     ## in the CAP model, first runs have urban demands only for districts
     ## so we just want to collect those
     self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month]
 
+    # factor in whether NIA and/or Ag Mitigation is active, and current long-term leases
+    # https://waterbank.az.gov/sites/default/files/NIA%20Mitigation%20Agreement%20Completed%207-18-2019.pdf
+    # https://new.azwater.gov/sites/default/files/Exhibit-5.1-Ag-Mitigation-Agreement.pdf
+    # TBD
+
+    # Tally up all available water for the subcontractor (district)
+    cdef double total_entitled_and_lease_water, used_entitlement_water, nia_shortage_frac, fed_shortage_frac
+    total_entitled_and_lease_water = 0.0
+    used_entitlement_water = 0.0
+    nia_shortage_frac = 1.0
+    fed_shortage_frac = 1.0
+    for contract in contract_list:
+      total_entitled_and_lease_water += \
+        contract.allocation[t] * self.project_contract[contract.key]
+
+      # collect some variables for the immediate next step of tallying leases
+      if contract.key == "NIA":
+        nia_shortage_frac = contract.reduction[mead_shortage_tier]
+      elif contract.key == "FED":
+        fed_shortage_frac = contract.reduction[mead_shortage_tier]
+
+    total_entitled_and_lease_water += self.get_lease_capacity(nia_shortage_frac, fed_shortage_frac)
+
+    # Does request/base demand exceed entitlement (of all rights classes) + leases?
+    # if so, record the curtailment
+    # if not, assuming deliveries are filled in decreasing order of priority entitlements for accounting
+    if self.dailydemand[t] > total_entitled_and_lease_water:
+      self.request_curtailment[t] = self.dailydemand[t] - total_entitled_and_lease_water
+      self.dailydemand[t] = total_entitled_and_lease_water
+      for contract in contract_list:
+        self.deliveries[contract.key][yr] = contract.allocation[t]
+    else:
+      used_entitlement_water = self.dailydemand[t]
+      for contract in contract_list:
+        if used_entitlement_water > contract.allocation[t]:
+          self.deliveries[contract.key][yr] = contract.allocation[t]
+          used_entitlement_water -= contract.allocation[t]
+        else:
+          self.deliveries[contract.key][yr] = used_entitlement_water
+          used_entitlement_water = 0.0
 
 
   def normalize_ownership_shares(self):

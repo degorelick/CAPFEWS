@@ -16,7 +16,7 @@ cdef class District():
     public int is_Canal, is_District, is_Private, is_Waterbank, is_Reservoir, T, turnback_use, must_fill, seasonal_connection, \
                 thismonthuse, monthusecounter, monthemptycounter, has_private, has_pesticide, has_pmp, k_close_wateryear, iter_count, \
                 contract_list_length, number_years, \
-                priority_to_recharge
+                priority_to_recharge, must_take_mead
 
     public bint in_leiu_banking
 
@@ -24,7 +24,8 @@ cdef class District():
 
     public list contract_list, turnout_list, crop_list, urban_profile, participant_list, contract_list_all, non_contract_delivery_list, \
                 recharge_rate_series, max_leiu_recharge, max_direct_recharge, delivery_location_list, private_fraction, recharge_decline, \
-                lease_partner, lease_quantity, lease_priority, recharge_profile, contract_list_cap, dcp_shortage_tiers
+                lease_partner, lease_quantity, lease_priority, recharge_profile, contract_list_cap, \
+                dcp_shortage_tiers, request_curtailment, non_contract_list_cap
 
     public dict project_contract, rights, service, inleiucap, deliveries, current_balance, paper_balance, turnback_pool, \
                 projected_supply, carryover, recharge_carryover, delivery_carryover, contract_carryover_list, dynamic_recharge_cap, \
@@ -94,7 +95,9 @@ cdef class District():
 
   cdef void get_urban_demand(self, int t, int m, int da, int dowy, int wateryear, int year_index, list dowy_eom, double total_delta_pumping, double allocation_change, str model_mode)
 
-  cdef void set_district_request(self, int t, int month, str mead_shortage_tier)
+  cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list)
+
+  cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction)
 
 
   

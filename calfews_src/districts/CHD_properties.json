@@ -15,5 +15,6 @@
   "lease_partner": ["GRIC", "SRPMIC"],
   "lease_quantity": [2450, 2586],
   "lease_priority": ["FED", "FED"],
-  "priority_to_recharge": 0
+  "priority_to_recharge": 0,
+  "must_take_mead": false
 }

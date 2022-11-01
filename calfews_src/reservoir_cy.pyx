@@ -68,6 +68,8 @@ cdef class Reservoir():
     self.evap = [0.0 for _ in range(12)]
     self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
     self.mead_shortage_tier = 'T0'
+    self.pleasant_target_elev = [0.0 for _ in range(12)]
+    self.cap_diversion_pump_frac = [0.0 for _ in range(12)]
 
     # initialization for CAP model here
     # Lake Mead is a special case because we really only care about elevation
@@ -211,17 +213,24 @@ cdef class Reservoir():
     pleasant_area = self.calculate_pleasant_area(t)
 
 
+  cdef double set_pleasant_pumping_target(self, int t, int m):
+    ## based on elevation target and current storage, determine
+    ## how much water to pump in/out of pleasant ideally
+    cdef double pleasant_pumping_target
+    pleasant_pumping_target = self.calculate_pleasant_storage(self.pleasant_target_elev[m]) - \
+                              self.calculate_pleasant_storage(self.elevation[t])
+
+    return pleasant_pumping_target
 
 
-
-  cdef double calculate_pleasant_storage(self, int t):
+  cdef double calculate_pleasant_storage(self, double elev):
     ## based on elevation, calculate lake pleasant total storage
     cdef double pleasant_total_storage
     pleasant_total_storage = \
       28846633.0 + \
-      -18579.4 * self.elevation[t] + \
-      -12.8222 * (self.elevation[t])^2 + \
-      0.008269 * (self.elevation[t])^3
+      -18579.4 * elev + \
+      -12.8222 * (elev)^2 + \
+      0.008269 * (elev)^3
     return pleasant_total_storage
 
 

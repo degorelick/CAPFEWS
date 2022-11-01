@@ -15,5 +15,6 @@
   "lease_partner": "GRIC",
   "lease_quantity": 18185,
   "lease_priority": "NIA",
-  "priority_to_recharge": 1
+  "priority_to_recharge": 1,
+  "must_take_mead": false
 }
