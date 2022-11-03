@@ -87,7 +87,7 @@ cdef class main_cy():
         scenario[k] = self.results_folder + '/' + k + '_scenario.json'
 
     if self.model_mode == 'central_arizona_project':
-      self.flow_input_source = 'LakeMead'
+      self.flow_input_source = 'historic' # historic or crss
 
     ### copy runtime file for future use
     shutil.copy(self.runtime_file, self.results_folder + '/' + self.runtime_file)
@@ -98,7 +98,7 @@ cdef class main_cy():
 
     # data for actual simulation
     if self.model_mode == 'central_arizona_project':
-      demand_type = 'historic' # or crss projections
+      demand_type = 'cap_historic' # or crss projections
 
       # FIRST COLUMN OF DATA NEEDS TO BE DATETIME
       # if i dont need to generate syntethic data, or i have everything in this initial csv
@@ -231,49 +231,49 @@ cdef class main_cy():
 # ### Main simulation
 # ################################################################################################################################
 
-def run_sim_py_cap(self, start_time):
-  return self.run_sim_cap(start_time)
+  def run_sim_py_cap(self, start_time):
+    return self.run_sim_cap(start_time)
 
-cdef int run_sim_cap(self, start_time) except -1:
-  cdef:
-    int timeseries_length, t
-    double cap_variable
-    dict mead_surplus
-    str wyt
+  cdef int run_sim_cap(self, start_time) except -1:
+    cdef:
+      int timeseries_length, t
+      double cap_variable
+      dict mead_surplus
+      str wyt
 
-  # # reset seed the same each sample k
-  # if (self.seed > 0):
-  #   np.random.seed(self.seed)
-  ### simulation length (days)
-  if self.short_test < 0:
-    timeseries_length = min(self.modelcap.T)
-  else:
-    timeseries_length = self.short_test
+    # # reset seed the same each sample k
+    # if (self.seed > 0):
+    #   np.random.seed(self.seed)
+    ### simulation length (days)
+    if self.short_test < 0:
+      timeseries_length = min(self.modelcap.T)
+    else:
+      timeseries_length = self.short_test
 
-  ###initial parameters for northern model input
-  ###generated from southern model at each timestep
-  mead_surplus = 0.0
-  print('Begin simulation, ', datetime.now() - start_time)
-  print(self.results_folder)
-  sys.stdout.flush()
+    ###initial parameters for northern model input
+    ###generated from southern model at each timestep
+    mead_surplus = 0.0
+    print('Begin simulation, ', datetime.now() - start_time)
+    print(self.results_folder)
+    sys.stdout.flush()
 
-  ############################################
-  # while True:
-  for t in range(0, timeseries_length):
-    self.progress = (t + 1) / timeseries_length
-    if (t % 365 == 364):
-      print('Year ', (t + 1) / 365, ', ', datetime.now() - start_time)
-      sys.stdout.flush()
+    ############################################
+    # while True:
+    for t in range(0, timeseries_length):
+      self.progress = (t + 1) / timeseries_length
+      if (t % 365 == 364):
+        print('Year ', (t + 1) / 365, ', ', datetime.now() - start_time)
+        sys.stdout.flush()
 
-    # simulate CAP system
-    output_results = self.modelcap.simulate_cap(t)
+      # simulate CAP system
+      output_results = self.modelcap.simulate_cap(t)
 
-    # end simulation if error has been through within inner cython/c code (i.e. keyboard interrupt)
-    PyErr_CheckSignals()
+      # end simulation if error has been through within inner cython/c code (i.e. keyboard interrupt)
+      PyErr_CheckSignals()
 
-  gc.collect()
+    gc.collect()
 
-  return 0
+    return 0
 
 
 

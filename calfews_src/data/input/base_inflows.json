@@ -1,8 +1,8 @@
 {
-  "flow_input_type": ["cap", "observations", "downscaled_19952005", "downscaled_20062016", "downscaled_20402050", "downscaled_20902100", "downscaled_19502100"],
+  "flow_input_type": ["cap_data", "observations", "downscaled_19952005", "downscaled_20062016", "downscaled_20402050", "downscaled_20902100", "downscaled_19502100"],
     
   "flow_input_source":{
-    "cap": {
+    "cap_data": {
       "historic": "calfews_src/data/input/cap-data.csv",
       "crss": "calfews_src/data/input/cap-data.csv"
       },
@@ -74,7 +74,7 @@
   },
 
   "export_series":{
-    "cap": {
+    "cap_data": {
       "historic": "calfews_src/data/input/cap-data.csv",
       "crss": "calfews_src/data/input/cap-data.csv"
       },
@@ -146,8 +146,8 @@
     },
   
   "simulation_period_start":{
-    "cap": {
-      "historic": 2014,
+    "cap_data": {
+      "historic": 2013,
       "crss": 2023
       },
     "observations":{
@@ -218,7 +218,7 @@
   },
   
   "simulation_period_end":{
-    "cap": {
+    "cap_data": {
       "historic": 2021,
       "crss": 2054
       },
@@ -290,8 +290,8 @@
   },
   
   "file_start":{
-    "cap": {
-      "historic": "1/1/2008",
+    "cap_data": {
+      "historic": "1/1/2013",
       "crss": "1/1/2023"
       },
     "observations":{
@@ -362,7 +362,7 @@
   },
   
   "file_end":{
-    "cap": {
+    "cap_data": {
       "historic": "12/1/2021",
       "crss": "12/1/2054"
       },
@@ -433,7 +433,7 @@
     }
   },
   "has_full_inputs":{
-    "cap": {
+    "cap_data": {
       "historic": true,
       "crss": true
     },
@@ -505,7 +505,7 @@
   },
   
   "has_leap":{
-    "cap": {
+    "cap_data": {
       "historic": false,
       "crss": false
       },
@@ -577,7 +577,7 @@
   },
 
   "inflow_unit":{
-    "cap":{
+    "cap_data":{
       "historic": "af",
       "crss": "af"
       },

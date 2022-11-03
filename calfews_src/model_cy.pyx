@@ -6441,7 +6441,7 @@ cdef class Model():
     ##Water Balance on each reservoir
     ##Decisions - deliver water to sub-contractors, execute long-term leases, bank water
     cdef:
-      double mead_available_for_cap_delivery, pleasant_available_for_cap_delivery, all_cap_requests_to_deliver, \
+      double mead_available_for_cap_delivery, all_cap_requests_to_deliver, \
         excess_for_delivery, total_excess_demand, mead_delivered_diversion, pleasant_delivered_releases
       list nia_mitigation_partners, nia_mitigation_tier_percents
       dict excess_demand
@@ -6464,36 +6464,36 @@ cdef class Model():
       mead_available_for_cap_delivery = self.mead.cap_allocation[t]
 
     ## STEP 1a: ACCOUNT FOR EXISTING ENTITLEMENTS
-    for contract_obj in self.contract_list:
-      contract_obj.calc_allocation_cap(t, self.mead.mead_shortage_tier)
-
-    ## STEP 1b: SUBCONTRACTORS REQUEST DELIVERIES FOR UPCOMING MONTH, FACTORING IN LEASE AGREEMENTS
-    all_cap_requests_to_deliver = 0.0
-    total_excess_demand = 0.0
-    excess_demand = {}
-    for district_obj in self.district_list:
-      district_obj.set_district_request(t, m, year_index, self.mead.mead_shortage_tier, self.contract_list)
-      all_cap_requests_to_deliver += district_obj.dailydemand[t]
-      excess_demand[district_obj.key] = district_obj.request_curtailment[t]
-      total_excess_demand += district_obj.request_curtailment[t]
-
-    ## STEP 1c: DETERMINE IF ANY TAKERS FOR EXCESS WATER
-    ## Assume any excess is proportionally split among those who still have unmet demand
-    excess_for_delivery = max(0.0,
-                              mead_available_for_cap_delivery - all_cap_requests_to_deliver, # remaining diversion water this year
-                              self.capcanal.annual_diversion_capacity * self.kAFtoAF - all_cap_requests_to_deliver) # constrain by canal capacity
-    for district_obj in self.district_list:
-      if district_obj.request_curtailment[t] > 0.0:
-        district_obj.deliveries['EXCESS'][year_index] += min(district_obj.request_curtailment[t],
-                                                             excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
-        all_cap_requests_to_deliver += min(district_obj.request_curtailment[t],
-                                           excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
-        district_obj.request_curtailment[t] -= min(district_obj.request_curtailment[t],
-                                                   excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
-
-    # What is the storage target for Lake Pleasant?
-    # This factors in seasonality (i.e. in winter, CAP is filling Pleasant rather than draining)
     if da == 0:
+      for contract_obj in self.contract_list:
+        contract_obj.calc_allocation_cap(t, self.mead.mead_shortage_tier)
+
+      ## STEP 1b: SUBCONTRACTORS REQUEST DELIVERIES FOR UPCOMING MONTH, FACTORING IN LEASE AGREEMENTS
+      all_cap_requests_to_deliver = 0.0
+      total_excess_demand = 0.0
+      excess_demand = {}
+      for district_obj in self.district_list:
+        district_obj.set_district_request(t, m, year_index, self.mead.mead_shortage_tier, self.contract_list)
+        all_cap_requests_to_deliver += district_obj.dailydemand[t]
+        excess_demand[district_obj.key] = district_obj.request_curtailment[t]
+        total_excess_demand += district_obj.request_curtailment[t]
+
+      ## STEP 1c: DETERMINE IF ANY TAKERS FOR EXCESS WATER
+      ## Assume any excess is proportionally split among those who still have unmet demand
+      excess_for_delivery = max(0.0,
+                                mead_available_for_cap_delivery - all_cap_requests_to_deliver, # remaining diversion water this year
+                                self.capcanal.annual_diversion_capacity * self.kAFtoAF - all_cap_requests_to_deliver) # constrain by canal capacity
+      for district_obj in self.district_list:
+        if district_obj.request_curtailment[t] > 0.0:
+          district_obj.deliveries['EXCESS'][year_index] += min(district_obj.request_curtailment[t],
+                                                               excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
+          all_cap_requests_to_deliver += min(district_obj.request_curtailment[t],
+                                             excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
+          district_obj.request_curtailment[t] -= min(district_obj.request_curtailment[t],
+                                                     excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
+
+      # What is the storage target for Lake Pleasant?
+      # This factors in seasonality (i.e. in winter, CAP is filling Pleasant rather than draining)
       self.pleasant.set_pleasant_pumping(t, m, self.capcanal.annual_diversion_capacity * self.kAFtoAF - all_cap_requests_to_deliver)
 
       # Based on Lake Pleasant operating goals, determine what fraction of water to-be-delivered
@@ -6507,38 +6507,41 @@ cdef class Model():
                                           self.pleasant.cap_allocation[t])
         self.pleasant.net_pleasant_pumping[t] = -1.0 * pleasant_delivered_releases # re-set this if corrected
       mead_delivered_diversion = all_cap_requests_to_deliver - pleasant_delivered_releases
-      mead_available_for_cap_delivery -= mead_delivered_diversion # update throughout the year as months progress
 
-    ## STEP 1d: DELIVERIES MARKED FOR RECHARGE ARE SENT TO AMA BANKING FOR STORAGE CREDIT
-    for district_obj in self.district_list:
-      for ama_obj in self.waterbank_list:
-        if district_obj.key in ama_obj.participant_list:
-          # if demand was already curtailed significantly because of Colorado shortage
-          # then (in most cases) recharge is the first use to be curtailed by subcontractors
-          district_obj.calculate_recharge_delivery(t, ama_obj.key)
-          ama_obj.storage[district_obj.key] += district_obj.recharge_contribution[ama_obj.key][t]
-          ama_obj.bank_timeseries[district_obj.key][t] += district_obj.recharge_contribution[ama_obj.key][t]
+      # update throughout the year as months progress
+      mead_available_for_cap_delivery -= mead_delivered_diversion
+      if self.pleasant.net_pleasant_pumping[t] > 0.0:
+        mead_available_for_cap_delivery -= self.pleasant.net_pleasant_pumping[t]
 
-    ## STEP 2: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
+      ## STEP 1d: DELIVERIES MARKED FOR RECHARGE ARE SENT TO AMA BANKING FOR STORAGE CREDIT
+      for district_obj in self.district_list:
+        for ama_obj in self.waterbank_list:
+          if district_obj.key in ama_obj.participant_list:
+            # if demand was already curtailed significantly because of Colorado shortage
+            # then (in most cases) recharge is the first use to be curtailed by subcontractors
+            district_obj.calculate_recharge_delivery(t, ama_obj.key)
+            ama_obj.storage[district_obj.key] += district_obj.recharge_contribution[ama_obj.key][t]
+            ama_obj.bank_timeseries[district_obj.key][t] += district_obj.recharge_contribution[ama_obj.key][t]
 
-
-    ## STEP 3: CAP BUDGET, RESERVE FUND USE, AND WATER RATE SET FOR UPCOMING YEAR
-
-
-    ## STEP 4: RUN MONTHLY WATER BALANCE FOR DELIVERIES
-    # no formal water balance process for Lake Mead
-    self.pleasant.step_pleasant(t, self.pleasant.net_pleasant_pumping[t])
-
-    ## STEP 5: CALCULATE ANNUAL WATER AND POWER REVENUES
+      ## STEP 2: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
 
 
-    ## STEP 6: TRIGGER POTENTIAL MITIGATION - NEW SHORT-TERM LEASES, ETC.
+      ## STEP 3: CAP BUDGET, RESERVE FUND USE, AND WATER RATE SET FOR UPCOMING YEAR
 
 
-    ## STEP 7: IMPLEMENT RECONCILIATION OF THE BUDGET
+      ## STEP 4: RUN MONTHLY WATER BALANCE FOR DELIVERIES
+      # no formal water balance process for Lake Mead
+      self.pleasant.step_pleasant(t, m)
+
+      ## STEP 5: CALCULATE ANNUAL WATER AND POWER REVENUES
 
 
-    return mead_available_for_cap_delivery, pleasant_available_for_cap_delivery
+      ## STEP 6: TRIGGER POTENTIAL MITIGATION - NEW SHORT-TERM LEASES, ETC.
+
+
+      ## STEP 7: IMPLEMENT RECONCILIATION OF THE BUDGET
+
+    return mead_available_for_cap_delivery
 
 
   ## LINK CAP OBJECTS

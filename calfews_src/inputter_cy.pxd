@@ -26,4 +26,6 @@ cdef class Inputter():
 
   cdef tuple whiten_data(self, double[:] data)
 
+#  cdef void run_initialization_cap(self, str plot_key) except *
+
 

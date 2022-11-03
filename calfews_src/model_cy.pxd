@@ -112,7 +112,7 @@ cdef class Model():
 
   cdef tuple simulate_cap(self, int t)
 
-  cdef void initialize_cap(self, scenario = 'historic')
+  cdef void initialize_cap(self, scenario = *) except *
 
 
 

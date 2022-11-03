@@ -200,19 +200,17 @@ cdef class Reservoir():
 
     self.net_pleasant_pumping = [0.0 for _ in range(self.T)]
 
-  cdef void step_pleasant(self, int t, double cap_demand_on_pleasant):
+  cdef void step_pleasant(self, int t, int m):
     ## this function handles the water balance for Lake Pleasant, CAP system
     ## for total storage, elevation, and CAP pool storage.
-    ## Will be adjusted based on (1) what fraction of water deliveries are met via Waddell releases and
-    ## (2) how much CAP water from Lake Mead is pumped into Pleasant for a given timestep
+    if t < (self.T - 1):
+      self.S[t+1] = self.S[t] + self.net_pleasant_pumping[t] + \
+                    self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m] - self.evap[m] * self.calculate_pleasant_area(t)
 
-    ## this function returns the available storage that Lake Pleasant has to deliver
-    ## to the CAP system at a given time
-    cdef double pleasant_storage, pleasant_area
-
-    # first, get current pleasant storage conditions
-    pleasant_storage = self.calculate_pleasant_storage(t)
-    pleasant_area = self.calculate_pleasant_area(t)
+      # record other timeseries based on total mass balance
+      self.elevation[t+1] = self.calculate_pleasant_elevation(self.S[t+1])
+      self.cap_allocation[t+1] = self.cap_allocation[t] + self.net_pleasant_pumping[t] + self.MWD_inflow[m] + \
+                                 self.evap[m] * self.calculate_pleasant_area(t) * self.cap_allocation[t]/self.S[t]
 
 
   cdef void set_pleasant_pumping(self, int t, int m, double available_pumping_volume):
@@ -223,25 +221,40 @@ cdef class Reservoir():
                                        available_pumping_volume)
 
 
+  cdef double calculate_pleasant_elevation(self, double storage):
+    ## based on elevation, calculate lake pleasant total storage
+    # Elevation = 1542.36 + 0.000413939*Vol + -4.77E-10*Vol^2 + 2.502E-16*Vol^3
+    cdef double pleasant_total_elevation
+    pleasant_total_elevation = \
+      1542.36 + \
+      0.00041394 * storage + \
+      -0.000000000477 * (storage)**2 + \
+      0.0000000000000002502 * (storage)**3
+
+    return pleasant_total_elevation
+
+
   cdef double calculate_pleasant_storage(self, double elev):
     ## based on elevation, calculate lake pleasant total storage
+    #  Volume = 28846633 + -18579.4*Elevation + -12.8222*Elevation^2 + 0.008269*Elevation^3
     cdef double pleasant_total_storage
     pleasant_total_storage = \
       28846633.0 + \
       -18579.4 * elev + \
-      -12.8222 * (elev)^2 + \
-      0.008269 * (elev)^3
+      -12.8222 * (elev)**2 + \
+      0.008269 * (elev)**3
     return pleasant_total_storage
 
 
   cdef double calculate_pleasant_area(self, int t):
     ## based on elevation, calculate lake pleasant total area (for evap estimation)
+    # Area = -3580975 + 6574.7*Elev + -4.0501*Elev^2 + 0.0008383*Elev^3
     cdef double pleasant_total_area
     pleasant_total_area = \
       -3580975.0 + \
       6574.7 * self.elevation[t] + \
-      -4.0501 * (self.elevation[t])^2 + \
-      0.0008383 * (self.elevation[t])^3
+      -4.0501 * (self.elevation[t])**2 + \
+      0.0008383 * (self.elevation[t])**3
     return pleasant_total_area
 
 
