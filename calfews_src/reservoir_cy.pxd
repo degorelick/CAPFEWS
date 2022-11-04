@@ -51,19 +51,19 @@ cdef class Reservoir():
 
   ################## CAP FUNCTIONS ##################
 
-  cdef void step_pleasant(self, int t, int m)
+  cdef void step_pleasant(self, int t, int m) except *
 
-  cdef void calculate_cap_mead_allocation(self, int t)
+  cdef void calculate_cap_mead_allocation(self, int t) except *
 
-  cdef double calc_az_mead_curtailment(self, int t)
+  cdef double calc_az_mead_curtailment(self, int t) except *
 
-  cdef double calculate_pleasant_area(self, int t)
+  cdef double calculate_pleasant_area(self, int t) except *
 
-  cdef double calculate_pleasant_storage(self, double elev)
+  cdef double calculate_pleasant_storage(self, double elev) except *
 
-  cdef void set_pleasant_pumping(self, int t, int m, double available_pumping_volume)
+  cdef void set_pleasant_pumping(self, int t, int m, double available_pumping_volume) except *
 
-  cdef double calculate_pleasant_elevation(self, double storage)
+  cdef double calculate_pleasant_elevation(self, double storage) except *
 
   
 

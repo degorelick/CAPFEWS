@@ -46,7 +46,7 @@ cdef class District():
     self.lease_partner = ["none"]
     self.lease_quantity = [0.0]
     self.lease_priority = ["none"]
-    self.recharge_profile = np.zeros(12)
+    self.recharge_profile = [0.0 for _ in range(self.T)]
     self.ama_used = ["none"]
     self.ama_share = [0.0]
     self.recharge_contribution = {}
@@ -209,21 +209,21 @@ cdef class District():
     # for now, assume no conservation applied unless constrained by entitlement shortage
     self.monthlydemand = {}
     self.dcp_shortage_tiers = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
-    for wyt in zip(self.dcp_shortage_tiers):
+    for wyt in self.dcp_shortage_tiers:
       self.monthlydemand[wyt] = np.zeros(12)
       for monthloop in range(0, 12):
         self.monthlydemand[wyt][monthloop] += self.urban_profile[monthloop] * self.AFY
 
-    self.request_curtailment = np.zeros(self.T)
+    self.request_curtailment = [0.0 for _ in range(self.T)]
 
-  cdef void calculate_recharge_delivery(self, int t, str ama_key):
+  cdef void calculate_recharge_delivery(self, int t, str ama_key) except *:
     ## in the CAP model, allocate fraction of subcontractor delivery request for recharge
     ## depending on the AMA, fraction of demands sent for recharge overall, and shortage
     for i in range(0,len(self.ama_used)):
       if self.ama_used[i] == ama_key:
         self.recharge_contribution[ama_key][t] = self.ama_share[i] * self.dailydemand[t]
 
-  cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction):
+  cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction) except *:
     ## in the CAP model, districts/subcontractors may hold leases from Tribes. This will add them all up,
     ## applying shortage factors to them as necessary
     cdef double nia_leases, fed_leases
@@ -238,7 +238,7 @@ cdef class District():
     return nia_leases + fed_leases
 
 
-  cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list):
+  cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list) except *:
     ## in the CAP model, first runs have urban demands only for districts
     ## so we just want to collect those
     self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month]

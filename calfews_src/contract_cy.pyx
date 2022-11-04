@@ -52,12 +52,6 @@ cdef class Contract():
       self.daily_supplies[x] = np.zeros(model.T)
 
 
-  cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier):
-    # this function calculates the contract allocation based on Lake mead elevation shortage tier
-    # no cuts are taken by P3 priority rights, so they are bypassed
-    # only P3 rights are unaffected. M&I and FED rights hit a bit, NIA a lot
-    # this can be adjusted if NIA or Ag Pool mitigation occurs
-    self.allocation[t] = self.total * self.reduction[dcp_shortage_tier]
 
   cdef void calc_allocation(self, int t, int dowy, double forecast_available, double priority_contract, double secondary_contract, str wyt):
     #this function calculates the contract allocation based on snowpack-based flow forecast
@@ -101,7 +95,14 @@ cdef class Contract():
       forecast_used = self.max_allocation
 	  
     self.allocation[t] = max(min(forecast_used,self.total*self.reduction[wyt]), 0.0)
-	
+
+
+  cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier) except *:
+    # this function calculates the contract allocation based on Lake mead elevation shortage tier
+    # only P3 rights are unaffected. M&I and FED rights hit a bit, NIA a lot
+    # this can be adjusted if NIA or Ag Pool mitigation occurs
+    self.allocation[t] = self.total * self.reduction[dcp_shortage_tier]
+
 
   cdef void find_storage_pool(self, int t, int wateryear, double total_water, double reservoir_storage, double priority_storage):
     #this function finds the storage pool for each contract, given the 'total water'

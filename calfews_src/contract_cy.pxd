@@ -22,7 +22,7 @@ cdef class Contract():
 
   cdef void accounting(self, int t, double deliveries, double carryover, double turnback, double flood)
 
-  cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier)
+  cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier) except *
 
 
   

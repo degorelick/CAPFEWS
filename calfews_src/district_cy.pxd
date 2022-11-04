@@ -96,11 +96,11 @@ cdef class District():
 
   cdef void get_urban_demand(self, int t, int m, int da, int dowy, int wateryear, int year_index, list dowy_eom, double total_delta_pumping, double allocation_change, str model_mode)
 
-  cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list)
+  cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list) except *
 
-  cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction)
+  cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction) except *
 
-  cdef void calculate_recharge_delivery(self, int t, str ama_key)
+  cdef void calculate_recharge_delivery(self, int t, str ama_key) except *
 
 
   

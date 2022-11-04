@@ -1,6 +1,8 @@
 {
   "name": "Tucson AMA",
-  "canal_rights": "CAP",
+  "canal_rights": [
+    "CAP"
+  ],
   "participant_list": ["AKC", "AWB", "CGD", "ORO", "OTH", "PHX", "TOH", "TUC"],
   "initial_recharge": 999999,
   "tot_storage": 99999,

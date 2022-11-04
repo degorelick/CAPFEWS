@@ -75,11 +75,13 @@ if model_mode == 'central_arizona_project':
 
     if a == 0:
       ### calculate objectives
+      print('Begin objective calculation,', datetime.now() - start_time)
       main_cy_obj.calc_objectives_cap()
       print('Objective calculation complete,', datetime.now() - start_time)
 
       ### output results
-      main_cy_obj.output_results()
+      print('Begin data output,', datetime.now() - start_time)
+      main_cy_obj.output_results_cap()
       print('Data output complete,', datetime.now() - start_time)
       sys.stdout.flush()
 

@@ -1725,8 +1725,8 @@ static int __Pyx_check_binary_version(void);
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
-static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation_cap(struct __pyx_obj_11calfews_src_11contract_cy_Contract *__pyx_v_self, int __pyx_v_t, PyObject *__pyx_v_dcp_shortage_tier); /* proto*/
 static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct __pyx_obj_11calfews_src_11contract_cy_Contract *__pyx_v_self, int __pyx_v_t, int __pyx_v_dowy, double __pyx_v_forecast_available, double __pyx_v_priority_contract, double __pyx_v_secondary_contract, PyObject *__pyx_v_wyt); /* proto*/
+static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation_cap(struct __pyx_obj_11calfews_src_11contract_cy_Contract *__pyx_v_self, int __pyx_v_t, PyObject *__pyx_v_dcp_shortage_tier); /* proto*/
 static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(struct __pyx_obj_11calfews_src_11contract_cy_Contract *__pyx_v_self, int __pyx_v_t, CYTHON_UNUSED int __pyx_v_wateryear, double __pyx_v_total_water, double __pyx_v_reservoir_storage, double __pyx_v_priority_storage); /* proto*/
 static void __pyx_f_11calfews_src_11contract_cy_8Contract_adjust_accounts(struct __pyx_obj_11calfews_src_11contract_cy_Contract *__pyx_v_self, double __pyx_v_contract_deliveries, PyObject *__pyx_v_search_type, int __pyx_v_wateryear); /* proto*/
 static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __pyx_obj_11calfews_src_11contract_cy_Contract *__pyx_v_self, int __pyx_v_t, double __pyx_v_deliveries, double __pyx_v_carryover, double __pyx_v_turnback, double __pyx_v_flood); /* proto*/
@@ -2951,74 +2951,8 @@ static int __pyx_pf_11calfews_src_11contract_cy_8Contract_6__init__(struct __pyx
   return __pyx_r;
 }
 
-/* "calfews_src/contract_cy.pyx":55
+/* "calfews_src/contract_cy.pyx":56
  * 
- * 
- *   cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier):             # <<<<<<<<<<<<<<
- *     # this function calculates the contract allocation based on Lake mead elevation shortage tier
- *     # no cuts are taken by P3 priority rights, so they are bypassed
- */
-
-static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation_cap(struct __pyx_obj_11calfews_src_11contract_cy_Contract *__pyx_v_self, int __pyx_v_t, PyObject *__pyx_v_dcp_shortage_tier) {
-  __Pyx_TraceDeclarations
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("calc_allocation_cap", 0);
-  __Pyx_TraceCall("calc_allocation_cap", __pyx_f[0], 55, 0, __PYX_ERR(0, 55, __pyx_L1_error));
-
-  /* "calfews_src/contract_cy.pyx":60
- *     # only P3 rights are unaffected. M&I and FED rights hit a bit, NIA a lot
- *     # this can be adjusted if NIA or Ag Pool mitigation occurs
- *     self.allocation[t] = self.total * self.reduction[dcp_shortage_tier]             # <<<<<<<<<<<<<<
- * 
- *   cdef void calc_allocation(self, int t, int dowy, double forecast_available, double priority_contract, double secondary_contract, str wyt):
- */
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->total); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely(__pyx_v_self->reduction == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 60, __pyx_L1_error)
-  }
-  __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->reduction, __pyx_v_dcp_shortage_tier); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(__pyx_v_self->allocation == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 60, __pyx_L1_error)
-  }
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_self->allocation, __pyx_v_t, __pyx_t_3, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-  /* "calfews_src/contract_cy.pyx":55
- * 
- * 
- *   cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier):             # <<<<<<<<<<<<<<
- *     # this function calculates the contract allocation based on Lake mead elevation shortage tier
- *     # no cuts are taken by P3 priority rights, so they are bypassed
- */
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_WriteUnraisable("calfews_src.contract_cy.Contract.calc_allocation_cap", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
-  __pyx_L0:;
-  __Pyx_TraceReturn(Py_None, 0);
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "calfews_src/contract_cy.pyx":62
- *     self.allocation[t] = self.total * self.reduction[dcp_shortage_tier]
  * 
  *   cdef void calc_allocation(self, int t, int dowy, double forecast_available, double priority_contract, double secondary_contract, str wyt):             # <<<<<<<<<<<<<<
  *     #this function calculates the contract allocation based on snowpack-based flow forecast
@@ -3041,9 +2975,9 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("calc_allocation", 0);
-  __Pyx_TraceCall("calc_allocation", __pyx_f[0], 62, 0, __PYX_ERR(0, 62, __pyx_L1_error));
+  __Pyx_TraceCall("calc_allocation", __pyx_f[0], 56, 0, __PYX_ERR(0, 56, __pyx_L1_error));
 
-  /* "calfews_src/contract_cy.pyx":69
+  /* "calfews_src/contract_cy.pyx":63
  *     cdef double forecast_used
  * 
  *     if dowy < 90:             # <<<<<<<<<<<<<<
@@ -3053,7 +2987,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
   __pyx_t_1 = ((__pyx_v_dowy < 90) != 0);
   if (__pyx_t_1) {
 
-    /* "calfews_src/contract_cy.pyx":70
+    /* "calfews_src/contract_cy.pyx":64
  * 
  *     if dowy < 90:
  *       if forecast_available > self.maxForecastValue:             # <<<<<<<<<<<<<<
@@ -3063,7 +2997,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
     __pyx_t_1 = ((__pyx_v_forecast_available > __pyx_v_self->maxForecastValue) != 0);
     if (__pyx_t_1) {
 
-      /* "calfews_src/contract_cy.pyx":71
+      /* "calfews_src/contract_cy.pyx":65
  *     if dowy < 90:
  *       if forecast_available > self.maxForecastValue:
  *         if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
@@ -3073,7 +3007,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
       __pyx_t_1 = ((__pyx_v_self->allocation_priority == 1) != 0);
       if (__pyx_t_1) {
 
-        /* "calfews_src/contract_cy.pyx":72
+        /* "calfews_src/contract_cy.pyx":66
  *       if forecast_available > self.maxForecastValue:
  *         if self.allocation_priority == 1:
  *           forecast_used = forecast_available*self.total/priority_contract             # <<<<<<<<<<<<<<
@@ -3083,11 +3017,11 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         __pyx_t_2 = (__pyx_v_forecast_available * __pyx_v_self->total);
         if (unlikely(__pyx_v_priority_contract == 0)) {
           PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 72, __pyx_L1_error)
+          __PYX_ERR(0, 66, __pyx_L1_error)
         }
         __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_priority_contract);
 
-        /* "calfews_src/contract_cy.pyx":71
+        /* "calfews_src/contract_cy.pyx":65
  *     if dowy < 90:
  *       if forecast_available > self.maxForecastValue:
  *         if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
@@ -3097,7 +3031,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         goto __pyx_L5;
       }
 
-      /* "calfews_src/contract_cy.pyx":74
+      /* "calfews_src/contract_cy.pyx":68
  *           forecast_used = forecast_available*self.total/priority_contract
  *         else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
  *           forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract             # <<<<<<<<<<<<<<
@@ -3108,13 +3042,13 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         __pyx_t_2 = ((__pyx_v_forecast_available - __pyx_v_priority_contract) * __pyx_v_self->total);
         if (unlikely(__pyx_v_secondary_contract == 0)) {
           PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 74, __pyx_L1_error)
+          __PYX_ERR(0, 68, __pyx_L1_error)
         }
         __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_secondary_contract);
       }
       __pyx_L5:;
 
-      /* "calfews_src/contract_cy.pyx":70
+      /* "calfews_src/contract_cy.pyx":64
  * 
  *     if dowy < 90:
  *       if forecast_available > self.maxForecastValue:             # <<<<<<<<<<<<<<
@@ -3124,7 +3058,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
       goto __pyx_L4;
     }
 
-    /* "calfews_src/contract_cy.pyx":75
+    /* "calfews_src/contract_cy.pyx":69
  *         else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
  *           forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
  *       elif self.lastYearForecast < forecast_available:             # <<<<<<<<<<<<<<
@@ -3134,7 +3068,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
     __pyx_t_1 = ((__pyx_v_self->lastYearForecast < __pyx_v_forecast_available) != 0);
     if (__pyx_t_1) {
 
-      /* "calfews_src/contract_cy.pyx":76
+      /* "calfews_src/contract_cy.pyx":70
  *           forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
  *       elif self.lastYearForecast < forecast_available:
  *         if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
@@ -3144,7 +3078,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
       __pyx_t_1 = ((__pyx_v_self->allocation_priority == 1) != 0);
       if (__pyx_t_1) {
 
-        /* "calfews_src/contract_cy.pyx":77
+        /* "calfews_src/contract_cy.pyx":71
  *       elif self.lastYearForecast < forecast_available:
  *         if self.allocation_priority == 1:
  *           forecast_used = forecast_available*self.total/priority_contract             # <<<<<<<<<<<<<<
@@ -3154,11 +3088,11 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         __pyx_t_2 = (__pyx_v_forecast_available * __pyx_v_self->total);
         if (unlikely(__pyx_v_priority_contract == 0)) {
           PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 77, __pyx_L1_error)
+          __PYX_ERR(0, 71, __pyx_L1_error)
         }
         __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_priority_contract);
 
-        /* "calfews_src/contract_cy.pyx":76
+        /* "calfews_src/contract_cy.pyx":70
  *           forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
  *       elif self.lastYearForecast < forecast_available:
  *         if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
@@ -3168,7 +3102,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         goto __pyx_L6;
       }
 
-      /* "calfews_src/contract_cy.pyx":79
+      /* "calfews_src/contract_cy.pyx":73
  *           forecast_used = forecast_available*self.total/priority_contract
  *         else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
  *           forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract             # <<<<<<<<<<<<<<
@@ -3179,13 +3113,13 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         __pyx_t_2 = ((__pyx_v_forecast_available - __pyx_v_priority_contract) * __pyx_v_self->total);
         if (unlikely(__pyx_v_secondary_contract == 0)) {
           PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 79, __pyx_L1_error)
+          __PYX_ERR(0, 73, __pyx_L1_error)
         }
         __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_secondary_contract);
       }
       __pyx_L6:;
 
-      /* "calfews_src/contract_cy.pyx":75
+      /* "calfews_src/contract_cy.pyx":69
  *         else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
  *           forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
  *       elif self.lastYearForecast < forecast_available:             # <<<<<<<<<<<<<<
@@ -3195,7 +3129,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
       goto __pyx_L4;
     }
 
-    /* "calfews_src/contract_cy.pyx":81
+    /* "calfews_src/contract_cy.pyx":75
  *           forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
  *       else:
  *         if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
@@ -3206,7 +3140,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
       __pyx_t_1 = ((__pyx_v_self->allocation_priority == 1) != 0);
       if (__pyx_t_1) {
 
-        /* "calfews_src/contract_cy.pyx":82
+        /* "calfews_src/contract_cy.pyx":76
  *       else:
  *         if self.allocation_priority == 1:
  *           forecast_used = min(self.lastYearForecast, self.maxForecastValue)*self.total/priority_contract             # <<<<<<<<<<<<<<
@@ -3223,11 +3157,11 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         __pyx_t_2 = (__pyx_t_4 * __pyx_v_self->total);
         if (unlikely(__pyx_v_priority_contract == 0)) {
           PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 82, __pyx_L1_error)
+          __PYX_ERR(0, 76, __pyx_L1_error)
         }
         __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_priority_contract);
 
-        /* "calfews_src/contract_cy.pyx":81
+        /* "calfews_src/contract_cy.pyx":75
  *           forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
  *       else:
  *         if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
@@ -3237,7 +3171,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         goto __pyx_L7;
       }
 
-      /* "calfews_src/contract_cy.pyx":84
+      /* "calfews_src/contract_cy.pyx":78
  *           forecast_used = min(self.lastYearForecast, self.maxForecastValue)*self.total/priority_contract
  *         else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
  *           forecast_used = (min(self.lastYearForecast, self.maxForecastValue)- priority_contract)*self.total/secondary_contract             # <<<<<<<<<<<<<<
@@ -3255,7 +3189,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
         __pyx_t_2 = ((__pyx_t_3 - __pyx_v_priority_contract) * __pyx_v_self->total);
         if (unlikely(__pyx_v_secondary_contract == 0)) {
           PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 84, __pyx_L1_error)
+          __PYX_ERR(0, 78, __pyx_L1_error)
         }
         __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_secondary_contract);
       }
@@ -3263,7 +3197,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
     }
     __pyx_L4:;
 
-    /* "calfews_src/contract_cy.pyx":69
+    /* "calfews_src/contract_cy.pyx":63
  *     cdef double forecast_used
  * 
  *     if dowy < 90:             # <<<<<<<<<<<<<<
@@ -3273,7 +3207,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
     goto __pyx_L3;
   }
 
-  /* "calfews_src/contract_cy.pyx":87
+  /* "calfews_src/contract_cy.pyx":81
  *     else:
  *       #if the contract has priority, the allocation is just the available (forecasted) water
  *       if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
@@ -3284,8 +3218,71 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
     __pyx_t_1 = ((__pyx_v_self->allocation_priority == 1) != 0);
     if (__pyx_t_1) {
 
-      /* "calfews_src/contract_cy.pyx":88
+      /* "calfews_src/contract_cy.pyx":82
  *       #if the contract has priority, the allocation is just the available (forecasted) water
+ *       if self.allocation_priority == 1:
+ *         forecast_used = forecast_available*self.total/priority_contract             # <<<<<<<<<<<<<<
+ *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
+ *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
+ */
+      __pyx_t_2 = (__pyx_v_forecast_available * __pyx_v_self->total);
+      if (unlikely(__pyx_v_priority_contract == 0)) {
+        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+        __PYX_ERR(0, 82, __pyx_L1_error)
+      }
+      __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_priority_contract);
+
+      /* "calfews_src/contract_cy.pyx":81
+ *     else:
+ *       #if the contract has priority, the allocation is just the available (forecasted) water
+ *       if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
+ *         forecast_used = forecast_available*self.total/priority_contract
+ *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
+ */
+      goto __pyx_L8;
+    }
+
+    /* "calfews_src/contract_cy.pyx":84
+ *         forecast_used = forecast_available*self.total/priority_contract
+ *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
+ *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract             # <<<<<<<<<<<<<<
+ * 
+ *     if dowy == 360:
+ */
+    /*else*/ {
+      __pyx_t_2 = ((__pyx_v_forecast_available - __pyx_v_priority_contract) * __pyx_v_self->total);
+      if (unlikely(__pyx_v_secondary_contract == 0)) {
+        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+        __PYX_ERR(0, 84, __pyx_L1_error)
+      }
+      __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_secondary_contract);
+    }
+    __pyx_L8:;
+  }
+  __pyx_L3:;
+
+  /* "calfews_src/contract_cy.pyx":86
+ *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
+ * 
+ *     if dowy == 360:             # <<<<<<<<<<<<<<
+ *       if self.allocation_priority == 1:
+ *         forecast_used = forecast_available*self.total/priority_contract
+ */
+  __pyx_t_1 = ((__pyx_v_dowy == 0x168) != 0);
+  if (__pyx_t_1) {
+
+    /* "calfews_src/contract_cy.pyx":87
+ * 
+ *     if dowy == 360:
+ *       if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
+ *         forecast_used = forecast_available*self.total/priority_contract
+ *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
+ */
+    __pyx_t_1 = ((__pyx_v_self->allocation_priority == 1) != 0);
+    if (__pyx_t_1) {
+
+      /* "calfews_src/contract_cy.pyx":88
+ *     if dowy == 360:
  *       if self.allocation_priority == 1:
  *         forecast_used = forecast_available*self.total/priority_contract             # <<<<<<<<<<<<<<
  *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
@@ -3299,69 +3296,6 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
       __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_priority_contract);
 
       /* "calfews_src/contract_cy.pyx":87
- *     else:
- *       #if the contract has priority, the allocation is just the available (forecasted) water
- *       if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
- *         forecast_used = forecast_available*self.total/priority_contract
- *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
- */
-      goto __pyx_L8;
-    }
-
-    /* "calfews_src/contract_cy.pyx":90
- *         forecast_used = forecast_available*self.total/priority_contract
- *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
- *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract             # <<<<<<<<<<<<<<
- * 
- *     if dowy == 360:
- */
-    /*else*/ {
-      __pyx_t_2 = ((__pyx_v_forecast_available - __pyx_v_priority_contract) * __pyx_v_self->total);
-      if (unlikely(__pyx_v_secondary_contract == 0)) {
-        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 90, __pyx_L1_error)
-      }
-      __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_secondary_contract);
-    }
-    __pyx_L8:;
-  }
-  __pyx_L3:;
-
-  /* "calfews_src/contract_cy.pyx":92
- *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
- * 
- *     if dowy == 360:             # <<<<<<<<<<<<<<
- *       if self.allocation_priority == 1:
- *         forecast_used = forecast_available*self.total/priority_contract
- */
-  __pyx_t_1 = ((__pyx_v_dowy == 0x168) != 0);
-  if (__pyx_t_1) {
-
-    /* "calfews_src/contract_cy.pyx":93
- * 
- *     if dowy == 360:
- *       if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
- *         forecast_used = forecast_available*self.total/priority_contract
- *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
- */
-    __pyx_t_1 = ((__pyx_v_self->allocation_priority == 1) != 0);
-    if (__pyx_t_1) {
-
-      /* "calfews_src/contract_cy.pyx":94
- *     if dowy == 360:
- *       if self.allocation_priority == 1:
- *         forecast_used = forecast_available*self.total/priority_contract             # <<<<<<<<<<<<<<
- *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
- *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
- */
-      __pyx_t_2 = (__pyx_v_forecast_available * __pyx_v_self->total);
-      if (unlikely(__pyx_v_priority_contract == 0)) {
-        PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 94, __pyx_L1_error)
-      }
-      __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_priority_contract);
-
-      /* "calfews_src/contract_cy.pyx":93
  * 
  *     if dowy == 360:
  *       if self.allocation_priority == 1:             # <<<<<<<<<<<<<<
@@ -3371,7 +3305,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
       goto __pyx_L10;
     }
 
-    /* "calfews_src/contract_cy.pyx":96
+    /* "calfews_src/contract_cy.pyx":90
  *         forecast_used = forecast_available*self.total/priority_contract
  *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
  *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract             # <<<<<<<<<<<<<<
@@ -3382,13 +3316,13 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
       __pyx_t_2 = ((__pyx_v_forecast_available - __pyx_v_priority_contract) * __pyx_v_self->total);
       if (unlikely(__pyx_v_secondary_contract == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 96, __pyx_L1_error)
+        __PYX_ERR(0, 90, __pyx_L1_error)
       }
       __pyx_v_forecast_used = (__pyx_t_2 / __pyx_v_secondary_contract);
     }
     __pyx_L10:;
 
-    /* "calfews_src/contract_cy.pyx":97
+    /* "calfews_src/contract_cy.pyx":91
  *       else:#if the contract doesn't have priority, the allocation is the available water minus all priority allocations
  *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
  *       self.lastYearForecast = forecast_available             # <<<<<<<<<<<<<<
@@ -3397,7 +3331,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
  */
     __pyx_v_self->lastYearForecast = __pyx_v_forecast_available;
 
-    /* "calfews_src/contract_cy.pyx":92
+    /* "calfews_src/contract_cy.pyx":86
  *         forecast_used = (forecast_available - priority_contract)*self.total/secondary_contract
  * 
  *     if dowy == 360:             # <<<<<<<<<<<<<<
@@ -3406,7 +3340,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
  */
   }
 
-  /* "calfews_src/contract_cy.pyx":100
+  /* "calfews_src/contract_cy.pyx":94
  *       #if self.lastYearForecast > self.maxForecastValue:
  *         #self.lastYearForecast = self.maxForecastValue
  *     if forecast_used > self.max_allocation:             # <<<<<<<<<<<<<<
@@ -3416,7 +3350,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
   __pyx_t_1 = ((__pyx_v_forecast_used > __pyx_v_self->max_allocation) != 0);
   if (__pyx_t_1) {
 
-    /* "calfews_src/contract_cy.pyx":101
+    /* "calfews_src/contract_cy.pyx":95
  *         #self.lastYearForecast = self.maxForecastValue
  *     if forecast_used > self.max_allocation:
  *       forecast_used = self.max_allocation             # <<<<<<<<<<<<<<
@@ -3426,7 +3360,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
     __pyx_t_2 = __pyx_v_self->max_allocation;
     __pyx_v_forecast_used = __pyx_t_2;
 
-    /* "calfews_src/contract_cy.pyx":100
+    /* "calfews_src/contract_cy.pyx":94
  *       #if self.lastYearForecast > self.maxForecastValue:
  *         #self.lastYearForecast = self.maxForecastValue
  *     if forecast_used > self.max_allocation:             # <<<<<<<<<<<<<<
@@ -3435,7 +3369,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
  */
   }
 
-  /* "calfews_src/contract_cy.pyx":103
+  /* "calfews_src/contract_cy.pyx":97
  *       forecast_used = self.max_allocation
  * 
  *     self.allocation[t] = max(min(forecast_used,self.total*self.reduction[wyt]), 0.0)             # <<<<<<<<<<<<<<
@@ -3443,30 +3377,30 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
  * 
  */
   __pyx_t_2 = 0.0;
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->total); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->total); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   if (unlikely(__pyx_v_self->reduction == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 103, __pyx_L1_error)
+    __PYX_ERR(0, 97, __pyx_L1_error)
   }
-  __pyx_t_6 = __Pyx_PyDict_GetItem(__pyx_v_self->reduction, __pyx_v_wyt); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_GetItem(__pyx_v_self->reduction, __pyx_v_wyt); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_t_3 = __pyx_v_forecast_used;
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_8 = PyObject_RichCompare(__pyx_t_7, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_8 = PyObject_RichCompare(__pyx_t_7, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   if (__pyx_t_1) {
     __Pyx_INCREF(__pyx_t_7);
     __pyx_t_6 = __pyx_t_7;
   } else {
-    __pyx_t_8 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 103, __pyx_L1_error)
+    __pyx_t_8 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 97, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_6 = __pyx_t_8;
     __pyx_t_8 = 0;
@@ -3475,14 +3409,14 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
   __Pyx_INCREF(__pyx_t_6);
   __pyx_t_7 = __pyx_t_6;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_8 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_8 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_5 = PyObject_RichCompare(__pyx_t_8, __pyx_t_7, Py_GT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_5 = PyObject_RichCompare(__pyx_t_8, __pyx_t_7, Py_GT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   if (__pyx_t_1) {
-    __pyx_t_5 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 103, __pyx_L1_error)
+    __pyx_t_5 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 97, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = __pyx_t_5;
     __pyx_t_5 = 0;
@@ -3496,13 +3430,13 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   if (unlikely(__pyx_v_self->allocation == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 103, __pyx_L1_error)
+    __PYX_ERR(0, 97, __pyx_L1_error)
   }
-  if (unlikely(__Pyx_SetItemInt(__pyx_v_self->allocation, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 103, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_self->allocation, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "calfews_src/contract_cy.pyx":62
- *     self.allocation[t] = self.total * self.reduction[dcp_shortage_tier]
+  /* "calfews_src/contract_cy.pyx":56
+ * 
  * 
  *   cdef void calc_allocation(self, int t, int dowy, double forecast_available, double priority_contract, double secondary_contract, str wyt):             # <<<<<<<<<<<<<<
  *     #this function calculates the contract allocation based on snowpack-based flow forecast
@@ -3522,7 +3456,73 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation(struct
   __Pyx_RefNannyFinishContext();
 }
 
-/* "calfews_src/contract_cy.pyx":106
+/* "calfews_src/contract_cy.pyx":100
+ * 
+ * 
+ *   cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier) except *:             # <<<<<<<<<<<<<<
+ *     # this function calculates the contract allocation based on Lake mead elevation shortage tier
+ *     # only P3 rights are unaffected. M&I and FED rights hit a bit, NIA a lot
+ */
+
+static void __pyx_f_11calfews_src_11contract_cy_8Contract_calc_allocation_cap(struct __pyx_obj_11calfews_src_11contract_cy_Contract *__pyx_v_self, int __pyx_v_t, PyObject *__pyx_v_dcp_shortage_tier) {
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("calc_allocation_cap", 0);
+  __Pyx_TraceCall("calc_allocation_cap", __pyx_f[0], 100, 0, __PYX_ERR(0, 100, __pyx_L1_error));
+
+  /* "calfews_src/contract_cy.pyx":104
+ *     # only P3 rights are unaffected. M&I and FED rights hit a bit, NIA a lot
+ *     # this can be adjusted if NIA or Ag Pool mitigation occurs
+ *     self.allocation[t] = self.total * self.reduction[dcp_shortage_tier]             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->total); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (unlikely(__pyx_v_self->reduction == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(0, 104, __pyx_L1_error)
+  }
+  __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->reduction, __pyx_v_dcp_shortage_tier); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(__pyx_v_self->allocation == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(0, 104, __pyx_L1_error)
+  }
+  if (unlikely(__Pyx_SetItemInt(__pyx_v_self->allocation, __pyx_v_t, __pyx_t_3, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "calfews_src/contract_cy.pyx":100
+ * 
+ * 
+ *   cdef void calc_allocation_cap(self, int t, str dcp_shortage_tier) except *:             # <<<<<<<<<<<<<<
+ *     # this function calculates the contract allocation based on Lake mead elevation shortage tier
+ *     # only P3 rights are unaffected. M&I and FED rights hit a bit, NIA a lot
+ */
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("calfews_src.contract_cy.Contract.calc_allocation_cap", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "calfews_src/contract_cy.pyx":107
  * 
  * 
  *   cdef void find_storage_pool(self, int t, int wateryear, double total_water, double reservoir_storage, double priority_storage):             # <<<<<<<<<<<<<<
@@ -3546,9 +3546,9 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("find_storage_pool", 0);
-  __Pyx_TraceCall("find_storage_pool", __pyx_f[0], 106, 0, __PYX_ERR(0, 106, __pyx_L1_error));
+  __Pyx_TraceCall("find_storage_pool", __pyx_f[0], 107, 0, __PYX_ERR(0, 107, __pyx_L1_error));
 
-  /* "calfews_src/contract_cy.pyx":110
+  /* "calfews_src/contract_cy.pyx":111
  * 	#that has come into a given reservoir (storage + deliveries) and the total priority
  * 	#storage that must be filled before this contract's storage
  *     if self.storage_priority == 1:             # <<<<<<<<<<<<<<
@@ -3558,7 +3558,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
   __pyx_t_1 = ((__pyx_v_self->storage_priority == 1) != 0);
   if (__pyx_t_1) {
 
-    /* "calfews_src/contract_cy.pyx":114
+    /* "calfews_src/contract_cy.pyx":115
  * 	  #all contracts with priority storage share the 'total_water' - i.e. if 1/2 of the priority storage
  * 	  #has already come into the reservoir, then 1/2 of the contract's allocation is 'currently available'
  *       if priority_storage > self.epsilon:             # <<<<<<<<<<<<<<
@@ -3568,7 +3568,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     __pyx_t_1 = ((__pyx_v_priority_storage > __pyx_v_self->epsilon) != 0);
     if (__pyx_t_1) {
 
-      /* "calfews_src/contract_cy.pyx":115
+      /* "calfews_src/contract_cy.pyx":116
  * 	  #has already come into the reservoir, then 1/2 of the contract's allocation is 'currently available'
  *       if priority_storage > self.epsilon:
  *         self.storage_pool[t] = min(1.0, total_water/priority_storage)*(self.allocation[t])             # <<<<<<<<<<<<<<
@@ -3577,7 +3577,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
  */
       if (unlikely(__pyx_v_priority_storage == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 115, __pyx_L1_error)
+        __PYX_ERR(0, 116, __pyx_L1_error)
       }
       __pyx_t_2 = (__pyx_v_total_water / __pyx_v_priority_storage);
       __pyx_t_3 = 1.0;
@@ -3586,58 +3586,58 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
       } else {
         __pyx_t_4 = __pyx_t_3;
       }
-      __pyx_t_5 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 115, __pyx_L1_error)
+      __pyx_t_5 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      if (unlikely(__pyx_v_self->allocation == Py_None)) {
-        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 115, __pyx_L1_error)
-      }
-      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 115, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(__pyx_v_self->storage_pool == Py_None)) {
-        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 115, __pyx_L1_error)
-      }
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_self->storage_pool, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 115, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-
-      /* "calfews_src/contract_cy.pyx":116
- *       if priority_storage > self.epsilon:
- *         self.storage_pool[t] = min(1.0, total_water/priority_storage)*(self.allocation[t])
- *         self.available_water[t] = reservoir_storage * (self.allocation[t])/priority_storage             # <<<<<<<<<<<<<<
- *       else:
- *         self.storage_pool[t] = self.allocation[t]
- */
-      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_reservoir_storage); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 116, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
       if (unlikely(__pyx_v_self->allocation == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
         __PYX_ERR(0, 116, __pyx_L1_error)
       }
       __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_5 = PyNumber_Multiply(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 116, __pyx_L1_error)
+      __pyx_t_7 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 116, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(__pyx_v_self->storage_pool == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 116, __pyx_L1_error)
+      }
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_self->storage_pool, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 116, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+
+      /* "calfews_src/contract_cy.pyx":117
+ *       if priority_storage > self.epsilon:
+ *         self.storage_pool[t] = min(1.0, total_water/priority_storage)*(self.allocation[t])
+ *         self.available_water[t] = reservoir_storage * (self.allocation[t])/priority_storage             # <<<<<<<<<<<<<<
+ *       else:
+ *         self.storage_pool[t] = self.allocation[t]
+ */
+      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_reservoir_storage); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 117, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      if (unlikely(__pyx_v_self->allocation == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 117, __pyx_L1_error)
+      }
+      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 117, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_5 = PyNumber_Multiply(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 117, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyFloat_FromDouble(__pyx_v_priority_storage); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
+      __pyx_t_6 = PyFloat_FromDouble(__pyx_v_priority_storage); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 117, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 116, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 117, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       if (unlikely(__pyx_v_self->available_water == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 116, __pyx_L1_error)
+        __PYX_ERR(0, 117, __pyx_L1_error)
       }
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_self->available_water, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 116, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_self->available_water, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 117, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "calfews_src/contract_cy.pyx":114
+      /* "calfews_src/contract_cy.pyx":115
  * 	  #all contracts with priority storage share the 'total_water' - i.e. if 1/2 of the priority storage
  * 	  #has already come into the reservoir, then 1/2 of the contract's allocation is 'currently available'
  *       if priority_storage > self.epsilon:             # <<<<<<<<<<<<<<
@@ -3647,7 +3647,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
       goto __pyx_L4;
     }
 
-    /* "calfews_src/contract_cy.pyx":118
+    /* "calfews_src/contract_cy.pyx":119
  *         self.available_water[t] = reservoir_storage * (self.allocation[t])/priority_storage
  *       else:
  *         self.storage_pool[t] = self.allocation[t]             # <<<<<<<<<<<<<<
@@ -3657,36 +3657,36 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     /*else*/ {
       if (unlikely(__pyx_v_self->allocation == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 118, __pyx_L1_error)
+        __PYX_ERR(0, 119, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 118, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 119, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       if (unlikely(__pyx_v_self->storage_pool == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 118, __pyx_L1_error)
+        __PYX_ERR(0, 119, __pyx_L1_error)
       }
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_self->storage_pool, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_self->storage_pool, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 119, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "calfews_src/contract_cy.pyx":119
+      /* "calfews_src/contract_cy.pyx":120
  *       else:
  *         self.storage_pool[t] = self.allocation[t]
  *         self.available_water[t] = reservoir_storage             # <<<<<<<<<<<<<<
  *     else:
  *       #if the contract doesn't have priority, the contract has to wait for the total_water to be greater than the
  */
-      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_reservoir_storage); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 119, __pyx_L1_error)
+      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_reservoir_storage); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 120, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       if (unlikely(__pyx_v_self->available_water == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 119, __pyx_L1_error)
+        __PYX_ERR(0, 120, __pyx_L1_error)
       }
-      if (unlikely(__Pyx_SetItemInt(__pyx_v_self->available_water, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 119, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_v_self->available_water, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 120, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
     __pyx_L4:;
 
-    /* "calfews_src/contract_cy.pyx":110
+    /* "calfews_src/contract_cy.pyx":111
  * 	#that has come into a given reservoir (storage + deliveries) and the total priority
  * 	#storage that must be filled before this contract's storage
  *     if self.storage_priority == 1:             # <<<<<<<<<<<<<<
@@ -3696,7 +3696,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     goto __pyx_L3;
   }
 
-  /* "calfews_src/contract_cy.pyx":123
+  /* "calfews_src/contract_cy.pyx":124
  *       #if the contract doesn't have priority, the contract has to wait for the total_water to be greater than the
  * 	  #priority storage before any of that water is available to them
  *       self.storage_pool[t] = min(self.allocation[t], max(total_water - priority_storage, 0.0))             # <<<<<<<<<<<<<<
@@ -3714,18 +3714,18 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     __pyx_t_4 = __pyx_t_3;
     if (unlikely(__pyx_v_self->allocation == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 123, __pyx_L1_error)
+      __PYX_ERR(0, 124, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 123, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 124, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_5 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 123, __pyx_L1_error)
+    __pyx_t_5 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_8 = PyObject_RichCompare(__pyx_t_5, __pyx_t_7, Py_LT); __Pyx_XGOTREF(__pyx_t_8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 123, __pyx_L1_error)
+    __pyx_t_8 = PyObject_RichCompare(__pyx_t_5, __pyx_t_7, Py_LT); __Pyx_XGOTREF(__pyx_t_8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 124, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 123, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     if (__pyx_t_1) {
-      __pyx_t_8 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 123, __pyx_L1_error)
+      __pyx_t_8 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 124, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __pyx_t_6 = __pyx_t_8;
       __pyx_t_8 = 0;
@@ -3739,12 +3739,12 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (unlikely(__pyx_v_self->storage_pool == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 123, __pyx_L1_error)
+      __PYX_ERR(0, 124, __pyx_L1_error)
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_self->storage_pool, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 123, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_self->storage_pool, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "calfews_src/contract_cy.pyx":124
+    /* "calfews_src/contract_cy.pyx":125
  * 	  #priority storage before any of that water is available to them
  *       self.storage_pool[t] = min(self.allocation[t], max(total_water - priority_storage, 0.0))
  *       self.available_water[t] = max(min(total_water - priority_storage, self.allocation[t], reservoir_storage), 0.0)             # <<<<<<<<<<<<<<
@@ -3754,23 +3754,23 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     __pyx_t_4 = 0.0;
     if (unlikely(__pyx_v_self->allocation == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 124, __pyx_L1_error)
+      __PYX_ERR(0, 125, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_self->allocation, __pyx_v_t, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_3 = __pyx_v_reservoir_storage;
     __pyx_t_2 = (__pyx_v_total_water - __pyx_v_priority_storage);
-    __pyx_t_8 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_8 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_5 = PyObject_RichCompare(__pyx_t_7, __pyx_t_8, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_5 = PyObject_RichCompare(__pyx_t_7, __pyx_t_8, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (__pyx_t_1) {
       __Pyx_INCREF(__pyx_t_7);
       __pyx_t_6 = __pyx_t_7;
     } else {
-      __pyx_t_5 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
+      __pyx_t_5 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 125, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 = __pyx_t_5;
       __pyx_t_5 = 0;
@@ -3778,14 +3778,14 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     __Pyx_INCREF(__pyx_t_6);
     __pyx_t_5 = __pyx_t_6;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_8 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_8 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = PyObject_RichCompare(__pyx_t_8, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_9); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_9 = PyObject_RichCompare(__pyx_t_8, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_9); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     if (__pyx_t_1) {
-      __pyx_t_9 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 124, __pyx_L1_error)
+      __pyx_t_9 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 125, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_6 = __pyx_t_9;
       __pyx_t_9 = 0;
@@ -3798,14 +3798,14 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     __Pyx_INCREF(__pyx_t_6);
     __pyx_t_7 = __pyx_t_6;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_5 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_5 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_9 = PyObject_RichCompare(__pyx_t_5, __pyx_t_7, Py_GT); __Pyx_XGOTREF(__pyx_t_9); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_9 = PyObject_RichCompare(__pyx_t_5, __pyx_t_7, Py_GT); __Pyx_XGOTREF(__pyx_t_9); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     if (__pyx_t_1) {
-      __pyx_t_9 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 124, __pyx_L1_error)
+      __pyx_t_9 = PyFloat_FromDouble(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 125, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_6 = __pyx_t_9;
       __pyx_t_9 = 0;
@@ -3819,14 +3819,14 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (unlikely(__pyx_v_self->available_water == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 124, __pyx_L1_error)
+      __PYX_ERR(0, 125, __pyx_L1_error)
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_self->available_water, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_self->available_water, __pyx_v_t, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   }
   __pyx_L3:;
 
-  /* "calfews_src/contract_cy.pyx":106
+  /* "calfews_src/contract_cy.pyx":107
  * 
  * 
  *   cdef void find_storage_pool(self, int t, int wateryear, double total_water, double reservoir_storage, double priority_storage):             # <<<<<<<<<<<<<<
@@ -3848,7 +3848,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_find_storage_pool(stru
   __Pyx_RefNannyFinishContext();
 }
 
-/* "calfews_src/contract_cy.pyx":127
+/* "calfews_src/contract_cy.pyx":128
  * 
  * 
  *   cdef void adjust_accounts(self, double contract_deliveries, str search_type, int wateryear):             # <<<<<<<<<<<<<<
@@ -3870,20 +3870,20 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_adjust_accounts(struct
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("adjust_accounts", 0);
-  __Pyx_TraceCall("adjust_accounts", __pyx_f[0], 127, 0, __PYX_ERR(0, 127, __pyx_L1_error));
+  __Pyx_TraceCall("adjust_accounts", __pyx_f[0], 128, 0, __PYX_ERR(0, 128, __pyx_L1_error));
 
-  /* "calfews_src/contract_cy.pyx":129
+  /* "calfews_src/contract_cy.pyx":130
  *   cdef void adjust_accounts(self, double contract_deliveries, str search_type, int wateryear):
  *     #this function records deliveries made on a contract by year - for use in determining if
  *     if search_type == "flood":             # <<<<<<<<<<<<<<
  *       self.flood_deliveries[wateryear] += contract_deliveries
  *     else:
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_search_type, __pyx_n_u_flood, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_search_type, __pyx_n_u_flood, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 130, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "calfews_src/contract_cy.pyx":130
+    /* "calfews_src/contract_cy.pyx":131
  *     #this function records deliveries made on a contract by year - for use in determining if
  *     if search_type == "flood":
  *       self.flood_deliveries[wateryear] += contract_deliveries             # <<<<<<<<<<<<<<
@@ -3892,32 +3892,32 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_adjust_accounts(struct
  */
     if (unlikely(__pyx_v_self->flood_deliveries == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 130, __pyx_L1_error)
+      __PYX_ERR(0, 131, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_self->flood_deliveries);
     __pyx_t_3 = __pyx_v_self->flood_deliveries;
     __pyx_t_4 = __pyx_v_wateryear;
     if (unlikely(__pyx_t_3 == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 130, __pyx_L1_error)
+      __PYX_ERR(0, 131, __pyx_L1_error)
     }
-    __pyx_t_5 = __Pyx_GetItemInt_List(__pyx_t_3, __pyx_t_4, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_GetItemInt_List(__pyx_t_3, __pyx_t_4, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 131, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = PyFloat_FromDouble(__pyx_v_contract_deliveries); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __pyx_t_6 = PyFloat_FromDouble(__pyx_v_contract_deliveries); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 131, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = PyNumber_InPlaceAdd(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __pyx_t_7 = PyNumber_InPlaceAdd(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 131, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (unlikely(__pyx_t_3 == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 130, __pyx_L1_error)
+      __PYX_ERR(0, 131, __pyx_L1_error)
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_t_3, __pyx_t_4, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 130, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_t_3, __pyx_t_4, __pyx_t_7, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 131, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "calfews_src/contract_cy.pyx":129
+    /* "calfews_src/contract_cy.pyx":130
  *   cdef void adjust_accounts(self, double contract_deliveries, str search_type, int wateryear):
  *     #this function records deliveries made on a contract by year - for use in determining if
  *     if search_type == "flood":             # <<<<<<<<<<<<<<
@@ -3927,7 +3927,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_adjust_accounts(struct
     goto __pyx_L3;
   }
 
-  /* "calfews_src/contract_cy.pyx":132
+  /* "calfews_src/contract_cy.pyx":133
  *       self.flood_deliveries[wateryear] += contract_deliveries
  *     else:
  *       self.annual_deliveries[wateryear] += contract_deliveries             # <<<<<<<<<<<<<<
@@ -3937,32 +3937,32 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_adjust_accounts(struct
   /*else*/ {
     if (unlikely(__pyx_v_self->annual_deliveries == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 132, __pyx_L1_error)
+      __PYX_ERR(0, 133, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_self->annual_deliveries);
     __pyx_t_3 = __pyx_v_self->annual_deliveries;
     __pyx_t_4 = __pyx_v_wateryear;
     if (unlikely(__pyx_t_3 == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 132, __pyx_L1_error)
+      __PYX_ERR(0, 133, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_t_3, __pyx_t_4, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_t_3, __pyx_t_4, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_6 = PyFloat_FromDouble(__pyx_v_contract_deliveries); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __pyx_t_6 = PyFloat_FromDouble(__pyx_v_contract_deliveries); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (unlikely(__pyx_t_3 == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 132, __pyx_L1_error)
+      __PYX_ERR(0, 133, __pyx_L1_error)
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_t_3, __pyx_t_4, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 132, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_t_3, __pyx_t_4, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 1, 1, 1) < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "calfews_src/contract_cy.pyx":133
+    /* "calfews_src/contract_cy.pyx":134
  *     else:
  *       self.annual_deliveries[wateryear] += contract_deliveries
  *       self.daily_deliveries += contract_deliveries             # <<<<<<<<<<<<<<
@@ -3973,7 +3973,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_adjust_accounts(struct
   }
   __pyx_L3:;
 
-  /* "calfews_src/contract_cy.pyx":127
+  /* "calfews_src/contract_cy.pyx":128
  * 
  * 
  *   cdef void adjust_accounts(self, double contract_deliveries, str search_type, int wateryear):             # <<<<<<<<<<<<<<
@@ -3994,7 +3994,7 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_adjust_accounts(struct
   __Pyx_RefNannyFinishContext();
 }
 
-/* "calfews_src/contract_cy.pyx":136
+/* "calfews_src/contract_cy.pyx":137
  * 
  * 
  *   cdef void accounting(self, int t, double deliveries, double carryover, double turnback, double flood):             # <<<<<<<<<<<<<<
@@ -4019,9 +4019,9 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("accounting", 0);
-  __Pyx_TraceCall("accounting", __pyx_f[0], 136, 0, __PYX_ERR(0, 136, __pyx_L1_error));
+  __Pyx_TraceCall("accounting", __pyx_f[0], 137, 0, __PYX_ERR(0, 137, __pyx_L1_error));
 
-  /* "calfews_src/contract_cy.pyx":137
+  /* "calfews_src/contract_cy.pyx":138
  * 
  *   cdef void accounting(self, int t, double deliveries, double carryover, double turnback, double flood):
  *     self.daily_supplies['contract'][t] += max(deliveries - max(carryover, 0.0) - max(turnback, 0.0), 0.0)             # <<<<<<<<<<<<<<
@@ -4030,12 +4030,12 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
  */
   if (unlikely(__pyx_v_self->daily_supplies == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 137, __pyx_L1_error)
+    __PYX_ERR(0, 138, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_contract); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_contract); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_v_t;
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = 0.0;
   __pyx_t_5 = 0.0;
@@ -4058,17 +4058,17 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
   } else {
     __pyx_t_8 = __pyx_t_5;
   }
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 138, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_10 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 138, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_10, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 137, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_10, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 138, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "calfews_src/contract_cy.pyx":138
+  /* "calfews_src/contract_cy.pyx":139
  *   cdef void accounting(self, int t, double deliveries, double carryover, double turnback, double flood):
  *     self.daily_supplies['contract'][t] += max(deliveries - max(carryover, 0.0) - max(turnback, 0.0), 0.0)
  *     self.daily_supplies['carryover'][t] += max(min(carryover, deliveries), 0.0)             # <<<<<<<<<<<<<<
@@ -4077,12 +4077,12 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
  */
   if (unlikely(__pyx_v_self->daily_supplies == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 138, __pyx_L1_error)
+    __PYX_ERR(0, 139, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_carryover); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_carryover); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_v_t;
-  __pyx_t_10 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __pyx_t_8 = 0.0;
   __pyx_t_4 = __pyx_v_deliveries;
@@ -4098,17 +4098,17 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
   } else {
     __pyx_t_7 = __pyx_t_4;
   }
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_3, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 138, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_3, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "calfews_src/contract_cy.pyx":139
+  /* "calfews_src/contract_cy.pyx":140
  *     self.daily_supplies['contract'][t] += max(deliveries - max(carryover, 0.0) - max(turnback, 0.0), 0.0)
  *     self.daily_supplies['carryover'][t] += max(min(carryover, deliveries), 0.0)
  *     self.daily_supplies['turnback'][t] += max(min(turnback, deliveries - carryover), 0.0)             # <<<<<<<<<<<<<<
@@ -4117,12 +4117,12 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
  */
   if (unlikely(__pyx_v_self->daily_supplies == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 139, __pyx_L1_error)
+    __PYX_ERR(0, 140, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_turnback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_turnback); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_v_t;
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_7 = 0.0;
   __pyx_t_8 = (__pyx_v_deliveries - __pyx_v_carryover);
@@ -4138,17 +4138,17 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
   } else {
     __pyx_t_5 = __pyx_t_8;
   }
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_10 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_10, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 139, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_10, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "calfews_src/contract_cy.pyx":140
+  /* "calfews_src/contract_cy.pyx":141
  *     self.daily_supplies['carryover'][t] += max(min(carryover, deliveries), 0.0)
  *     self.daily_supplies['turnback'][t] += max(min(turnback, deliveries - carryover), 0.0)
  *     self.daily_supplies['flood'][t] += flood             # <<<<<<<<<<<<<<
@@ -4157,24 +4157,24 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
  */
   if (unlikely(__pyx_v_self->daily_supplies == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 140, __pyx_L1_error)
+    __PYX_ERR(0, 141, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_flood); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_flood); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_v_t;
-  __pyx_t_10 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_flood); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_flood); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_t_10, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_3, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_3, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "calfews_src/contract_cy.pyx":141
+  /* "calfews_src/contract_cy.pyx":142
  *     self.daily_supplies['turnback'][t] += max(min(turnback, deliveries - carryover), 0.0)
  *     self.daily_supplies['flood'][t] += flood
  *     self.daily_supplies['total_carryover'][t] += carryover             # <<<<<<<<<<<<<<
@@ -4183,24 +4183,24 @@ static void __pyx_f_11calfews_src_11contract_cy_8Contract_accounting(struct __py
  */
   if (unlikely(__pyx_v_self->daily_supplies == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 141, __pyx_L1_error)
+    __PYX_ERR(0, 142, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_total_carryover); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_self->daily_supplies, __pyx_n_u_total_carryover); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_v_t;
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, __pyx_t_2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_carryover); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_carryover); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_10 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_10, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 141, __pyx_L1_error)
+  if (unlikely(__Pyx_SetItemInt(__pyx_t_1, __pyx_t_2, __pyx_t_10, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "calfews_src/contract_cy.pyx":136
+  /* "calfews_src/contract_cy.pyx":137
  * 
  * 
  *   cdef void accounting(self, int t, double deliveries, double carryover, double turnback, double flood):             # <<<<<<<<<<<<<<

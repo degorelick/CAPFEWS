@@ -85,8 +85,8 @@ cdef class Model():
       list reservoir_list, district_list, canal_list, contract_list, bank_list
 
     # CAP System Reservoirs of relevance - Lake Mead and Lake Pleasant
-    self.mead = Reservoir(self, 'mead', 'MED', self.model_mode)
-    self.pleasant = Reservoir(self, 'pleasant', 'PST', self.model_mode)
+    self.mead = Reservoir(self, 'mead', 'MDE', self.model_mode)
+    self.pleasant = Reservoir(self, 'pleasant', 'PLS', self.model_mode)
 
     self.reservoir_list = [self.mead, self.pleasant]
 
@@ -114,12 +114,12 @@ cdef class Model():
 
     self.msidd = District(self, 'Maricopa Stanfield IDD', 'MSD', self.model_mode)
     self.caidd = District(self, 'Central AZ IDD', 'CAD', self.model_mode)
-    self.hvid = District(self, 'Harquahala Valley IDD', 'HVI', self.model_mode)
+    self.hvid = District(self, 'Harquahala Valley IDD', 'HVD', self.model_mode)
     self.hidd = District(self, 'Hohokam IDD', 'HID', self.model_mode)
     self.cagrd = District(self, 'Central AZ GRD', 'CGD', self.model_mode)
     self.asarco = District(self, 'ASARCO', 'ASR', self.model_mode)
     self.awba = District(self, 'AZ Water Banking Authority', 'AWB', self.model_mode)
-    self.asld = District(self, 'AZ State Land Department', 'ALD', self.model_mode)
+    self.asld = District(self, 'AZ State Land Department', 'ASL', self.model_mode)
     self.orovalley = District(self, 'Oro Valley', 'ORO', self.model_mode)
     self.mwd = District(self, 'Maricopa Water District', 'MWD', self.model_mode)
     self.epcor = District(self, 'EPCOR', 'EPC', self.model_mode)
@@ -133,15 +133,15 @@ cdef class Model():
                           self.msidd, self.caidd, self.hvid, self.hidd, self.asld, self.cagrd, self.awba, self.other]
 
     # CAP System Canal
-    self.capcanal = Canal(self, 'CAP Canal', 'CAP', self.model_mode)
+    self.capcanal = Canal('CAP Canal', 'CAP', self.model_mode)
 
     self.canal_list = [self.capcanal]
 
     # CAP System Water Contracts - Split by Priority Class
-    self.pthree = Contract(self, 'P3', 'PTR', self.model_mode)
-    self.municipal = Contract(self, 'Municipal and Industrial', 'MUI', self.model_mode)
-    self.tribal = Contract(self, 'Tribal', 'FED', self.model_mode)
-    self.nia = Contract(self, 'Non Indian Agriculture', 'NIA', self.model_mode)
+    self.pthree = Contract(self, 'P3', 'PTR')
+    self.municipal = Contract(self, 'Municipal and Industrial', 'MUI')
+    self.tribal = Contract(self, 'Tribal', 'FED')
+    self.nia = Contract(self, 'Non Indian Agriculture', 'NIA')
 
     self.contract_list = [self.pthree, self.municipal, self.tribal, self.nia]
 
@@ -6436,7 +6436,7 @@ cdef class Model():
   #############################     Main simulation (CAP Model Sys)     ###############################################
   #####################################################################################################################
 
-  cdef tuple simulate_cap(self, int t):
+  cdef double simulate_cap(self, int t) except *:
     ###Monthly Operations###
     ##Water Balance on each reservoir
     ##Decisions - deliver water to sub-contractors, execute long-term leases, bank water
@@ -6448,6 +6448,7 @@ cdef class Model():
       int d, da, dowy, m, y, wateryear, year_index
       District district_obj
       Waterbank ama_obj
+      Contract contract_obj
 
     d = self.day_year[t]
     da = self.day_month[t]
@@ -6457,14 +6458,16 @@ cdef class Model():
     wateryear = self.water_year[t]
     year_index = y - self.starting_year
 
+    print(m)
+
     ## STEP 0: IDENTIFY TOTAL AVAILABLE COLORADO RIVER WATER FOR CAP AT START OF YEAR
-    if d == 0:
+    if d == 1:
       # How much water can CAP get from Mead? Based on Mead elevation and AZ on-river demands
       self.mead.calculate_cap_mead_allocation(t)
       mead_available_for_cap_delivery = self.mead.cap_allocation[t]
 
     ## STEP 1a: ACCOUNT FOR EXISTING ENTITLEMENTS
-    if da == 0:
+    if da == 1:
       for contract_obj in self.contract_list:
         contract_obj.calc_allocation_cap(t, self.mead.mead_shortage_tier)
 
@@ -6473,7 +6476,7 @@ cdef class Model():
       total_excess_demand = 0.0
       excess_demand = {}
       for district_obj in self.district_list:
-        district_obj.set_district_request(t, m, year_index, self.mead.mead_shortage_tier, self.contract_list)
+        district_obj.set_district_request(t, m-1, year_index-1, self.mead.mead_shortage_tier, self.contract_list)
         all_cap_requests_to_deliver += district_obj.dailydemand[t]
         excess_demand[district_obj.key] = district_obj.request_curtailment[t]
         total_excess_demand += district_obj.request_curtailment[t]
@@ -6485,7 +6488,7 @@ cdef class Model():
                                 self.capcanal.annual_diversion_capacity * self.kAFtoAF - all_cap_requests_to_deliver) # constrain by canal capacity
       for district_obj in self.district_list:
         if district_obj.request_curtailment[t] > 0.0:
-          district_obj.deliveries['EXCESS'][year_index] += min(district_obj.request_curtailment[t],
+          district_obj.deliveries['EXCESS'][year_index-1] += min(district_obj.request_curtailment[t],
                                                                excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
           all_cap_requests_to_deliver += min(district_obj.request_curtailment[t],
                                              excess_for_delivery * district_obj.request_curtailment[t]/total_excess_demand)
@@ -6494,7 +6497,7 @@ cdef class Model():
 
       # What is the storage target for Lake Pleasant?
       # This factors in seasonality (i.e. in winter, CAP is filling Pleasant rather than draining)
-      self.pleasant.set_pleasant_pumping(t, m, self.capcanal.annual_diversion_capacity * self.kAFtoAF - all_cap_requests_to_deliver)
+      self.pleasant.set_pleasant_pumping(t, m-1, self.capcanal.annual_diversion_capacity * self.kAFtoAF - all_cap_requests_to_deliver)
 
       # Based on Lake Pleasant operating goals, determine what fraction of water to-be-delivered
       # comes from Pleasant as releases vs. comes from Mead directly as Colorado diversion
@@ -6531,7 +6534,7 @@ cdef class Model():
 
       ## STEP 4: RUN MONTHLY WATER BALANCE FOR DELIVERIES
       # no formal water balance process for Lake Mead
-      self.pleasant.step_pleasant(t, m)
+      self.pleasant.step_pleasant(t, m-1)
 
       ## STEP 5: CALCULATE ANNUAL WATER AND POWER REVENUES
 
@@ -6546,7 +6549,6 @@ cdef class Model():
 
   ## LINK CAP OBJECTS
   def create_object_associations_cap(self):
-    cdef Private private_obj
     cdef District district_obj
     cdef Canal canal_obj
     cdef Contract contract_obj
@@ -6616,20 +6618,6 @@ cdef class Model():
       district_obj.carryover_rights = {}
       for contract_obj in self.contract_list:
           district_obj.carryover_rights[contract_obj.name] = 0.0
-    for private_obj in self.private_list:
-      private_obj.carryover_rights = {}
-      for district_key in private_obj.district_list:
-        district_obj = self.district_keys[district_key]
-        private_obj.carryover_rights[district_key] = {}
-        for contract_obj in self.contract_list:
-            private_obj.carryover_rights[district_key][contract_obj.name] = 0.0
-    for private_obj in self.city_list:
-      private_obj.carryover_rights = {}
-      for district_key in private_obj.district_list:
-        district_obj = self.district_keys[district_key]
-        private_obj.carryover_rights[district_key] = {}
-        for contract_obj in self.contract_list:
-            private_obj.carryover_rights[district_key][contract_obj.name] = 0.0
 
     ##Use reservoir/contract dictionary to develop
     ##a list linking individual districts to reservoirs,
@@ -6647,38 +6635,6 @@ cdef class Model():
           district_obj.reservoir_contract[reservoir_obj.key] = 1
         else:
           district_obj.reservoir_contract[reservoir_obj.key] = 0
-
-    for private_obj in self.private_list:
-      private_obj.reservoir_contract = {}
-      for reservoir_obj in self.reservoir_list:
-        use_reservoir = 0
-        for contract_obj in self.reservoir_contract[reservoir_obj.key]:
-          for district_key in private_obj.district_list:
-            district_obj = self.district_keys[district_key]
-            for contract_key_dis in district_obj.contract_list:
-              if contract_obj.name == contract_key_dis:
-                use_reservoir = 1
-                break
-        if use_reservoir == 1:
-          private_obj.reservoir_contract[reservoir_obj.key] = 1
-        else:
-          private_obj.reservoir_contract[reservoir_obj.key] = 0
-
-    for private_obj in self.city_list:
-      private_obj.reservoir_contract = {}
-      for reservoir_obj in self.reservoir_list:
-        use_reservoir = 0
-        for contract_obj in self.reservoir_contract[reservoir_obj.key]:
-          for district_key in private_obj.district_list:
-            district_obj = self.district_keys[district_key]
-            for contract_key_dis in district_obj.contract_list:
-              if contract_obj.name == contract_key_dis:
-                use_reservoir = 1
-                break
-        if use_reservoir == 1:
-          private_obj.reservoir_contract[reservoir_obj.key] = 1
-        else:
-          private_obj.reservoir_contract[reservoir_obj.key] = 0
 
     ##Contract-Reservoir Relationships (contracts are dictionary key, reservoirs are list objects)
     self.contract_reservoir = {}

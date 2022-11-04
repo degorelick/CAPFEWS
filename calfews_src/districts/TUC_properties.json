@@ -3,7 +3,9 @@
   "MDD": 0,
   "AFY": 144.781,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
-  "turnout_list": "CAP",
+  "turnout_list": [
+    "CAP"
+  ],
   "urban_profile": [0.0587, 0.0731, 0.1087, 0.1166, 0.1246, 0.1166, 0.1099, 0.1132, 0.089, 0.0417, 0.0106, 0.0372],
   "recharge_profile": [1, 1, 0.9997, 0.9996, 0.9991, 0.9999, 1, 1, 0.9994, 1, 1, 0.9993],
   "project_contract": {
@@ -12,14 +14,22 @@
     "FED": 0,
     "NIA": 0
   },
-  "lease_partner": "none",
-  "lease_quantity": 0,
-  "lease_priority": "none",
+  "lease_partner": [
+    "none"
+  ],
+  "lease_quantity": [
+    0
+  ],
+  "lease_priority": [
+    "none"
+  ],
   "priority_to_recharge": 0,
   "must_take_mead": false,
-  "ag_mitigation_triggers": ["T1", "T2a", "T2b"],
-  "ag_mitigation_donor": false,
-  "ag_mitigation_taker": false,
-  "ama_used": "TSA",
-  "ama_share": 1
+  "ama_used": [
+    "TSA"
+  ],
+  "ama_share": [
+    1
+  ],
+  "zone": "zone15"
 }

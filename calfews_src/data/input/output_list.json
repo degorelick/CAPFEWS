@@ -2,14 +2,14 @@
   "cap": {
     "reservoirs": {
       "mead": {
-        "elevation": true
+        "elevation": true,
+        "cap_allocation": true
       },
       "pleasant": {
         "elevation": true,
         "S": true,
-        "outflow_release": true,
-        "available_storage": true,
-        "Q": true
+        "net_pleasant_pumping": true,
+        "cap_allocation": true
       }
     },
     "contracts": {
@@ -31,17 +31,354 @@
       }
     },
     "districts": {
-
+      "Ak-Chin": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "ASARCO": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "AWBA": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "AZ State Land": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "AZWC": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "CAGRD": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "CAIDD": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Chandler": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "EPCOR": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "FMYN": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Gilbert": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Glendale": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Goodyear": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "GRIC": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "HIDD": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "HVID": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Mesa": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "MSIDD": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "MWD": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Oro Valley": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "OTHER": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Peoria": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Phoenix": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "SCAT": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Scottsdale": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "SRPMIC": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Surprise": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Tempe": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Tohono O'odham": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "Tucson": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      },
+      "WMAT": {
+        "request_curtailment": true,
+        "recharge_contribution": true,
+        "PTR": true,
+        "MUI": true,
+        "FED": true,
+        "NIA": true,
+        "EXCESS": true,
+        "dailydemand": true
+      }
     },
     "waterbanks": {
       "amaphoenix": {
-
+        "AKC": true,
+        "ASR": true,
+        "AWB": true,
+        "AWC": true,
+        "CGD": true,
+        "CHD": true,
+        "EPC": true,
+        "GIL": true,
+        "GLN": true,
+        "GYR": true,
+        "GRC": true,
+        "OTH": true,
+        "PEO": true,
+        "PHX": true,
+        "SDL": true,
+        "SUR": true,
+        "TPE": true,
+        "TOH": true
       },
       "amapinal" : {
-
+        "AWB": true,
+        "AWC": true,
+        "CGD": true,
+        "GRC": true,
+        "OTH": true
       },
       "amatucson": {
-
+        "AKC": true,
+        "AWB": true,
+        "CGD": true,
+        "ORO": true,
+        "OTH": true,
+        "PHX": true,
+        "TOH": true,
+        "TUC": true
       }
     }
   },

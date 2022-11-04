@@ -3,13 +3,5 @@
   "capacity": 999999,
   "az_capacity": 2800,
   "cap_allocation_capacity": 1600,
-  "az_availability": {
-    "T0": 2800,
-    "T1": 2288,
-    "T2a": 2208,
-    "T2b": 2160,
-    "T3": 2080,
-    "DP": 1400
-  },
   "az_on_river_demand": 1300
 }

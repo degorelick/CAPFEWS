@@ -200,20 +200,27 @@ cdef class Reservoir():
 
     self.net_pleasant_pumping = [0.0 for _ in range(self.T)]
 
-  cdef void step_pleasant(self, int t, int m):
+
+  cdef void step_pleasant(self, int t, int m) except *:
     ## this function handles the water balance for Lake Pleasant, CAP system
     ## for total storage, elevation, and CAP pool storage.
     if t < (self.T - 1):
       self.S[t+1] = self.S[t] + self.net_pleasant_pumping[t] + \
                     self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m] - self.evap[m] * self.calculate_pleasant_area(t)
 
+      # check that storage does not exceed capacity
+      if self.calculate_pleasant_elevation(self.S[t+1]) > 1701.0:
+        self.elevation[t+1] = 1701.0
+        self.S[t+1] = self.calculate_pleasant_storage(self.elevation[t+1])
+      else:
+        self.elevation[t+1] = self.calculate_pleasant_elevation(self.S[t+1])
+
       # record other timeseries based on total mass balance
-      self.elevation[t+1] = self.calculate_pleasant_elevation(self.S[t+1])
-      self.cap_allocation[t+1] = self.cap_allocation[t] + self.net_pleasant_pumping[t] + self.MWD_inflow[m] + \
-                                 self.evap[m] * self.calculate_pleasant_area(t) * self.cap_allocation[t]/self.S[t]
+      self.cap_allocation[t+1] = min(self.cap_allocation[t] + self.net_pleasant_pumping[t] + self.MWD_inflow[m] + self.evap[m] * self.calculate_pleasant_area(t) * self.cap_allocation[t]/self.S[t],
+                                     self.cap_allocation_capacity)
 
 
-  cdef void set_pleasant_pumping(self, int t, int m, double available_pumping_volume):
+  cdef void set_pleasant_pumping(self, int t, int m, double available_pumping_volume) except *:
     ## based on elevation target and current storage, determine
     ## how much water to pump in/out of pleasant ideally
     ## This will be negative if water "should" be released for deliveries/hydro
@@ -221,7 +228,7 @@ cdef class Reservoir():
                                        available_pumping_volume)
 
 
-  cdef double calculate_pleasant_elevation(self, double storage):
+  cdef double calculate_pleasant_elevation(self, double storage) except *:
     ## based on elevation, calculate lake pleasant total storage
     # Elevation = 1542.36 + 0.000413939*Vol + -4.77E-10*Vol^2 + 2.502E-16*Vol^3
     cdef double pleasant_total_elevation
@@ -234,7 +241,7 @@ cdef class Reservoir():
     return pleasant_total_elevation
 
 
-  cdef double calculate_pleasant_storage(self, double elev):
+  cdef double calculate_pleasant_storage(self, double elev) except *:
     ## based on elevation, calculate lake pleasant total storage
     #  Volume = 28846633 + -18579.4*Elevation + -12.8222*Elevation^2 + 0.008269*Elevation^3
     cdef double pleasant_total_storage
@@ -246,9 +253,10 @@ cdef class Reservoir():
     return pleasant_total_storage
 
 
-  cdef double calculate_pleasant_area(self, int t):
+  cdef double calculate_pleasant_area(self, int t) except *:
     ## based on elevation, calculate lake pleasant total area (for evap estimation)
     # Area = -3580975 + 6574.7*Elev + -4.0501*Elev^2 + 0.0008383*Elev^3
+    #print(self.elevation[t])
     cdef double pleasant_total_area
     pleasant_total_area = \
       -3580975.0 + \
@@ -258,7 +266,7 @@ cdef class Reservoir():
     return pleasant_total_area
 
 
-  cdef void calculate_cap_mead_allocation(self, int t):
+  cdef void calculate_cap_mead_allocation(self, int t) except *:
     ##this function is for lake mead ONLY, to calculate the CAP allocation
     cdef float cap_baseline_lower_basin_allocation, cap_system_losses
     cap_baseline_lower_basin_allocation = 1490000.0  # AF/yr allocation for CAP, without cuts
@@ -270,7 +278,7 @@ cdef class Reservoir():
     self.cap_allocation[t] = cap_baseline_lower_basin_allocation - az_curtailment - cap_system_losses
 
 
-  cdef double calc_az_mead_curtailment(self, int t):
+  cdef double calc_az_mead_curtailment(self, int t) except *:
     cdef double curtailment, guidelines_curtailment, dcp_curtailment
     if self.elevation[t] < 1025.0: # Tier 3
       guidelines_curtailment = 480000.0

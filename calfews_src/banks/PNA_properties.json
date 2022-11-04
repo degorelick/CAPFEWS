@@ -1,6 +1,8 @@
 {
   "name": "Pinal AMA",
-  "canal_rights": "CAP",
+  "canal_rights": [
+    "CAP"
+  ],
   "participant_list": ["AWB", "AWC", "CGD", "GRC", "OTH"],
   "initial_recharge": 999999,
   "tot_storage": 99999,

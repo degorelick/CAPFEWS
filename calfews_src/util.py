@@ -198,6 +198,154 @@ def model_attribute_loop_generator(output_list, clean_output, modelno, modelso):
   yield (False, False)
 
 
+# function to take cap model, process & output data
+def data_output_cap(output_list_loc, results_folder, clean_output, sensitivity_factors, modelcap, objs):
+  nt = len(modelcap.pleasant.baseline_inf)
+  with open(output_list_loc, 'r') as f:
+    output_list = json.load(f)
+
+  chunk = 50
+  with h5py.File(results_folder + '/results.hdf5', 'a') as f:
+    d = f.create_dataset('s', (nt, chunk), dtype='float', compression='gzip', chunks=(nt, chunk), maxshape=(nt, None))
+
+    ### use generator to loop through data and save to hdf5 in chunks
+    dat = np.zeros((nt, chunk))
+    names = []
+    col = 0
+    chunknum = 0
+    initial_write = 0
+    for (att, name) in model_attribute_loop_generator_cap(output_list, clean_output, modelcap):
+      if name:  ### end of dataset not yet reached
+        if col < chunk:
+          names.append(name)
+          dat[:, col] = att
+          col += 1
+        else:
+          ### save current chunk and start new one
+          if initial_write == 0:
+            ### write first set of data
+            d[:] = dat[:, :]
+            initial_write = 1
+          else:
+            ### resize and add new data
+            d.resize((nt, d.shape[1] + chunk))
+            d[:, -chunk:] = dat[:, :]
+          ### start new chunk with current data
+          dat[:, 0] = att
+          col = 1
+          gc.collect()
+
+          ### save chunk of column names & start new chunk
+          d.attrs['columns' + str(chunknum)] = names
+          names = [name]
+          chunknum += 1
+
+      else:  ### end of dataset reached
+        if col > 0:
+          ### resize and add new data
+          d.resize((nt, d.shape[1] + col))
+          d[:, -col:] = dat[:, :col]
+          d.attrs['columns' + str(chunknum)] = names
+
+    ### add attribute names as columns
+    d.attrs['start_date'] = str(modelcap.year[0]) + '-' + str(modelcap.month[0]) + '-' + str(modelcap.day_month[0])
+
+    ### add objectives
+    for k, v in objs.items():
+      d.attrs[k] = v
+
+  ## also write data as csv since it isn't very large
+#  pd.DataFrame(d).to_csv(results_folder + '/results.csv')
+
+
+### generator to loop through important model attributes and return non-zero data
+def model_attribute_loop_generator_cap(output_list, clean_output, modelcap):
+  for r in output_list['cap']['reservoirs'].keys():
+    for o in output_list['cap']['reservoirs'][r].keys():
+      if output_list['cap']['reservoirs'][r][o]:
+        try:
+          att, name = model_attribute_nonzero(modelcap.__getattribute__(r).__getattribute__(o), np.string_(r + '_' + o),
+                                              clean_output)
+          if list(att):
+            yield list(att), name
+        except:
+          pass
+
+  for r in output_list['cap']['reservoirs'].keys():
+    for o in output_list['cap']['reservoirs'][r].keys():
+      if output_list['cap']['reservoirs'][r][o]:
+        try:
+          att, name = model_attribute_nonzero(modelcap.__getattribute__(r).__getattribute__(o), np.string_(r + '_' + o),
+                                              clean_output)
+          if list(att):
+            yield list(att), name
+        except:
+          pass
+
+  for c in output_list['cap']['contracts'].keys():
+    for o in output_list['cap']['contracts'][c].keys():
+      if o == 'daily_supplies':
+        for t in output_list['cap']['contracts'][c]['daily_supplies'].keys():
+          if output_list['cap']['contracts'][c]['daily_supplies'][t]:
+            try:
+              att, name = model_attribute_nonzero(modelcap.__getattribute__(c).daily_supplies[t],
+                                                  np.string_(c + '_' + t), clean_output)
+              if list(att):
+                yield list(att), name
+            except:
+              pass
+
+      elif output_list['cap']['contracts'][c][o]:
+        try:
+          att, name = model_attribute_nonzero(modelcap.__getattribute__(c).__getattribute__(o), np.string_(c + '_' + o),
+                                              clean_output)
+          if list(att):
+            yield list(att), name
+        except:
+          pass
+
+  for d in output_list['cap']['districts'].keys():
+    for o in output_list['cap']['districts'][d].keys():
+      try:
+        att, name = model_attribute_nonzero(modelcap.__getattribute__(d).daily_supplies_full[o], np.string_(d + '_' + o),
+                                            clean_output)
+        if list(att):
+          yield list(att), name
+      except:
+        pass
+
+  for waterbank_obj in modelcap.waterbank_list:
+    for partner_key, partner_series in waterbank_obj.bank_timeseries.items():
+      try:
+        att, name = model_attribute_nonzero(partner_series, np.string_(waterbank_obj.name + '_' + partner_key),
+                                            clean_output)
+        if list(att):
+          yield list(att), name
+      except:
+        pass
+
+  for canal_obj in modelcap.canal_list:
+    for node_key, node_series in canal_obj.daily_flow.items():
+      try:
+        att, name = model_attribute_nonzero(node_series, np.string_(canal_obj.name + '_' + node_key + '_flow'),
+                                            clean_output)
+        if list(att):
+          yield list(att), name
+      except:
+        pass
+    for node_key, node_series in canal_obj.daily_turnout.items():
+      try:
+        att, name = model_attribute_nonzero(node_series, np.string_(canal_obj.name + '_' + node_key + '_turnout'),
+                                            clean_output)
+        if list(att):
+          yield list(att), name
+      except:
+        pass
+
+        ### signify end of dataset
+  yield (False, False)
+
+
 # function to take northern & southern model, process & output data
 def data_output(output_list_loc, results_folder, clean_output, sensitivity_factors, modelno, modelso, objs):
   nt = len(modelno.shasta.baseline_inf)

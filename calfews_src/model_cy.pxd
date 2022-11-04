@@ -52,7 +52,7 @@ cdef class Model():
                 kaweahdelta, sanluiswater, panoche, delpuerto, \
                 phoenix, gric, tucson, akchin, msidd, mesa, scottsdale, caidd, awba, tohono, gilbert, scat, cagrd, peoria, \
                 tempe, hidd, hvid, surprise, fmyn, srpmic, glendale, other, goodyear, mwd, epcor, asarco, asld, azwc, \
-                orovalley, wmat
+                orovalley, wmat, chandler
 
     public Private wonderful, metropolitan, castaic, coachella
 
@@ -110,7 +110,7 @@ cdef class Model():
 
 ######### cap functions
 
-  cdef tuple simulate_cap(self, int t)
+  cdef double simulate_cap(self, int t) except *
 
   cdef void initialize_cap(self, scenario = *) except *
 

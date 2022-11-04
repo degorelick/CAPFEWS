@@ -127,8 +127,14 @@ cdef class main_cy():
     if True:
       self.modelcap = Model(input_data_file, expected_release_datafile, self.model_mode, demand_type)
 
+    PyErr_CheckSignals()
+    if True:
+      self.modelcap.initialize_cap(scenario)
 
-################################################################################################################################
+    gc.collect()
+
+
+    ################################################################################################################################
 ### Northern/southern model initialization
 ################################################################################################################################
   def initialize_py(self):
@@ -246,7 +252,7 @@ cdef class main_cy():
     #   np.random.seed(self.seed)
     ### simulation length (days)
     if self.short_test < 0:
-      timeseries_length = min(self.modelcap.T)
+      timeseries_length = self.modelcap.T
     else:
       timeseries_length = self.short_test
 
@@ -359,20 +365,19 @@ cdef class main_cy():
 
 
   def calc_objectives_cap(self):
-    nt = len(self.modelno.pleasant.baseline_inf)
     with open(self.output_list, 'r') as f:
       output_list = json.load(f)
 
     self.objs = {}
-    total_delivery = np.zeros(self.modelno.T)
-    for c in ['gric1', 'others']:
+    total_delivery = np.zeros(self.modelcap.T)
+    for c in ['pthree', 'municipal', 'tribal', 'nia']:
       for cc in ['contract']:
         try:
-          total_delivery += self.modelso.__getattribute__(c).daily_supplies[cc]
+          total_delivery += self.modelcap.__getattribute__(c).daily_supplies[cc]
         except:
           pass
 
-    total_delivery = pd.DataFrame({'ts': total_delivery, 'wy': self.modelno.water_year})
+    total_delivery = pd.DataFrame({'ts': total_delivery, 'wy': self.modelcap.water_year})
     total_wy_delivery = total_delivery.groupby('wy').max()['ts'].values
     self.objs['avg_gric_lease'] = np.mean(total_wy_delivery)
     self.objs['min_gric_lease'] = np.min(total_wy_delivery)
@@ -384,7 +389,7 @@ cdef class main_cy():
 
   def output_results(self, output_name = ''):
     ### data output function from calfews_src/util.py
-    data_output(self.output_list, self.results_folder, self.clean_output, {}, self.modelno, self.modelso, self.objs) 
+    data_output(self.output_list, self.results_folder, self.clean_output, {}, self.modelno, self.modelso, self.objs)
         
     if (self.save_full):
       try:
@@ -401,6 +406,19 @@ cdef class main_cy():
     self.running_sim = False
 
 
+  def output_results_cap(self, output_name = ''):
+    ### data output function from calfews_src/util.py
+    data_output_cap(self.output_list, self.results_folder, self.clean_output, {}, self.modelcap, self.objs)
 
+    if (self.save_full):
+      try:
+        gc.collect()
+        pd.to_pickle(self.modelcap, self.results_folder + '/modelcap.pkl')
+        del self.modelcap
+        gc.collect()
+      except Exception as e:
+        print(e)
+
+    self.running_sim = False
 
 

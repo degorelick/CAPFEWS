@@ -1261,7 +1261,7 @@ struct __pyx_ctuple_int__and_int__and_double__and_double__and_double {
 };
 
 /* "model_cy.pxd":115
- *   cdef tuple simulate_cap(self, int t)
+ *   cdef double simulate_cap(self, int t) except *
  * 
  *   cdef void initialize_cap(self, scenario = *) except *             # <<<<<<<<<<<<<<
  * 
@@ -2029,6 +2029,7 @@ struct __pyx_obj_11calfews_src_8model_cy_Model {
   struct __pyx_obj_11calfews_src_11district_cy_District *azwc;
   struct __pyx_obj_11calfews_src_11district_cy_District *orovalley;
   struct __pyx_obj_11calfews_src_11district_cy_District *wmat;
+  struct __pyx_obj_11calfews_src_11district_cy_District *chandler;
   struct __pyx_obj_11calfews_src_10private_cy_Private *wonderful;
   struct __pyx_obj_11calfews_src_10private_cy_Private *metropolitan;
   struct __pyx_obj_11calfews_src_10private_cy_Private *castaic;
@@ -2624,7 +2625,7 @@ struct __pyx_vtabstruct_11calfews_src_8model_cy_Model {
   void (*update_leiu_capacity)(struct __pyx_obj_11calfews_src_8model_cy_Model *);
   PyObject *(*proj_gains)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int, int, int, int);
   __pyx_ctuple_int__and_int__and_double__and_double__and_double (*find_pumping_release)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int, int, int, int, PyObject *, PyObject *, PyObject *, double, double, PyObject *, int, PyObject *);
-  PyObject *(*simulate_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int);
+  double (*simulate_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int);
   void (*initialize_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap *__pyx_optional_args);
   PyObject *(*northern_initialization_routine)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_northern_initialization_routine *__pyx_optional_args);
   void (*initialize_northern_res)(struct __pyx_obj_11calfews_src_8model_cy_Model *);
