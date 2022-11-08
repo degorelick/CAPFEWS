@@ -991,7 +991,7 @@ struct __pyx_ctuple_double__and_double;
 typedef struct __pyx_ctuple_double__and_double __pyx_ctuple_double__and_double;
 struct __pyx_opt_args_11calfews_src_12reservoir_cy_9Reservoir_sj_riv_res_flows;
 
-/* "reservoir_cy.pxd":34
+/* "reservoir_cy.pxd":35
  *                 temp_releases_ya, monthly, daily_df_data, snowpack, daily_output_data, k_close_wateryear, monthly_new
  * 
  *   cdef (double, double) current_tocs(self, int dowy, int ix)             # <<<<<<<<<<<<<<
@@ -1003,7 +1003,7 @@ struct __pyx_ctuple_double__and_double {
   double f1;
 };
 
-/* "reservoir_cy.pxd":50
+/* "reservoir_cy.pxd":51
  *   cdef void calc_expected_min_release(self, Model model, dict delta_req, depletions, int sjrr_toggle)
  * 
  *   cdef double sj_riv_res_flows(self, int t, int dowy, int toggle_short_series=*)             # <<<<<<<<<<<<<<
@@ -1257,6 +1257,7 @@ struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir {
   int iter_count;
   int eos_day;
   int has_snow_new;
+  int kAFtoAF;
   int nodd_meets_envmin;
   int has_downstream_target_flow;
   int has_delta_target;
@@ -1319,6 +1320,7 @@ struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir {
   PyObject *pleasant_target_elev;
   PyObject *cap_diversion_pump_frac;
   PyObject *net_pleasant_pumping;
+  PyObject *cap_diversion;
   PyObject *env_min_flow;
   PyObject *temp_releases;
   PyObject *tocs_rule;
@@ -1539,6 +1541,7 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   PyObject *non_contract_list_cap;
   PyObject *ama_used;
   PyObject *ama_share;
+  PyObject *initial_request_curtailment;
   PyObject *project_contract;
   PyObject *rights;
   PyObject *service;
@@ -1583,6 +1586,7 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   PyObject *dailydemand_start;
   PyObject *infrastructure_shares;
   PyObject *recharge_contribution;
+  PyObject *monthly_deliveries;
   struct __pyx_obj_11calfews_src_7crop_cy_Crop *irrdemand;
 };
 

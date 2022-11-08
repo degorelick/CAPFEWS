@@ -15,13 +15,13 @@
     "NIA": 0.1211
   },
   "lease_partner": [
-    "none"
+    "ASARCO"
   ],
   "lease_quantity": [
-    0
+    -10
   ],
   "lease_priority": [
-    "none"
+    "NIA"
   ],
   "priority_to_recharge": 0,
   "must_take_mead": false,

@@ -15,13 +15,13 @@
     "NIA": 0
   },
   "lease_partner": [
-    "none"
+    "Phoenix"
   ],
   "lease_quantity": [
-    0
+    -4.3
   ],
   "lease_priority": [
-    "none"
+    "FED"
   ],
   "priority_to_recharge": 0,
   "must_take_mead": false,

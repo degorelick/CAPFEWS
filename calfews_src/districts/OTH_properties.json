@@ -20,9 +20,9 @@
     "SCAT"
   ],
   "lease_quantity": [
-    7356,
-    23000,
-    14000
+    7.356,
+    23,
+    14
   ],
   "lease_priority": [
     "FED",

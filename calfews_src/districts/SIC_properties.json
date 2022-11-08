@@ -15,13 +15,31 @@
     "NIA": 0
   },
   "lease_partner": [
-    "none"
+    "Chandler",
+    "Gilbert",
+    "Glendale",
+    "Mesa",
+    "Phoenix",
+    "Scottsdale",
+    "Tempe"
   ],
   "lease_quantity": [
-    0
+    -2.586,
+    -4.088,
+    -1.814,
+    -1.669,
+    -3.023,
+    -0.06,
+    -0.06
   ],
   "lease_priority": [
-    "none"
+    "FED",
+    "FED",
+    "FED",
+    "FED",
+    "FED",
+    "FED",
+    "FED"
   ],
   "priority_to_recharge": 0,
   "must_take_mead": false,

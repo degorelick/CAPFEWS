@@ -25,7 +25,7 @@ cdef class District():
     public list contract_list, turnout_list, crop_list, urban_profile, participant_list, contract_list_all, non_contract_delivery_list, \
                 recharge_rate_series, max_leiu_recharge, max_direct_recharge, delivery_location_list, private_fraction, recharge_decline, \
                 lease_partner, lease_quantity, lease_priority, recharge_profile, contract_list_cap, \
-                dcp_shortage_tiers, request_curtailment, non_contract_list_cap, ama_used, ama_share
+                dcp_shortage_tiers, request_curtailment, non_contract_list_cap, ama_used, ama_share, initial_request_curtailment
 
     public dict project_contract, rights, service, inleiucap, deliveries, current_balance, paper_balance, turnback_pool, \
                 projected_supply, carryover, recharge_carryover, delivery_carryover, contract_carryover_list, dynamic_recharge_cap, \
@@ -34,7 +34,7 @@ cdef class District():
                 carryover_rights, private_demand, hist_demand_dict, acreage_by_year, private_delivery, acreage, annualdemand, \
                 delivery_percent_coefficient, pumping, annual_pumping, ytd_pumping, demand_auto_errors, demand_days, dailydemand, \
                 dailydemand_start, infrastructure_shares, \
-                recharge_contribution
+                recharge_contribution, monthly_deliveries
                 
     public Crop irrdemand
 

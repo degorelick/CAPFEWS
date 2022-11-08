@@ -1272,6 +1272,7 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   PyObject *non_contract_list_cap;
   PyObject *ama_used;
   PyObject *ama_share;
+  PyObject *initial_request_curtailment;
   PyObject *project_contract;
   PyObject *rights;
   PyObject *service;
@@ -1316,6 +1317,7 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   PyObject *dailydemand_start;
   PyObject *infrastructure_shares;
   PyObject *recharge_contribution;
+  PyObject *monthly_deliveries;
   struct __pyx_obj_11calfews_src_7crop_cy_Crop *irrdemand;
 };
 

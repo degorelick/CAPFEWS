@@ -3,7 +3,8 @@
     "reservoirs": {
       "mead": {
         "elevation": true,
-        "cap_allocation": true
+        "cap_allocation": true,
+        "cap_diversion": true
       },
       "pleasant": {
         "elevation": true,
@@ -14,332 +15,390 @@
     },
     "contracts": {
       "pthree": {
-        "allocation": true,
-        "available_water": true
+        "allocation": true
       },
       "municipal": {
-        "allocation": true,
-        "available_water": true
+        "allocation": true
       },
       "tribal": {
-        "allocation": true,
-        "available_water": true
+        "allocation": true
       },
       "nia": {
-        "allocation": true,
-        "available_water": true
+        "allocation": true
       }
     },
     "districts": {
-      "Ak-Chin": {
+      "akchin": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "ASARCO": {
+      "asarco": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "AWBA": {
+      "awba": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "AZ State Land": {
+      "asld": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "AZWC": {
+      "azwc": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "CAGRD": {
+      "cagrd": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "CAIDD": {
+      "caidd": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Chandler": {
+      "chandler": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "EPCOR": {
+      "epcor": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "FMYN": {
+      "fmyn": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Gilbert": {
+      "gilbert": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Glendale": {
+      "glendale": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Goodyear": {
+      "goodyear": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "GRIC": {
+      "gric": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "HIDD": {
+      "hidd": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "HVID": {
+      "hvid": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Mesa": {
+      "mesa": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "MSIDD": {
+      "msidd": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "MWD": {
+      "mwd": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Oro Valley": {
+      "orovalley": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "OTHER": {
+      "other": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Peoria": {
+      "peoria": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Phoenix": {
+      "phoenix": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "SCAT": {
+      "scat": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Scottsdale": {
+      "scottsdale": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "SRPMIC": {
+      "srpmic": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Surprise": {
+      "surprise": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Tempe": {
+      "tempe": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Tohono O'odham": {
+      "tohono": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "Tucson": {
+      "tucson": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       },
-      "WMAT": {
+      "wmat": {
+        "dailydemand": true,
+        "initial_request_curtailment": true,
         "request_curtailment": true,
-        "recharge_contribution": true,
-        "PTR": true,
-        "MUI": true,
-        "FED": true,
-        "NIA": true,
-        "EXCESS": true,
-        "dailydemand": true
+        "monthly_deliveries": {
+          "PTR": true,
+          "MUI": true,
+          "FED": true,
+          "NIA": true,
+          "EXCESS": true
+        }
       }
     },
     "waterbanks": {

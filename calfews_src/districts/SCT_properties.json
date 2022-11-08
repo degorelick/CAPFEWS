@@ -15,13 +15,19 @@
     "NIA": 0
   },
   "lease_partner": [
-    "none"
+    "Gilbert",
+    "Scottsdale",
+    "OTHER"
   ],
   "lease_quantity": [
-    0
+    -17.371,
+    -12.5,
+    -14
   ],
   "lease_priority": [
-    "none"
+    "FED",
+    "FED",
+    "FED"
   ],
   "priority_to_recharge": 0,
   "must_take_mead": false,

@@ -271,17 +271,6 @@ def model_attribute_loop_generator_cap(output_list, clean_output, modelcap):
         except:
           pass
 
-  for r in output_list['cap']['reservoirs'].keys():
-    for o in output_list['cap']['reservoirs'][r].keys():
-      if output_list['cap']['reservoirs'][r][o]:
-        try:
-          att, name = model_attribute_nonzero(modelcap.__getattribute__(r).__getattribute__(o), np.string_(r + '_' + o),
-                                              clean_output)
-          if list(att):
-            yield list(att), name
-        except:
-          pass
-
   for c in output_list['cap']['contracts'].keys():
     for o in output_list['cap']['contracts'][c].keys():
       if o == 'daily_supplies':
@@ -306,13 +295,31 @@ def model_attribute_loop_generator_cap(output_list, clean_output, modelcap):
 
   for d in output_list['cap']['districts'].keys():
     for o in output_list['cap']['districts'][d].keys():
-      try:
-        att, name = model_attribute_nonzero(modelcap.__getattribute__(d).daily_supplies_full[o], np.string_(d + '_' + o),
-                                            clean_output)
-        if list(att):
-          yield list(att), name
-      except:
-        pass
+      if o == 'monthly_deliveries':
+        for c in output_list['cap']['districts'][d]['monthly_deliveries']:
+          try:
+            att, name = model_attribute_nonzero(modelcap.__getattribute__(d).monthly_deliveries[c], np.string_(d + '_' + c),
+                                                clean_output)
+            if list(att):
+              yield list(att), name
+          except:
+            pass
+      elif o == 'dailydemand':
+        try:
+          att, name = model_attribute_nonzero(modelcap.__getattribute__(d).dailydemand.values(), np.string_(d + '_' + o),
+                                              clean_output)
+          if list(att):
+            yield list(att), name
+        except:
+          pass
+      else:
+        try:
+          att, name = model_attribute_nonzero(modelcap.__getattribute__(d).__getattribute__(o), np.string_(d + '_' + o),
+                                              clean_output)
+          if list(att):
+            yield list(att), name
+        except:
+          pass
 
   for waterbank_obj in modelcap.waterbank_list:
     for partner_key, partner_series in waterbank_obj.bank_timeseries.items():

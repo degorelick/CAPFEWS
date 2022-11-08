@@ -38,6 +38,7 @@ cdef class Reservoir():
     self.name = name
     self.forecastWYT = "AN"
     self.epsilon = 1e-13
+    self.kAFtoAF = 1000
     
 	  ##Reservoir Parameters
     self.S = [0.0 for _ in range(self.T)]
@@ -70,6 +71,7 @@ cdef class Reservoir():
     self.mead_shortage_tier = 'T0'
     self.pleasant_target_elev = [0.0 for _ in range(12)]
     self.cap_diversion_pump_frac = [0.0 for _ in range(12)]
+    self.cap_diversion = [0.0 for _ in range(self.T)]
 
     # initialization for CAP model here
     # Lake Mead is a special case because we really only care about elevation
@@ -82,8 +84,9 @@ cdef class Reservoir():
     elif self.key == "PLS":
       for k, v in json.load(open('calfews_src/reservoir/%s_properties.json' % key)).items():
         setattr(self, k, v)
-      self.elevation[0] = 1701.0 # assume full start for Lake Pleasant, in ft of elevation
-      self.S[0] = self.calculate_pleasant_storage(0)
+      self.elevation[0] = 1685.0 # assume start for Lake Pleasant, in ft of elevation, at Jan 2022 level
+      self.S[0] = self.calculate_pleasant_storage(self.elevation[0])
+      print(self.S[0])
       self.cap_allocation[0] = self.cap_allocation_capacity # assume full start for CAP pool, in kAF
 
     else:
@@ -204,6 +207,7 @@ cdef class Reservoir():
   cdef void step_pleasant(self, int t, int m) except *:
     ## this function handles the water balance for Lake Pleasant, CAP system
     ## for total storage, elevation, and CAP pool storage.
+    ## ALL UNITS HERE IN kAF, not AF
     if t < (self.T - 1):
       self.S[t+1] = self.S[t] + self.net_pleasant_pumping[t] + \
                     self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m] - self.evap[m] * self.calculate_pleasant_area(t)
@@ -231,12 +235,14 @@ cdef class Reservoir():
   cdef double calculate_pleasant_elevation(self, double storage) except *:
     ## based on elevation, calculate lake pleasant total storage
     # Elevation = 1542.36 + 0.000413939*Vol + -4.77E-10*Vol^2 + 2.502E-16*Vol^3
+    # storage is provided in kAF, but units of AF needed for this calculation
+    # so they are transformed within the calculation here
     cdef double pleasant_total_elevation
     pleasant_total_elevation = \
       1542.36 + \
-      0.00041394 * storage + \
-      -0.000000000477 * (storage)**2 + \
-      0.0000000000000002502 * (storage)**3
+      0.00041394 * (storage * self.kAFtoAF) + \
+      -0.000000000477 * (storage * self.kAFtoAF)**2 + \
+      0.0000000000000002502 * (storage * self.kAFtoAF)**3
 
     return pleasant_total_elevation
 
@@ -250,7 +256,9 @@ cdef class Reservoir():
       -18579.4 * elev + \
       -12.8222 * (elev)**2 + \
       0.008269 * (elev)**3
-    return pleasant_total_storage
+
+    # convert from AF to kAF and return
+    return pleasant_total_storage/self.kAFtoAF
 
 
   cdef double calculate_pleasant_area(self, int t) except *:
@@ -269,8 +277,8 @@ cdef class Reservoir():
   cdef void calculate_cap_mead_allocation(self, int t) except *:
     ##this function is for lake mead ONLY, to calculate the CAP allocation
     cdef float cap_baseline_lower_basin_allocation, cap_system_losses
-    cap_baseline_lower_basin_allocation = 1490000.0  # AF/yr allocation for CAP, without cuts
-    cap_system_losses = 75000.0 # annual system losses, AF (5% of allocation to CAP)
+    cap_baseline_lower_basin_allocation = 1490.0  # kAF/yr allocation for CAP, without cuts
+    cap_system_losses = 75.0 # annual system losses, kAF/yr (5% of allocation to CAP)
 
     cdef double az_curtailment
     az_curtailment = self.calc_az_mead_curtailment(t)
@@ -305,7 +313,8 @@ cdef class Reservoir():
       dcp_curtailment = 0.0
       self.mead_shortage_tier = 'T0'
 
-    curtailment = guidelines_curtailment + dcp_curtailment
+    # convert from AF to kAF
+    curtailment = (guidelines_curtailment + dcp_curtailment)/self.kAFtoAF
     return curtailment
 
   cdef void find_available_storage(self, int t, int m, int da, int dowy):

@@ -20,9 +20,9 @@
     "SRPMIC"
   ],
   "lease_quantity": [
-    4300,
-    15000,
-    3023
+    4.3,
+    15,
+    3.023
   ],
   "lease_priority": [
     "FED",

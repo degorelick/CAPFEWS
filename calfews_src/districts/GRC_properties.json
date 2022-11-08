@@ -15,13 +15,31 @@
     "NIA": 0.5177
   },
   "lease_partner": [
-    "none"
+    "CAGRD",
+    "Chandler",
+    "Goodyear",
+    "Peoria",
+    "Phoenix",
+    "Scottsdale",
+    "OTHER"
   ],
   "lease_quantity": [
-    0
+    -18.185,
+    -2.45,
+    -7,
+    -7,
+    -15,
+    -12,
+    -23
   ],
   "lease_priority": [
-    "none"
+    "NIA",
+    "FED",
+    "FED",
+    "FED",
+    "FED",
+    "FED",
+    "FED"
   ],
   "priority_to_recharge": 0,
   "must_take_mead": false,

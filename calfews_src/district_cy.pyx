@@ -74,6 +74,7 @@ cdef class District():
     self.irrdemand = Crop(self.zone)
 	  #initialize dictionary to hold different delivery types
     self.deliveries = {}
+    self.monthly_deliveries = {}
     self.contract_list_all = ['tableA', 'cvpdelta', 'exchange', 'cvc', 'friant1', 'friant2','kaweah', 'tule', 'kern','kings',
                               'PTR', 'MUI', 'FED', 'NIA']
     self.non_contract_delivery_list = ['recover_banked','inleiu_irrigation','inleiu_recharge','leiupumping','exchanged_GW','exchanged_SW','undelivered_trades']
@@ -103,8 +104,13 @@ cdef class District():
     self.deliveries['exchanged_SW'] = np.zeros(model.number_years)
     self.deliveries['undelivered_trades'] = np.zeros(model.number_years)
 
+    # just for CAP system, track delivery accounting monthly
+    for q in self.contract_list_cap:
+      self.monthly_deliveries[q] = np.zeros(model.T)
+
     # for CAP subcontractors taking excess, non-contracted water
     self.deliveries['EXCESS'] = np.zeros(model.number_years)
+    self.monthly_deliveries['EXCESS'] = np.zeros(model.T)
 	
     #set dictionaries to keep track of different 'color' water for each contract
     self.current_balance = {}#contract water currently available in surface water storage
@@ -214,6 +220,7 @@ cdef class District():
       for monthloop in range(0, 12):
         self.monthlydemand[wyt][monthloop] += self.urban_profile[monthloop] * self.AFY
 
+    self.initial_request_curtailment = [0.0 for _ in range(self.T)]
     self.request_curtailment = [0.0 for _ in range(self.T)]
 
   cdef void calculate_recharge_delivery(self, int t, str ama_key) except *:
@@ -225,7 +232,8 @@ cdef class District():
 
   cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction) except *:
     ## in the CAP model, districts/subcontractors may hold leases from Tribes. This will add them all up,
-    ## applying shortage factors to them as necessary
+    ## applying shortage factors to them as necessary. For tribes that are leasing water, these quantities
+    ## will be negative and then reduce their overall entitlement and request.
     cdef double nia_leases, fed_leases
     nia_leases = 0.0
     fed_leases = 0.0
@@ -242,6 +250,9 @@ cdef class District():
     ## in the CAP model, first runs have urban demands only for districts
     ## so we just want to collect those
     self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month]
+    if self.key == "SIC" and yr == 0:
+      print(self.monthlydemand[mead_shortage_tier][month])
+      print(self.dailydemand[t])
 
     # factor in whether NIA and/or Ag Mitigation is active, and current long-term leases
     # https://waterbank.az.gov/sites/default/files/NIA%20Mitigation%20Agreement%20Completed%207-18-2019.pdf
@@ -266,23 +277,34 @@ cdef class District():
 
     total_entitled_and_lease_water += self.get_lease_capacity(nia_shortage_frac, fed_shortage_frac)
 
+    if self.key == "SIC" and yr == 0:
+      print(total_entitled_and_lease_water)
+
     # Does request/base demand exceed entitlement (of all rights classes) + leases?
     # if so, record the curtailment
     # if not, assuming deliveries are filled in decreasing order of priority entitlements for accounting
     if self.dailydemand[t] > total_entitled_and_lease_water:
+      self.initial_request_curtailment[t] = self.dailydemand[t] - total_entitled_and_lease_water
       self.request_curtailment[t] = self.dailydemand[t] - total_entitled_and_lease_water
       self.dailydemand[t] = total_entitled_and_lease_water
       for contract in contract_list:
-        self.deliveries[contract.key][yr] = contract.allocation[t]
+        self.deliveries[contract.key][yr] = contract.allocation[t] * self.project_contract[contract.key]
+        self.monthly_deliveries[contract.key][t] = contract.allocation[t] * self.project_contract[contract.key]
     else:
       used_entitlement_water = self.dailydemand[t]
       for contract in contract_list:
-        if used_entitlement_water > contract.allocation[t]:
-          self.deliveries[contract.key][yr] = contract.allocation[t]
-          used_entitlement_water -= contract.allocation[t]
+        if used_entitlement_water > contract.allocation[t] * self.project_contract[contract.key]:
+          self.deliveries[contract.key][yr] = contract.allocation[t] * self.project_contract[contract.key]
+          self.monthly_deliveries[contract.key][t] = contract.allocation[t] * self.project_contract[contract.key]
+          used_entitlement_water -= contract.allocation[t] * self.project_contract[contract.key]
         else:
           self.deliveries[contract.key][yr] = used_entitlement_water
+          self.monthly_deliveries[contract.key][t] = used_entitlement_water
           used_entitlement_water = 0.0
+
+    if self.key == "SIC" and yr == 0:
+      print('final check on demand')
+      print(self.dailydemand[t])
 
 
   def normalize_ownership_shares(self):
