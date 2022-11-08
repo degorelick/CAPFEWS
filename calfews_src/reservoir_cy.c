@@ -1435,6 +1435,7 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   double current_requested;
   double epsilon;
   double AFY;
+  double growth_rate;
   int is_Canal;
   int is_District;
   int is_Private;

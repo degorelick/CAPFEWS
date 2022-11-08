@@ -50,6 +50,7 @@ cdef class District():
     self.ama_used = ["none"]
     self.ama_share = [0.0]
     self.recharge_contribution = {}
+    self.growth_rate = 0.0
 
     for k, v in json.load(open('calfews_src/districts/%s_properties.json' % key)).items():
       setattr(self, k, v)
@@ -249,7 +250,8 @@ cdef class District():
   cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list) except *:
     ## in the CAP model, first runs have urban demands only for districts
     ## so we just want to collect those
-    self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month]
+    ## includes annual growth rate applied to "daily" (really monthly) demands
+    self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month] * (1 + self.growth_rate)**yr
     if self.key == "SIC" and yr == 0:
       print(self.monthlydemand[mead_shortage_tier][month])
       print(self.dailydemand[t])
