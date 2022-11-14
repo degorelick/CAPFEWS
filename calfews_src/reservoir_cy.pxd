@@ -9,7 +9,7 @@ cdef class Reservoir():
                 gains_to_delta, rainflood_flows, baseline_flows, max_daily_uncontrolled, uncontrolled_available, force_spill, \
                 snowflood_flows, saved_water, total_capacity, flood_flow_min, epsilon, \
                 cap_allocation_capacity, az_on_river_demand, az_capacity, pump_inflow_capacity, \
-                hydropower_generation_capacity
+                hydropower_generation_capacity, monthly_diversion_capacity
 
     public int is_Canal, is_District, is_Private, is_Waterbank, is_Reservoir, T, T_short, melt_start, exceedence_level, \
                 iter_count, eos_day, has_snow_new, kAFtoAF
@@ -25,7 +25,7 @@ cdef class Reservoir():
                 max_direct_recharge, downstream_short, fnf_short, fnf_new, total_available_storage, outflow_release, \
                 reclaimed_carryover, contract_flooded, snow_new, dcp_guidelines, cap_allocation, elevation, \
                 gaged_inflow, MWD_inflow, seepage, evap, pleasant_target_elev, cap_diversion_pump_frac, net_pleasant_pumping, \
-                cap_diversion
+                cap_diversion, cap_excess, cap_excess_allocation
 
     public dict env_min_flow, temp_releases, tocs_rule, sj_restoration_proj, carryover_target, sodd_curtail_pct, exceedence, \
                 cum_min_release, oct_nov_min_release, aug_sept_min_release, monthly_demand, monthly_demand_full, \
@@ -55,6 +55,10 @@ cdef class Reservoir():
   cdef void step_pleasant(self, int t, int m) except *
 
   cdef void calculate_cap_mead_allocation(self, int t) except *
+
+  cdef void calculate_cap_mead_annual_diversion_remaining(self, int t, int m) except *
+
+  cdef void calculate_cap_mead_annual_excess_remaining(self, int t, int m) except *
 
   cdef double calc_az_mead_curtailment(self, int t) except *
 

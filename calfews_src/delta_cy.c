@@ -1245,6 +1245,7 @@ struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir {
   double az_capacity;
   double pump_inflow_capacity;
   double hydropower_generation_capacity;
+  double monthly_diversion_capacity;
   int is_Canal;
   int is_District;
   int is_Private;
@@ -1321,6 +1322,8 @@ struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir {
   PyObject *cap_diversion_pump_frac;
   PyObject *net_pleasant_pumping;
   PyObject *cap_diversion;
+  PyObject *cap_excess;
+  PyObject *cap_excess_allocation;
   PyObject *env_min_flow;
   PyObject *temp_releases;
   PyObject *tocs_rule;
@@ -1494,6 +1497,8 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   double epsilon;
   double AFY;
   double growth_rate;
+  double monthly_delivery_cap_on_annual_entitlement;
+  double monthly_delivery_cap_on_leases;
   int is_Canal;
   int is_District;
   int is_Private;
@@ -2120,6 +2125,8 @@ struct __pyx_vtabstruct_11calfews_src_12reservoir_cy_Reservoir {
   double (*sj_riv_res_flows)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int, struct __pyx_opt_args_11calfews_src_12reservoir_cy_9Reservoir_sj_riv_res_flows *__pyx_optional_args);
   void (*step_pleasant)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
   void (*calculate_cap_mead_allocation)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
+  void (*calculate_cap_mead_annual_diversion_remaining)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
+  void (*calculate_cap_mead_annual_excess_remaining)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
   double (*calc_az_mead_curtailment)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   double (*calculate_pleasant_area)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   double (*calculate_pleasant_storage)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, double);
@@ -2202,8 +2209,11 @@ struct __pyx_vtabstruct_11calfews_src_11district_cy_District {
   void (*calc_demand)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, int, PyObject *, int, PyObject *);
   void (*get_urban_demand)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, int, int, int, PyObject *, double, double, PyObject *);
   void (*set_district_request)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, PyObject *, PyObject *);
+  void (*reset_district_request)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, PyObject *, PyObject *, double);
   double (*get_lease_capacity)(struct __pyx_obj_11calfews_src_11district_cy_District *, double, double);
-  void (*calculate_recharge_delivery)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, PyObject *);
+  double (*get_lease_capacity_nia_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
+  double (*get_lease_capacity_fed_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
+  void (*calculate_recharge_delivery)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, PyObject *);
 };
 static struct __pyx_vtabstruct_11calfews_src_11district_cy_District *__pyx_vtabptr_11calfews_src_11district_cy_District;
 

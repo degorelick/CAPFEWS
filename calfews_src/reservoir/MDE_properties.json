@@ -3,5 +3,6 @@
   "capacity": 999999,
   "az_capacity": 2800,
   "cap_allocation_capacity": 1600,
-  "az_on_river_demand": 1300
+  "az_on_river_demand": 1257.8518,
+  "monthly_diversion_capacity": 3000
 }

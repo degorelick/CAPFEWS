@@ -112,6 +112,7 @@ cdef class District():
     # for CAP subcontractors taking excess, non-contracted water
     self.deliveries['EXCESS'] = np.zeros(model.number_years)
     self.monthly_deliveries['EXCESS'] = np.zeros(model.T)
+    self.monthly_deliveries['TOTAL'] = np.zeros(model.T)
 	
     #set dictionaries to keep track of different 'color' water for each contract
     self.current_balance = {}#contract water currently available in surface water storage
@@ -223,13 +224,91 @@ cdef class District():
 
     self.initial_request_curtailment = [0.0 for _ in range(self.T)]
     self.request_curtailment = [0.0 for _ in range(self.T)]
+    self.monthly_delivery_cap_on_annual_entitlement = 0.25
+    self.monthly_delivery_cap_on_leases = 0.11
 
-  cdef void calculate_recharge_delivery(self, int t, str ama_key) except *:
+
+  cdef void reset_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list, double total_needed_curtailment) except *:
+    ## when final delivery amounts are set, curtail them if necessary
+    # Tally up all available water for the subcontractor (district)
+    cdef:
+      double total_entitled_and_lease_water, used_entitlement_water, nia_shortage_frac, fed_shortage_frac, this_month_delivery, \
+        monthly_deliverable_water_cap, this_month_deliverable_water_remaining
+    total_entitled_and_lease_water = 0.0
+    used_entitlement_water = 0.0
+    nia_shortage_frac = 1.0
+    fed_shortage_frac = 1.0
+    for contract in contract_list:
+      total_entitled_and_lease_water += \
+        contract.allocation[t] * self.project_contract[contract.key]
+
+      # collect some variables for the immediate next step of tallying leases
+      if contract.key == "NIA":
+        nia_shortage_frac = contract.reduction[mead_shortage_tier]
+      elif contract.key == "FED":
+        fed_shortage_frac = contract.reduction[mead_shortage_tier]
+
+    total_entitled_and_lease_water += self.get_lease_capacity(nia_shortage_frac, fed_shortage_frac)
+
+    # if self.key == "SIC" and yr == 0:
+    #   print(total_entitled_and_lease_water)
+
+    # How much of the annual entitlements remain to be used?
+    # Subtract current-year deliveries that have already occurred from total
+    monthly_deliverable_water_cap = total_entitled_and_lease_water * self.monthly_delivery_cap_on_annual_entitlement
+    for contract in contract_list:
+      total_entitled_and_lease_water -= self.deliveries[contract.key][yr]
+
+    # Does request/base demand exceed entitlement (of all rights classes) + leases?
+    # if so, record the curtailment
+    # if not, assuming deliveries are filled in decreasing order of priority entitlements for accounting
+    this_month_deliverable_water_remaining = min(monthly_deliverable_water_cap, total_entitled_and_lease_water)
+    if self.dailydemand[t] > this_month_deliverable_water_remaining:
+      self.initial_request_curtailment[t] = self.dailydemand[t] - this_month_deliverable_water_remaining
+      self.request_curtailment[t] = self.dailydemand[t] - this_month_deliverable_water_remaining
+      self.dailydemand[t] = max(total_entitled_and_lease_water, 0.0)  # ensure non-negativity
+      for contract in contract_list:
+        # make basic assumption that no more than 11% of total annual entitlement can be delivered in any given month?
+        # this is based on contracted constraint between GRIC and CAGRD in their long-term NIA lease agreement (p.6)
+        # OVERWRITTEN AS 25% MAX, BASED ON HISTORICAL DELIVERIES. IN FUTURE, HAVE A SEPARATE CAP FOR LEASE USE
+        this_month_delivery = contract.allocation[t] * self.project_contract[
+          contract.key] * self.monthly_delivery_cap_on_annual_entitlement
+        self.deliveries[contract.key][yr] += this_month_delivery
+        self.monthly_deliveries[contract.key][t] = this_month_delivery
+    else:
+      used_entitlement_water = self.dailydemand[t]
+      for contract in contract_list:
+        this_month_delivery = contract.allocation[t] * self.project_contract[
+          contract.key] * self.monthly_delivery_cap_on_annual_entitlement
+        if used_entitlement_water > this_month_delivery:
+          self.deliveries[contract.key][yr] += this_month_delivery
+          self.monthly_deliveries[contract.key][t] = this_month_delivery
+          used_entitlement_water -= this_month_delivery
+        else:
+          self.deliveries[contract.key][yr] = used_entitlement_water
+          self.monthly_deliveries[contract.key][t] = used_entitlement_water
+          used_entitlement_water = 0.0
+
+
+  cdef void calculate_recharge_delivery(self, int t, int m, str ama_key) except *:
     ## in the CAP model, allocate fraction of subcontractor delivery request for recharge
     ## depending on the AMA, fraction of demands sent for recharge overall, and shortage
+    cdef double non_recharge_target, recharge_target
+
     for i in range(0,len(self.ama_used)):
       if self.ama_used[i] == ama_key:
-        self.recharge_contribution[ama_key][t] = self.ama_share[i] * self.dailydemand[t]
+        # If a district/subcontractor had to curtail their demand request,
+        # that should come from recharge first unless otherwise noted...
+        recharge_target = self.ama_share[i] * self.dailydemand[t] * self.recharge_profile[m]
+        non_recharge_target = self.ama_share[i] * self.dailydemand[t] * (1 - self.recharge_profile[m])
+
+        if self.monthly_deliveries['TOTAL'][t] < self.dailydemand[t]:
+          if self.priority_to_recharge == 0:
+            # leftover after non-recharge demands met
+            self.recharge_contribution[ama_key][t] = max(0.0, self.monthly_deliveries['TOTAL'][t] - non_recharge_target)
+          else:
+            # if priority is for recharge, then reduce recharge last
+            self.recharge_contribution[ama_key][t] = min(recharge_target, self.monthly_deliveries['TOTAL'][t])
 
   cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction) except *:
     ## in the CAP model, districts/subcontractors may hold leases from Tribes. This will add them all up,
@@ -247,14 +326,40 @@ cdef class District():
     return nia_leases + fed_leases
 
 
+  cdef double get_lease_capacity_fed_priority(self, double shortage_fraction) except *:
+    ## in the CAP model, districts/subcontractors may hold leases from Tribes.
+    ## For tribes that are leasing water, these quantities
+    ## will be negative and then reduce their overall entitlement and request.
+    cdef double leases
+    leases = 0.0
+    for i in range(0, len(self.lease_priority)):
+      if self.lease_priority[i] == "FED":
+        leases += self.lease_quantity[i] * shortage_fraction
+
+    return leases
+
+
+  cdef double get_lease_capacity_nia_priority(self, double shortage_fraction) except *:
+    ## in the CAP model, districts/subcontractors may hold leases from Tribes.
+    ## For tribes that are leasing water, these quantities
+    ## will be negative and then reduce their overall entitlement and request.
+    cdef double leases
+    leases = 0.0
+    for i in range(0, len(self.lease_priority)):
+      if self.lease_priority[i] == "NIA":
+        leases += self.lease_quantity[i] * shortage_fraction
+
+    return leases
+
   cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list) except *:
     ## in the CAP model, first runs have urban demands only for districts
     ## so we just want to collect those
     ## includes annual growth rate applied to "daily" (really monthly) demands
     self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month] * (1 + self.growth_rate)**yr
-    if self.key == "SIC" and yr == 0:
-      print(self.monthlydemand[mead_shortage_tier][month])
-      print(self.dailydemand[t])
+
+    # if self.key == "SIC" and yr == 0:
+    #   print(self.monthlydemand[mead_shortage_tier][month])
+    #   print(self.dailydemand[t])
 
     # factor in whether NIA and/or Ag Mitigation is active, and current long-term leases
     # https://waterbank.az.gov/sites/default/files/NIA%20Mitigation%20Agreement%20Completed%207-18-2019.pdf
@@ -262,7 +367,9 @@ cdef class District():
     # TBD
 
     # Tally up all available water for the subcontractor (district)
-    cdef double total_entitled_and_lease_water, used_entitlement_water, nia_shortage_frac, fed_shortage_frac
+    cdef:
+      double total_entitled_and_lease_water, used_entitlement_water, nia_shortage_frac, fed_shortage_frac, this_month_delivery, \
+              monthly_deliverable_water_cap, this_month_deliverable_water_remaining, this_month_lease_available
     total_entitled_and_lease_water = 0.0
     used_entitlement_water = 0.0
     nia_shortage_frac = 1.0
@@ -277,36 +384,89 @@ cdef class District():
       elif contract.key == "FED":
         fed_shortage_frac = contract.reduction[mead_shortage_tier]
 
+    # include leases under Tribal and NIA Priorities
     total_entitled_and_lease_water += self.get_lease_capacity(nia_shortage_frac, fed_shortage_frac)
 
-    if self.key == "SIC" and yr == 0:
-      print(total_entitled_and_lease_water)
+    # if self.key == "SIC" and yr == 0:
+    #   print(total_entitled_and_lease_water)
+
+    # How much of the annual entitlements remain to be used?
+    # Subtract current-year deliveries that have already occurred from total
+    monthly_deliverable_water_cap = total_entitled_and_lease_water * self.monthly_delivery_cap_on_annual_entitlement
+    for contract in contract_list:
+      total_entitled_and_lease_water -= self.deliveries[contract.key][yr]
 
     # Does request/base demand exceed entitlement (of all rights classes) + leases?
     # if so, record the curtailment
     # if not, assuming deliveries are filled in decreasing order of priority entitlements for accounting
-    if self.dailydemand[t] > total_entitled_and_lease_water:
-      self.initial_request_curtailment[t] = self.dailydemand[t] - total_entitled_and_lease_water
-      self.request_curtailment[t] = self.dailydemand[t] - total_entitled_and_lease_water
-      self.dailydemand[t] = total_entitled_and_lease_water
+    this_month_deliverable_water_remaining = min(monthly_deliverable_water_cap, total_entitled_and_lease_water)
+    if self.dailydemand[t] > this_month_deliverable_water_remaining:
+      self.initial_request_curtailment[t] = self.dailydemand[t] - this_month_deliverable_water_remaining
+      self.request_curtailment[t] = self.dailydemand[t] - this_month_deliverable_water_remaining
+#      self.dailydemand[t] = max(this_month_deliverable_water_remaining, 0.0) # ensure non-negativity
       for contract in contract_list:
-        self.deliveries[contract.key][yr] = contract.allocation[t] * self.project_contract[contract.key]
-        self.monthly_deliveries[contract.key][t] = contract.allocation[t] * self.project_contract[contract.key]
+        # make basic assumption that no more than 20% of total annual entitlement can be delivered in any given month,
+        # and that no more than 11% of total annual lease amount can be delivered in a month.
+        # this is based on contracted constraint between GRIC and CAGRD in their long-term NIA lease agreement (p.6)
+        # and viewing of historical delivery data of entitlements
+        this_month_lease_available = 0.0
+        if contract.key == "NIA":
+          this_month_lease_available = self.get_lease_capacity_nia_priority(nia_shortage_frac)
+        elif contract.key == "FED":
+          this_month_lease_available = self.get_lease_capacity_fed_priority(fed_shortage_frac)
+
+        # this month, only so much water from entitlements and leases can be delivered
+        this_month_delivery = \
+          max(0.0,
+              min(self.dailydemand[t],
+                  contract.allocation[t] * self.project_contract[contract.key] * self.monthly_delivery_cap_on_annual_entitlement + \
+                  this_month_lease_available * self.monthly_delivery_cap_on_leases,
+                  contract.allocation[t] * self.project_contract[contract.key] + this_month_lease_available - self.deliveries[contract.key][yr]))
+
+        self.deliveries[contract.key][yr] += this_month_delivery
+        self.monthly_deliveries[contract.key][t] = this_month_delivery
+
+        # record total deliveries scheduled for accounting
+        self.monthly_deliveries['TOTAL'][t] += this_month_delivery
     else:
       used_entitlement_water = self.dailydemand[t]
       for contract in contract_list:
-        if used_entitlement_water > contract.allocation[t] * self.project_contract[contract.key]:
-          self.deliveries[contract.key][yr] = contract.allocation[t] * self.project_contract[contract.key]
-          self.monthly_deliveries[contract.key][t] = contract.allocation[t] * self.project_contract[contract.key]
-          used_entitlement_water -= contract.allocation[t] * self.project_contract[contract.key]
+        # make basic assumption that no more than 20% of total annual entitlement can be delivered in any given month,
+        # and that no more than 11% of total annual lease amount can be delivered in a month.
+        # this is based on contracted constraint between GRIC and CAGRD in their long-term NIA lease agreement (p.6)
+        # and viewing of historical delivery data of entitlements
+        this_month_lease_available = 0.0
+        if contract.key == "NIA":
+          this_month_lease_available = self.get_lease_capacity_nia_priority(nia_shortage_frac)
+        elif contract.key == "FED":
+          this_month_lease_available = self.get_lease_capacity_fed_priority(fed_shortage_frac)
+
+        # this month, only so much water from entitlements and leases can be delivered
+        this_month_delivery = \
+          max(0.0,
+              min(self.dailydemand[t],
+                  contract.allocation[t] * self.project_contract[contract.key] * self.monthly_delivery_cap_on_annual_entitlement + \
+                  this_month_lease_available * self.monthly_delivery_cap_on_leases,
+                  contract.allocation[t] * self.project_contract[contract.key] + this_month_lease_available - self.deliveries[contract.key][yr]))
+
+        if used_entitlement_water > this_month_delivery:
+          self.deliveries[contract.key][yr] += this_month_delivery
+          self.monthly_deliveries[contract.key][t] = this_month_delivery
+          used_entitlement_water -= this_month_delivery
         else:
           self.deliveries[contract.key][yr] = used_entitlement_water
           self.monthly_deliveries[contract.key][t] = used_entitlement_water
           used_entitlement_water = 0.0
 
-    if self.key == "SIC" and yr == 0:
-      print('final check on demand')
-      print(self.dailydemand[t])
+        # record total deliveries scheduled for accounting
+        self.monthly_deliveries['TOTAL'][t] += this_month_delivery
+
+      if used_entitlement_water > 0.0:
+        print('Error: Request not met as expected for ' + self.name + ' in timestep ' + str(t))
+
+    # if self.key == "SIC" and yr == 0:
+    #   print('final check on demand')
+    #   print(self.dailydemand[t])
 
 
   def normalize_ownership_shares(self):

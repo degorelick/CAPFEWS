@@ -72,6 +72,10 @@ cdef class Reservoir():
     self.pleasant_target_elev = [0.0 for _ in range(12)]
     self.cap_diversion_pump_frac = [0.0 for _ in range(12)]
     self.cap_diversion = [0.0 for _ in range(self.T)]
+    self.capacity = 0.0
+    self.monthly_diversion_capacity = 0.0
+    self.cap_excess = [0.0 for _ in range(self.T)]
+    self.cap_excess_allocation = [0.0 for _ in range(self.T)]
 
     # initialization for CAP model here
     # Lake Mead is a special case because we really only care about elevation
@@ -87,7 +91,7 @@ cdef class Reservoir():
       self.elevation[0] = 1685.0 # assume start for Lake Pleasant, in ft of elevation, at Jan 2022 level
       self.S[0] = self.calculate_pleasant_storage(self.elevation[0])
       print(self.S[0])
-      self.cap_allocation[0] = self.cap_allocation_capacity # assume full start for CAP pool, in kAF
+      self.cap_allocation[0] = self.cap_allocation_capacity * self.S[0]/self.capacity # assume CAP pool start in proportion to total storage
 
     else:
       # otherwise, do all the other calfews stuff
@@ -214,14 +218,37 @@ cdef class Reservoir():
 
       # check that storage does not exceed capacity
       if self.calculate_pleasant_elevation(self.S[t+1]) > 1701.0:
+        self.flood_spill[t] = self.S[t+1] - self.capacity
         self.elevation[t+1] = 1701.0
         self.S[t+1] = self.calculate_pleasant_storage(self.elevation[t+1])
       else:
         self.elevation[t+1] = self.calculate_pleasant_elevation(self.S[t+1])
 
+      # check non-negativity in water balance, reduce release to compensate if necessary
+      if self.S[t+1] < 0.0:
+        if self.net_pleasant_pumping[t] < 0.0:
+          self.net_pleasant_pumping[t] = min(0.0,
+                                             self.net_pleasant_pumping[t] - self.S[t+1])
+          self.S[t + 1] = self.S[t] + self.net_pleasant_pumping[t] + \
+                          self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m] - self.evap[
+                            m] * self.calculate_pleasant_area(t)
+
+      # if storage is still negative after releases/pumping are adjusted above,
+      if self.S[t+1] < 0.0:
+        print('storage failure in Lake Pleasant for month' + str(t+1))
+        self.S[t+1] = 0.0
+
       # record other timeseries based on total mass balance
-      self.cap_allocation[t+1] = min(self.cap_allocation[t] + self.net_pleasant_pumping[t] + self.MWD_inflow[m] + self.evap[m] * self.calculate_pleasant_area(t) * self.cap_allocation[t]/self.S[t],
-                                     self.cap_allocation_capacity)
+      if self.S[t] == 0.0:
+        self.cap_allocation[t+1] = \
+          max(0.0,
+              min(self.cap_allocation[t] + self.net_pleasant_pumping[t] + self.MWD_inflow[m],
+                  self.cap_allocation_capacity))
+      else:
+        self.cap_allocation[t+1] = \
+          max(0.0,
+              min(self.cap_allocation[t] + self.net_pleasant_pumping[t] + self.MWD_inflow[m] - self.evap[m] * self.calculate_pleasant_area(t) * min(1.0, self.cap_allocation[t]/self.S[t]),
+                  self.cap_allocation_capacity))
 
 
   cdef void set_pleasant_pumping(self, int t, int m, double available_pumping_volume) except *:
@@ -273,6 +300,38 @@ cdef class Reservoir():
       0.0008383 * (self.elevation[t])**3
     return pleasant_total_area
 
+  cdef void calculate_cap_mead_annual_excess_remaining(self, int t, int m) except *:
+    ## how much water in a given year remains to be diverted to the CAP system for excess?
+    cdef:
+      double cumulative_cap_diversion
+      int start_of_year_timestep
+
+    cumulative_cap_diversion = 0.0
+    start_of_year_timestep = t - m
+
+    # COUNT THE DIVERSIONS UP FROM ALL PREVIOUS MONTHS THIS YEAR TO KNOW WHATS LEFT
+    for month in range(start_of_year_timestep, t):
+      cumulative_cap_diversion += self.cap_excess[month]
+
+    self.cap_excess_allocation[t] = max(self.cap_excess_allocation[start_of_year_timestep] - cumulative_cap_diversion,
+                                        0.0)  # non-negativity constraint
+
+
+  cdef void calculate_cap_mead_annual_diversion_remaining(self, int t, int m) except *:
+    ## how much water in a given year remains to be diverted to the CAP system?
+    cdef:
+      double cumulative_cap_diversion
+      int start_of_year_timestep
+
+    cumulative_cap_diversion = 0.0
+    start_of_year_timestep = t - m
+
+    # COUNT THE DIVERSIONS UP FROM ALL PREVIOUS MONTHS THIS YEAR TO KNOW WHATS LEFT
+    for month in range(start_of_year_timestep,t):
+      cumulative_cap_diversion += self.cap_diversion[month]
+
+    self.cap_allocation[t] = max(self.cap_allocation[start_of_year_timestep] - cumulative_cap_diversion, 0.0) # non-negativity constraint
+
 
   cdef void calculate_cap_mead_allocation(self, int t) except *:
     ##this function is for lake mead ONLY, to calculate the CAP allocation
@@ -284,6 +343,9 @@ cdef class Reservoir():
     az_curtailment = self.calc_az_mead_curtailment(t)
 
     self.cap_allocation[t] = cap_baseline_lower_basin_allocation - az_curtailment - cap_system_losses
+
+    # also estimate excess water availability based on this and AZ full allocation
+    self.cap_excess_allocation[t] = max(0.0, self.az_capacity - az_curtailment - cap_system_losses - self.cap_allocation[t] - self.az_on_river_demand)
 
 
   cdef double calc_az_mead_curtailment(self, int t) except *:

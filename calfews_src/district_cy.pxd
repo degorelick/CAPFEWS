@@ -11,7 +11,7 @@ cdef class District():
                 total_banked_storage, min_direct_recovery, turnback_sales, turnback_purchases, annual_private_pumping, \
                 irrseasondemand, recharge_rate, last_days_demand_regression_error, recovery_capacity_remain, table_a_request, \
                 current_recharge_storage, current_requested, epsilon, \
-                AFY, growth_rate
+                AFY, growth_rate, monthly_delivery_cap_on_annual_entitlement, monthly_delivery_cap_on_leases
 
     public int is_Canal, is_District, is_Private, is_Waterbank, is_Reservoir, T, turnback_use, must_fill, seasonal_connection, \
                 thismonthuse, monthusecounter, monthemptycounter, has_private, has_pesticide, has_pmp, k_close_wateryear, iter_count, \
@@ -98,9 +98,16 @@ cdef class District():
 
   cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list) except *
 
+  cdef void reset_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list,
+                                   double total_needed_curtailment) except *
+
   cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction) except *
 
-  cdef void calculate_recharge_delivery(self, int t, str ama_key) except *
+  cdef double get_lease_capacity_nia_priority(self, double shortage_fraction) except *
+
+  cdef double get_lease_capacity_fed_priority(self, double shortage_fraction) except *
+
+  cdef void calculate_recharge_delivery(self, int t, int m, str ama_key) except *
 
 
   

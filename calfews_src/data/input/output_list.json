@@ -4,7 +4,9 @@
       "mead": {
         "elevation": true,
         "cap_allocation": true,
-        "cap_diversion": true
+        "cap_diversion": true,
+        "cap_excess_allocation": true,
+        "cap_excess": true
       },
       "pleasant": {
         "elevation": true,
