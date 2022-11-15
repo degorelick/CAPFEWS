@@ -214,7 +214,10 @@ cdef class Reservoir():
     ## ALL UNITS HERE IN kAF, not AF
     if t < (self.T - 1):
       self.S[t+1] = self.S[t] + self.net_pleasant_pumping[t] + \
-                    self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m] - self.evap[m] * self.calculate_pleasant_area(t)
+                    self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m] - self.evap[m]
+
+      print('Loss due to evap from Pleasant: ' + str(self.evap[m]))
+      print('All natural inflows to Pleasant: ' + str(self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m]))
 
       # check that storage does not exceed capacity
       if self.calculate_pleasant_elevation(self.S[t+1]) > 1701.0:
@@ -224,14 +227,15 @@ cdef class Reservoir():
       else:
         self.elevation[t+1] = self.calculate_pleasant_elevation(self.S[t+1])
 
+      print('Loss due to spill from Pleasant: ' + str(self.flood_spill[t]))
+
       # check non-negativity in water balance, reduce release to compensate if necessary
       if self.S[t+1] < 0.0:
         if self.net_pleasant_pumping[t] < 0.0:
           self.net_pleasant_pumping[t] = min(0.0,
                                              self.net_pleasant_pumping[t] - self.S[t+1])
           self.S[t + 1] = self.S[t] + self.net_pleasant_pumping[t] + \
-                          self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m] - self.evap[
-                            m] * self.calculate_pleasant_area(t)
+                          self.seepage[m] + self.MWD_inflow[m] + self.gaged_inflow[m] - self.evap[m]
 
       # if storage is still negative after releases/pumping are adjusted above,
       if self.S[t+1] < 0.0:
@@ -247,7 +251,7 @@ cdef class Reservoir():
       else:
         self.cap_allocation[t+1] = \
           max(0.0,
-              min(self.cap_allocation[t] + self.net_pleasant_pumping[t] + self.MWD_inflow[m] - self.evap[m] * self.calculate_pleasant_area(t) * min(1.0, self.cap_allocation[t]/self.S[t]),
+              min(self.cap_allocation[t] + self.net_pleasant_pumping[t] + self.MWD_inflow[m] - self.evap[m] * min(1.0, self.cap_allocation[t]/self.S[t]),
                   self.cap_allocation_capacity))
 
 

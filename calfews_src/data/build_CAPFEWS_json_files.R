@@ -354,7 +354,10 @@ pleasant_monthly_gaged_inflow_projections = # in AF/month
 pleasant_monthly_net_evap_projections = # in inches
   c(1.6, 1.7, 4.1, 6.7, 10.0, 11.0,
     10.3, 9.0, 7.3, 3.25, 3.4, 2.0)
-pleasant_monthly_seepage_projections = # in inches
+pleasant_monthly_net_evap_projections = # in AF
+  c(1070, 1214, 3052, 5150, 7662, 8370,
+    7016, 5415, 3851, 1714, 1936, 1248)
+pleasant_monthly_seepage_projections = # in AF
   c(62, 56, 62, 60, 62, 60,
     62, 62, 60, 62, 60, 62)
 pleasant_monthly_MWDlakewater_projections = # in AF, exchanged deliveries to MWD

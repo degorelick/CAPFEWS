@@ -6443,7 +6443,7 @@ cdef class Model():
     cdef:
       double all_cap_requests_to_deliver, all_cap_requests_to_curtail, \
         total_excess_demand, pleasant_delivered_releases, cumulative_year_diversions, \
-        available_to_pleasant, initial_mead_diversion_estimate
+        available_to_pleasant, initial_mead_diversion_estimate, available_excess, excess_request_to_deliver
       list nia_mitigation_partners, nia_mitigation_tier_percents
       dict excess_demand
       int d, da, dowy, m, y, wateryear, year_index
@@ -6489,7 +6489,8 @@ cdef class Model():
       excess_demand = {}
       for district_obj in self.district_list:
         district_obj.set_district_request(t, m-1, year_index-1, self.mead.mead_shortage_tier, self.contract_list)
-        print(district_obj.name + ' demand is ' + str(district_obj.monthly_deliveries['TOTAL'][t]))
+#        print(district_obj.name + ' initial delivery total is ' + str(district_obj.monthly_deliveries['TOTAL'][t]))
+#        print(district_obj.name + ' demand total is ' + str(district_obj.dailydemand[t]))
         # if district_obj.key == "GRC" and year_index == 1:
         #   print(district_obj.dailydemand[t])
         #   print(district_obj.monthly_deliveries['TOTAL'][t])
@@ -6497,40 +6498,61 @@ cdef class Model():
         excess_demand[district_obj.key] = district_obj.request_curtailment[t]
         total_excess_demand += district_obj.request_curtailment[t]
 
-      print('2) All Requests For Delivery: ' + str(all_cap_requests_to_deliver))
+      print('2) All Initial Requests For Delivery: ' + str(all_cap_requests_to_deliver))
       print('3) All Curtailed Requests: ' + str(total_excess_demand))
 
       ## STEP 1c: DETERMINE IF ANY TAKERS FOR EXCESS WATER
-      ## Assume any excess is proportionally split among those who still have unmet demand, if available
-#      self.mead.cap_excess[t] = 0.0
-      self.mead.cap_excess[t] = max(0.0,
-                                min(self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t] - all_cap_requests_to_deliver, # remaining diversion water this year
-                                    self.mead.monthly_diversion_capacity * cfs_tafd * self.days_in_month[self.non_leap_year][m-1] - all_cap_requests_to_deliver, # monthly pumping capacity of Mark Wilmer at Havasu
-                                    self.capcanal.annual_diversion_capacity - all_cap_requests_to_deliver)) # constrain by physical canal capacity
-      if self.mead.cap_excess[t] > 0.0:
+      ## Start with total available excess - all the water left that CAP can divert, constrained by pumping capacity
+      available_excess = max(0.0,
+                             min(self.mead.cap_excess_allocation[t], # excess water that on-river AZ users don't consume
+                                 self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t] - all_cap_requests_to_deliver, # remaining diversion water this year
+                                 self.mead.monthly_diversion_capacity * cfs_tafd * self.days_in_month[self.non_leap_year][m-1] - all_cap_requests_to_deliver, # monthly pumping capacity of Mark Wilmer at Havasu
+                                 self.capcanal.annual_diversion_capacity - all_cap_requests_to_deliver)) # constrain by physical canal capacity
+      print('4a) Available Excess pre-adjustment: ' + str(available_excess))
+
+      # if it is the last month of the WY/CY and there is excess water in Mead that CAP can divert,
+      # let it be passed as excess to sub-contractors or otherwise used below
+      if m == 12:
+        available_excess = max(available_excess,
+                               self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t] - all_cap_requests_to_deliver)
+
+      print('4b) All Available Excess: ' + str(available_excess))
+
+      if available_excess > 0.0:
         for district_obj in self.district_list:
           if district_obj.request_curtailment[t] > 0.0:
-            district_obj.deliveries['EXCESS'][year_index-1] += min(district_obj.request_curtailment[t],
-                                                                 self.mead.cap_excess[t] * district_obj.request_curtailment[t]/total_excess_demand)
-            district_obj.monthly_deliveries['EXCESS'][t] += min(district_obj.request_curtailment[t],
-                                                                 self.mead.cap_excess[t] * district_obj.request_curtailment[t]/total_excess_demand)
-            all_cap_requests_to_deliver += min(district_obj.request_curtailment[t],
-                                               self.mead.cap_excess[t] * district_obj.request_curtailment[t]/total_excess_demand)
-            district_obj.request_curtailment[t] -= min(district_obj.request_curtailment[t],
-                                                       self.mead.cap_excess[t] * district_obj.request_curtailment[t]/total_excess_demand)
+            ## Assume any excess is proportionally split among those who still have unmet demand, if available
+            excess_request_to_deliver = min(district_obj.request_curtailment[t],
+                                            available_excess * district_obj.request_curtailment[t]/total_excess_demand)
 
-      print('5) All Requests (Contract + Excess) To Deliver: ' + str(all_cap_requests_to_deliver))
-      print('5a) All Requests (Excess) To Deliver: ' + str(self.mead.cap_excess[t]))
+            # handle excess delivery accounting throughout model variables
+            district_obj.deliveries['EXCESS'][year_index-1] += excess_request_to_deliver
+            district_obj.monthly_deliveries['EXCESS'][t] += excess_request_to_deliver
+            district_obj.monthly_deliveries['TOTAL'][t] += excess_request_to_deliver
+            all_cap_requests_to_deliver += excess_request_to_deliver
+            district_obj.request_curtailment[t] -= excess_request_to_deliver
+            self.mead.cap_excess[t] += excess_request_to_deliver
+
+      print('5) All Final Requests (Contract + Excess) To Deliver: ' + str(all_cap_requests_to_deliver))
+      print('5a) Excess from Mead Delivered: ' + str(self.mead.cap_excess[t]))
 
       # What is the storage target for Lake Pleasant? IN THOUSANDS OF AF
       # This factors in seasonality (i.e. in winter, CAP is filling Pleasant rather than draining)
       available_to_pleasant = max(0.0,
-                                  min(self.mead.cap_allocation[t] - all_cap_requests_to_deliver, # remaining diversion water this year
+                                  min(self.mead.cap_excess_allocation[t], # excess water that on-river AZ users don't consume
+                                      self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t] - self.mead.cap_excess[t] - all_cap_requests_to_deliver, # remaining diversion water this year
                                       self.mead.monthly_diversion_capacity * cfs_tafd * self.days_in_month[self.non_leap_year][m-1] - all_cap_requests_to_deliver, # monthly pumping capacity of Mark Wilmer at Havasu
                                       self.capcanal.annual_diversion_capacity - all_cap_requests_to_deliver)) # constrain by physical canal capacity
+
+      # if it is the last month of the WY/CY and there is excess water in Mead that CAP can divert, put it
+      # in Lake Pleasant if the lake is low. ASSUME END OF WY AND END OF CY ARE SAME: DECEMBER
+      if m == 12:
+        available_to_pleasant = max(available_to_pleasant,
+                                    self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t] - self.mead.cap_excess[t] - all_cap_requests_to_deliver)
+
       self.pleasant.set_pleasant_pumping(t, m-1, available_to_pleasant)
 
-      print('6) Initial Pleasant Availability: ' + str(available_to_pleasant))
+      print('6) Initial Pumping-to-Pleasant Availability: ' + str(available_to_pleasant))
       print('7) Initial Net Pleasant Pumping: ' + str(self.pleasant.net_pleasant_pumping[t]))
 
       # Based on Lake Pleasant operating goals, determine what fraction of water to-be-delivered
@@ -6547,13 +6569,19 @@ cdef class Model():
         self.mead.cap_diversion[t] = max(0.0, initial_mead_diversion_estimate - pleasant_delivered_releases)
       else:
         # if there is enough diversion water to go around, follow the planned Lake Pleasant operations
+        # or zero out planned releases from Pleasant to conserve it
         print('More Mead Available Than Demand')
         self.mead.cap_diversion[t] = \
           max(0.0,
               min(initial_mead_diversion_estimate,
                   all_cap_requests_to_deliver + self.pleasant.net_pleasant_pumping[t],
                   self.mead.monthly_diversion_capacity * cfs_tafd * self.days_in_month[self.non_leap_year][m-1]))
-        self.pleasant.net_pleasant_pumping[t] = initial_mead_diversion_estimate - all_cap_requests_to_deliver
+
+        # double-check that deliveries get met after above calculation
+        # REMINDER: net pleasant pumping is negative for releases for delivery
+        if self.mead.cap_diversion[t] - self.pleasant.net_pleasant_pumping[t] < all_cap_requests_to_deliver:
+          print('Issue in Mead Diversion Calculation: Pleasant releases not right')
+          self.pleasant.net_pleasant_pumping[t] = self.mead.cap_diversion[t] - all_cap_requests_to_deliver
 
       print('8) Revised Net Pleasant Pumping: ' + str(self.pleasant.net_pleasant_pumping[t]))
       print('9) Mead Diversion: ' + str(self.mead.cap_diversion[t]))
@@ -6595,9 +6623,6 @@ cdef class Model():
       #     all_cap_requests_to_deliver += district_obj.dailydemand[t]
       #     excess_demand[district_obj.key] = district_obj.request_curtailment[t]
       #     total_excess_demand += district_obj.request_curtailment[t]
-
-      print('10) All Requests For Delivery: ' + str(all_cap_requests_to_deliver))
-      print('11) All Curtailed Requests: ' + str(total_excess_demand))
 
 
 

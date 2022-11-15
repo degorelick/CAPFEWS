@@ -369,7 +369,7 @@ cdef class District():
     # Tally up all available water for the subcontractor (district)
     cdef:
       double total_entitled_and_lease_water, used_entitlement_water, nia_shortage_frac, fed_shortage_frac, this_month_delivery, \
-              monthly_deliverable_water_cap, this_month_deliverable_water_remaining, this_month_lease_available
+              monthly_deliverable_water_cap, this_month_deliverable_water_remaining, this_month_lease_available, this_month_already_delivered
     total_entitled_and_lease_water = 0.0
     used_entitlement_water = 0.0
     nia_shortage_frac = 1.0
@@ -403,7 +403,8 @@ cdef class District():
     if self.dailydemand[t] > this_month_deliverable_water_remaining:
       self.initial_request_curtailment[t] = self.dailydemand[t] - this_month_deliverable_water_remaining
       self.request_curtailment[t] = self.dailydemand[t] - this_month_deliverable_water_remaining
-#      self.dailydemand[t] = max(this_month_deliverable_water_remaining, 0.0) # ensure non-negativity
+
+      this_month_already_delivered = 0.0
       for contract in contract_list:
         # make basic assumption that no more than 20% of total annual entitlement can be delivered in any given month,
         # and that no more than 11% of total annual lease amount can be delivered in a month.
@@ -418,7 +419,7 @@ cdef class District():
         # this month, only so much water from entitlements and leases can be delivered
         this_month_delivery = \
           max(0.0,
-              min(self.dailydemand[t],
+              min(self.dailydemand[t] - this_month_already_delivered, # overall demand - deliveries under other contracts accounted-for
                   contract.allocation[t] * self.project_contract[contract.key] * self.monthly_delivery_cap_on_annual_entitlement + \
                   this_month_lease_available * self.monthly_delivery_cap_on_leases,
                   contract.allocation[t] * self.project_contract[contract.key] + this_month_lease_available - self.deliveries[contract.key][yr]))
@@ -428,8 +429,10 @@ cdef class District():
 
         # record total deliveries scheduled for accounting
         self.monthly_deliveries['TOTAL'][t] += this_month_delivery
+        this_month_already_delivered += this_month_delivery
     else:
       used_entitlement_water = self.dailydemand[t]
+      this_month_already_delivered = 0.0
       for contract in contract_list:
         # make basic assumption that no more than 20% of total annual entitlement can be delivered in any given month,
         # and that no more than 11% of total annual lease amount can be delivered in a month.
@@ -444,7 +447,7 @@ cdef class District():
         # this month, only so much water from entitlements and leases can be delivered
         this_month_delivery = \
           max(0.0,
-              min(self.dailydemand[t],
+              min(self.dailydemand[t] - this_month_already_delivered,
                   contract.allocation[t] * self.project_contract[contract.key] * self.monthly_delivery_cap_on_annual_entitlement + \
                   this_month_lease_available * self.monthly_delivery_cap_on_leases,
                   contract.allocation[t] * self.project_contract[contract.key] + this_month_lease_available - self.deliveries[contract.key][yr]))
@@ -460,6 +463,7 @@ cdef class District():
 
         # record total deliveries scheduled for accounting
         self.monthly_deliveries['TOTAL'][t] += this_month_delivery
+        this_month_already_delivered += this_month_delivery
 
       if used_entitlement_water > 0.0:
         print('Error: Request not met as expected for ' + self.name + ' in timestep ' + str(t))

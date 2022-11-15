@@ -6,7 +6,6 @@
 
 rm(list=ls()) # clear memory
 setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results') # set directory
-#library(tidyverse)
 
 # read output from hdf5 file
 # to do this, run: install.packages("BiocManager")
@@ -29,3 +28,6 @@ h5closeAll() # DO THIS OR CAPFEWS WONT OUTPUT DATA ON NEXT RUN
 
 # export as csv
 write.table(CO, "results.csv", sep = ",", row.names = FALSE, col.names = TRUE)
+
+# export some plots 
+#library(tidyverse)
