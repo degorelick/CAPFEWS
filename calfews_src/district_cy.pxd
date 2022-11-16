@@ -98,9 +98,6 @@ cdef class District():
 
   cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list) except *
 
-  cdef void reset_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list,
-                                   double total_needed_curtailment) except *
-
   cdef double get_lease_capacity(self, double nia_shortage_fraction, double fed_shortage_fraction) except *
 
   cdef double get_lease_capacity_nia_priority(self, double shortage_fraction) except *

@@ -129,7 +129,7 @@ cdef class Model():
     self.district_list = [self.gric, self.akchin, self.scat, self.tohono, self.fmyn, self.wmat, self.srpmic, \
                           self.phoenix, self.tucson, self.mesa, self.scottsdale, self.gilbert, self.peoria, \
                           self.chandler, self.surprise, self.tempe, self.goodyear, self.azwc, self.asarco, \
-                          self.orovalley, self.mwd, self.epcor, \
+                          self.orovalley, self.mwd, self.epcor, self.glendale, \
                           self.msidd, self.caidd, self.hvid, self.hidd, self.asld, self.cagrd, self.awba, self.other]
 
     # CAP System Canal
@@ -143,7 +143,10 @@ cdef class Model():
     self.tribal = Contract(self, 'Tribal', 'FED')
     self.nia = Contract(self, 'Non Indian Agriculture', 'NIA')
 
-    self.contract_list = [self.pthree, self.municipal, self.tribal, self.nia]
+    # THE ORDER OF THIS VECTOR MATTERS - THIS IS THE IMPLICIT ORDER OF PRIORITY
+    # THAT SUBCONTRACTORS WILL FOLLOW TO REQUEST THEIR DELIVERIES, FROM
+    # LOWEST-PRIORITY TO HIGHEST-PRIORITY, AND TRIBAL WATER (PLUS LEASES) BEFORE M&I
+    self.contract_list = [self.nia, self.tribal, self.municipal, self.pthree]
 
     # CAP System Recharge Facilities ("Banks") - grouped as AMA regions...
     self.amaphoenix = Waterbank(self, 'Phoenix AMA', 'PXA', self.model_mode)
