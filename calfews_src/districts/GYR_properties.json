@@ -1,7 +1,7 @@
 {
   "name": "Goodyear",
   "MDD": 0,
-  "AFY": 17.742,
+  "AFY": 8.872,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

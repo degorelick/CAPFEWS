@@ -114,7 +114,7 @@ cdef class Model():
 
   cdef void initialize_cap(self, scenario = *) except *
 
-
+  cdef list identify_lease_providers(self, list districts)
 
 ######### init
   cdef tuple northern_initialization_routine(self, scenario=*)

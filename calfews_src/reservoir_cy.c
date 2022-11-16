@@ -1142,7 +1142,7 @@ struct __pyx_ctuple_int__and_int__and_double__and_double__and_double {
  * 
  *   cdef void initialize_cap(self, scenario = *) except *             # <<<<<<<<<<<<<<
  * 
- * 
+ *   cdef list identify_lease_providers(self, list districts)
  */
 struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap {
   int __pyx_n;
@@ -2195,7 +2195,7 @@ struct __pyx_vtabstruct_11calfews_src_11district_cy_District {
   void (*accounting_leiubank)(struct __pyx_obj_11calfews_src_11district_cy_District *, int);
   void (*calc_demand)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, int, PyObject *, int, PyObject *);
   void (*get_urban_demand)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, int, int, int, PyObject *, double, double, PyObject *);
-  void (*set_district_request)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, PyObject *, PyObject *);
+  void (*set_district_request)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, PyObject *, PyObject *, PyObject *);
   double (*get_lease_capacity)(struct __pyx_obj_11calfews_src_11district_cy_District *, double, double);
   double (*get_lease_capacity_nia_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
   double (*get_lease_capacity_fed_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
@@ -2319,6 +2319,7 @@ struct __pyx_vtabstruct_11calfews_src_8model_cy_Model {
   __pyx_ctuple_int__and_int__and_double__and_double__and_double (*find_pumping_release)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int, int, int, int, PyObject *, PyObject *, PyObject *, double, double, PyObject *, int, PyObject *);
   double (*simulate_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int);
   void (*initialize_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap *__pyx_optional_args);
+  PyObject *(*identify_lease_providers)(struct __pyx_obj_11calfews_src_8model_cy_Model *, PyObject *);
   PyObject *(*northern_initialization_routine)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_northern_initialization_routine *__pyx_optional_args);
   void (*initialize_northern_res)(struct __pyx_obj_11calfews_src_8model_cy_Model *);
   void (*initialize_delta_ops)(struct __pyx_obj_11calfews_src_8model_cy_Model *);
@@ -3246,6 +3247,7 @@ static const char __pyx_k__8[] = "*";
 static const char __pyx_k_df[] = "df";
 static const char __pyx_k_np[] = "np";
 static const char __pyx_k_pd[] = "pd";
+static const char __pyx_k_BAU[] = "BAU";
 static const char __pyx_k_FOL[] = "FOL";
 static const char __pyx_k_KWH[] = "KWH";
 static const char __pyx_k_MDE[] = "MDE";
@@ -3409,6 +3411,7 @@ static PyObject *__pyx_kp_u_April_plus_2_Flow;
 static PyObject *__pyx_kp_u_April_plus_2_Pred;
 static PyObject *__pyx_kp_u_April_plus_3_Flow;
 static PyObject *__pyx_kp_u_April_plus_3_Pred;
+static PyObject *__pyx_n_u_BAU;
 static PyObject *__pyx_n_u_BN;
 static PyObject *__pyx_n_u_C;
 static PyObject *__pyx_n_u_D;
@@ -5067,7 +5070,7 @@ static int __pyx_pf_11calfews_src_12reservoir_cy_9Reservoir_6__init__(struct __p
  *     self.seepage = [0.0 for _ in range(12)]
  *     self.MWD_inflow = [0.0 for _ in range(12)]             # <<<<<<<<<<<<<<
  *     self.evap = [0.0 for _ in range(12)]
- *     self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+ *     self.dcp_guidelines = ['BAU', 'T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
  */
   { /* enter inner scope */
     __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
@@ -5087,8 +5090,8 @@ static int __pyx_pf_11calfews_src_12reservoir_cy_9Reservoir_6__init__(struct __p
  *     self.seepage = [0.0 for _ in range(12)]
  *     self.MWD_inflow = [0.0 for _ in range(12)]
  *     self.evap = [0.0 for _ in range(12)]             # <<<<<<<<<<<<<<
- *     self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
- *     self.mead_shortage_tier = 'T0'
+ *     self.dcp_guidelines = ['BAU', 'T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+ *     self.mead_shortage_tier = 'BAU'
  */
   { /* enter inner scope */
     __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
@@ -5107,30 +5110,33 @@ static int __pyx_pf_11calfews_src_12reservoir_cy_9Reservoir_6__init__(struct __p
   /* "calfews_src/reservoir_cy.pyx":70
  *     self.MWD_inflow = [0.0 for _ in range(12)]
  *     self.evap = [0.0 for _ in range(12)]
- *     self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']             # <<<<<<<<<<<<<<
- *     self.mead_shortage_tier = 'T0'
+ *     self.dcp_guidelines = ['BAU', 'T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']             # <<<<<<<<<<<<<<
+ *     self.mead_shortage_tier = 'BAU'
  *     self.pleasant_target_elev = [0.0 for _ in range(12)]
  */
-  __pyx_t_1 = PyList_New(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_n_u_BAU);
+  __Pyx_GIVEREF(__pyx_n_u_BAU);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_u_BAU);
   __Pyx_INCREF(__pyx_n_u_T0);
   __Pyx_GIVEREF(__pyx_n_u_T0);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_u_T0);
+  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_n_u_T0);
   __Pyx_INCREF(__pyx_n_u_T1);
   __Pyx_GIVEREF(__pyx_n_u_T1);
-  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_n_u_T1);
+  PyList_SET_ITEM(__pyx_t_1, 2, __pyx_n_u_T1);
   __Pyx_INCREF(__pyx_n_u_T2a);
   __Pyx_GIVEREF(__pyx_n_u_T2a);
-  PyList_SET_ITEM(__pyx_t_1, 2, __pyx_n_u_T2a);
+  PyList_SET_ITEM(__pyx_t_1, 3, __pyx_n_u_T2a);
   __Pyx_INCREF(__pyx_n_u_T2b);
   __Pyx_GIVEREF(__pyx_n_u_T2b);
-  PyList_SET_ITEM(__pyx_t_1, 3, __pyx_n_u_T2b);
+  PyList_SET_ITEM(__pyx_t_1, 4, __pyx_n_u_T2b);
   __Pyx_INCREF(__pyx_n_u_T3);
   __Pyx_GIVEREF(__pyx_n_u_T3);
-  PyList_SET_ITEM(__pyx_t_1, 4, __pyx_n_u_T3);
+  PyList_SET_ITEM(__pyx_t_1, 5, __pyx_n_u_T3);
   __Pyx_INCREF(__pyx_n_u_DP);
   __Pyx_GIVEREF(__pyx_n_u_DP);
-  PyList_SET_ITEM(__pyx_t_1, 5, __pyx_n_u_DP);
+  PyList_SET_ITEM(__pyx_t_1, 6, __pyx_n_u_DP);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF(__pyx_v_self->dcp_guidelines);
   __Pyx_DECREF(__pyx_v_self->dcp_guidelines);
@@ -5139,20 +5145,20 @@ static int __pyx_pf_11calfews_src_12reservoir_cy_9Reservoir_6__init__(struct __p
 
   /* "calfews_src/reservoir_cy.pyx":71
  *     self.evap = [0.0 for _ in range(12)]
- *     self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
- *     self.mead_shortage_tier = 'T0'             # <<<<<<<<<<<<<<
+ *     self.dcp_guidelines = ['BAU', 'T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+ *     self.mead_shortage_tier = 'BAU'             # <<<<<<<<<<<<<<
  *     self.pleasant_target_elev = [0.0 for _ in range(12)]
  *     self.cap_diversion_pump_frac = [0.0 for _ in range(12)]
  */
-  __Pyx_INCREF(__pyx_n_u_T0);
-  __Pyx_GIVEREF(__pyx_n_u_T0);
+  __Pyx_INCREF(__pyx_n_u_BAU);
+  __Pyx_GIVEREF(__pyx_n_u_BAU);
   __Pyx_GOTREF(__pyx_v_self->mead_shortage_tier);
   __Pyx_DECREF(__pyx_v_self->mead_shortage_tier);
-  __pyx_v_self->mead_shortage_tier = __pyx_n_u_T0;
+  __pyx_v_self->mead_shortage_tier = __pyx_n_u_BAU;
 
   /* "calfews_src/reservoir_cy.pyx":72
- *     self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
- *     self.mead_shortage_tier = 'T0'
+ *     self.dcp_guidelines = ['BAU', 'T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+ *     self.mead_shortage_tier = 'BAU'
  *     self.pleasant_target_elev = [0.0 for _ in range(12)]             # <<<<<<<<<<<<<<
  *     self.cap_diversion_pump_frac = [0.0 for _ in range(12)]
  *     self.cap_diversion = [0.0 for _ in range(self.T)]
@@ -5172,7 +5178,7 @@ static int __pyx_pf_11calfews_src_12reservoir_cy_9Reservoir_6__init__(struct __p
   __pyx_t_1 = 0;
 
   /* "calfews_src/reservoir_cy.pyx":73
- *     self.mead_shortage_tier = 'T0'
+ *     self.mead_shortage_tier = 'BAU'
  *     self.pleasant_target_elev = [0.0 for _ in range(12)]
  *     self.cap_diversion_pump_frac = [0.0 for _ in range(12)]             # <<<<<<<<<<<<<<
  *     self.cap_diversion = [0.0 for _ in range(self.T)]
@@ -10233,7 +10239,7 @@ static double __pyx_f_11calfews_src_12reservoir_cy_9Reservoir_calc_az_mead_curta
  *     else:
  *       guidelines_curtailment = 0.0             # <<<<<<<<<<<<<<
  *       dcp_curtailment = 0.0
- *       self.mead_shortage_tier = 'T0'
+ *       self.mead_shortage_tier = 'BAU'
  */
   /*else*/ {
     __pyx_v_guidelines_curtailment = 0.0;
@@ -10242,7 +10248,7 @@ static double __pyx_f_11calfews_src_12reservoir_cy_9Reservoir_calc_az_mead_curta
  *     else:
  *       guidelines_curtailment = 0.0
  *       dcp_curtailment = 0.0             # <<<<<<<<<<<<<<
- *       self.mead_shortage_tier = 'T0'
+ *       self.mead_shortage_tier = 'BAU'
  * 
  */
     __pyx_v_dcp_curtailment = 0.0;
@@ -10250,15 +10256,15 @@ static double __pyx_f_11calfews_src_12reservoir_cy_9Reservoir_calc_az_mead_curta
     /* "calfews_src/reservoir_cy.pyx":380
  *       guidelines_curtailment = 0.0
  *       dcp_curtailment = 0.0
- *       self.mead_shortage_tier = 'T0'             # <<<<<<<<<<<<<<
+ *       self.mead_shortage_tier = 'BAU'             # <<<<<<<<<<<<<<
  * 
  *     # convert from AF to kAF
  */
-    __Pyx_INCREF(__pyx_n_u_T0);
-    __Pyx_GIVEREF(__pyx_n_u_T0);
+    __Pyx_INCREF(__pyx_n_u_BAU);
+    __Pyx_GIVEREF(__pyx_n_u_BAU);
     __Pyx_GOTREF(__pyx_v_self->mead_shortage_tier);
     __Pyx_DECREF(__pyx_v_self->mead_shortage_tier);
-    __pyx_v_self->mead_shortage_tier = __pyx_n_u_T0;
+    __pyx_v_self->mead_shortage_tier = __pyx_n_u_BAU;
   }
   __pyx_L3:;
 
@@ -51491,6 +51497,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_April_plus_2_Pred, __pyx_k_April_plus_2_Pred, sizeof(__pyx_k_April_plus_2_Pred), 0, 1, 0, 0},
   {&__pyx_kp_u_April_plus_3_Flow, __pyx_k_April_plus_3_Flow, sizeof(__pyx_k_April_plus_3_Flow), 0, 1, 0, 0},
   {&__pyx_kp_u_April_plus_3_Pred, __pyx_k_April_plus_3_Pred, sizeof(__pyx_k_April_plus_3_Pred), 0, 1, 0, 0},
+  {&__pyx_n_u_BAU, __pyx_k_BAU, sizeof(__pyx_k_BAU), 0, 1, 0, 1},
   {&__pyx_n_u_BN, __pyx_k_BN, sizeof(__pyx_k_BN), 0, 1, 0, 1},
   {&__pyx_n_u_C, __pyx_k_C, sizeof(__pyx_k_C), 0, 1, 0, 1},
   {&__pyx_n_u_D, __pyx_k_D, sizeof(__pyx_k_D), 0, 1, 0, 1},

@@ -1,7 +1,7 @@
 {
   "name": "Tucson",
   "MDD": 0,
-  "AFY": 144.781,
+  "AFY": 144.0865,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

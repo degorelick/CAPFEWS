@@ -1567,7 +1567,7 @@ struct __pyx_vtabstruct_11calfews_src_11district_cy_District {
   void (*accounting_leiubank)(struct __pyx_obj_11calfews_src_11district_cy_District *, int);
   void (*calc_demand)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, int, PyObject *, int, PyObject *);
   void (*get_urban_demand)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, int, int, int, PyObject *, double, double, PyObject *);
-  void (*set_district_request)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, PyObject *, PyObject *);
+  void (*set_district_request)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, PyObject *, PyObject *, PyObject *);
   double (*get_lease_capacity)(struct __pyx_obj_11calfews_src_11district_cy_District *, double, double);
   double (*get_lease_capacity_nia_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
   double (*get_lease_capacity_fed_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);

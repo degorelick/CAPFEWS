@@ -1,7 +1,7 @@
 {
   "name": "AWBA",
   "MDD": 0,
-  "AFY": 65.764,
+  "AFY": 34.565,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

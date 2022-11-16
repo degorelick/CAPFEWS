@@ -1,7 +1,7 @@
 {
   "name": "Gilbert",
   "MDD": 0,
-  "AFY": 62.577,
+  "AFY": 38.498,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

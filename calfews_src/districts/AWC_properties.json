@@ -1,7 +1,7 @@
 {
   "name": "AZWC",
   "MDD": 0,
-  "AFY": 17.648,
+  "AFY": 16.8335,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

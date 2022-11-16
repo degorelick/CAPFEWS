@@ -1,7 +1,7 @@
 {
   "name": "HVID",
   "MDD": 0,
-  "AFY": 34.282,
+  "AFY": 27.161,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

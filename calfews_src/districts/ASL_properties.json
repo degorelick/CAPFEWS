@@ -1,7 +1,7 @@
 {
   "name": "AZ State Land",
   "MDD": 0,
-  "AFY": 1.122,
+  "AFY": 0.4335,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

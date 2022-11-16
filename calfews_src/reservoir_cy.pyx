@@ -67,8 +67,8 @@ cdef class Reservoir():
     self.seepage = [0.0 for _ in range(12)]
     self.MWD_inflow = [0.0 for _ in range(12)]
     self.evap = [0.0 for _ in range(12)]
-    self.dcp_guidelines = ['T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
-    self.mead_shortage_tier = 'T0'
+    self.dcp_guidelines = ['BAU', 'T0', 'T1', 'T2a', 'T2b', 'T3', 'DP']
+    self.mead_shortage_tier = 'BAU'
     self.pleasant_target_elev = [0.0 for _ in range(12)]
     self.cap_diversion_pump_frac = [0.0 for _ in range(12)]
     self.cap_diversion = [0.0 for _ in range(self.T)]
@@ -377,7 +377,7 @@ cdef class Reservoir():
     else:
       guidelines_curtailment = 0.0
       dcp_curtailment = 0.0
-      self.mead_shortage_tier = 'T0'
+      self.mead_shortage_tier = 'BAU'
 
     # convert from AF to kAF
     curtailment = (guidelines_curtailment + dcp_curtailment)/self.kAFtoAF

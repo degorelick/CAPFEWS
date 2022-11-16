@@ -1,7 +1,7 @@
 {
   "name": "Ak-Chin",
   "MDD": 0,
-  "AFY": 81.632,
+  "AFY": 73.318,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

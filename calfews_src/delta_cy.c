@@ -1155,7 +1155,7 @@ struct __pyx_ctuple_int__and_int__and_double__and_double__and_double {
  * 
  *   cdef void initialize_cap(self, scenario = *) except *             # <<<<<<<<<<<<<<
  * 
- * 
+ *   cdef list identify_lease_providers(self, list districts)
  */
 struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap {
   int __pyx_n;
@@ -2208,7 +2208,7 @@ struct __pyx_vtabstruct_11calfews_src_11district_cy_District {
   void (*accounting_leiubank)(struct __pyx_obj_11calfews_src_11district_cy_District *, int);
   void (*calc_demand)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, int, PyObject *, int, PyObject *);
   void (*get_urban_demand)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, int, int, int, PyObject *, double, double, PyObject *);
-  void (*set_district_request)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, PyObject *, PyObject *);
+  void (*set_district_request)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, int, PyObject *, PyObject *, PyObject *);
   double (*get_lease_capacity)(struct __pyx_obj_11calfews_src_11district_cy_District *, double, double);
   double (*get_lease_capacity_nia_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
   double (*get_lease_capacity_fed_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
@@ -2332,6 +2332,7 @@ struct __pyx_vtabstruct_11calfews_src_8model_cy_Model {
   __pyx_ctuple_int__and_int__and_double__and_double__and_double (*find_pumping_release)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int, int, int, int, PyObject *, PyObject *, PyObject *, double, double, PyObject *, int, PyObject *);
   double (*simulate_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int);
   void (*initialize_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap *__pyx_optional_args);
+  PyObject *(*identify_lease_providers)(struct __pyx_obj_11calfews_src_8model_cy_Model *, PyObject *);
   PyObject *(*northern_initialization_routine)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_northern_initialization_routine *__pyx_optional_args);
   void (*initialize_northern_res)(struct __pyx_obj_11calfews_src_8model_cy_Model *);
   void (*initialize_delta_ops)(struct __pyx_obj_11calfews_src_8model_cy_Model *);

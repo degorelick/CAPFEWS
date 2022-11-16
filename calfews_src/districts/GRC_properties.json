@@ -1,7 +1,7 @@
 {
   "name": "GRIC",
   "MDD": 0,
-  "AFY": 246.498,
+  "AFY": 141.0755,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

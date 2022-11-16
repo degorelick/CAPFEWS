@@ -1,7 +1,7 @@
 {
   "name": "Chandler",
   "MDD": 0,
-  "AFY": 32.001,
+  "AFY": 27.1055,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

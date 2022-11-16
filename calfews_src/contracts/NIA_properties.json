@@ -7,6 +7,7 @@
   "allocation_priority": 1,
   "storage_priority": 1,
   "reduction": {
+    "BAU": 1,
     "T0": 0.4545,
     "T1": 0,
     "T2a": 0,

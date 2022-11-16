@@ -1,7 +1,7 @@
 {
   "name": "HIDD",
   "MDD": 0,
-  "AFY": 37.551,
+  "AFY": 30.4575,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

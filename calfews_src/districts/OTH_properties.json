@@ -1,7 +1,7 @@
 {
   "name": "OTHER",
   "MDD": 0,
-  "AFY": 123.586,
+  "AFY": 114.617,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

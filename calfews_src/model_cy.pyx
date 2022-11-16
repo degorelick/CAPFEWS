@@ -6439,6 +6439,22 @@ cdef class Model():
   #############################     Main simulation (CAP Model Sys)     ###############################################
   #####################################################################################################################
 
+  cdef list identify_lease_providers(self, list districts):
+    ## Cycle through districts and identify which provide leases
+    ## so that they can be treated differently in the delivery requesting functions
+    cdef:
+      list lease_provider_district_keys
+      District district_obj
+
+    # if any lease quantity is negative, this user is a provider
+    lease_provider_district_keys = []
+    for district_obj in districts:
+      if district_obj.lease_quantity[0] < 0.0:
+        lease_provider_district_keys.append(district_obj.key)
+
+    return lease_provider_district_keys
+
+
   cdef double simulate_cap(self, int t) except *:
     ###Monthly Operations###
     ##Water Balance on each reservoir
@@ -6447,7 +6463,7 @@ cdef class Model():
       double all_cap_requests_to_deliver, all_cap_requests_to_curtail, \
         total_excess_demand, pleasant_delivered_releases, cumulative_year_diversions, \
         available_to_pleasant, initial_mead_diversion_estimate, available_excess, excess_request_to_deliver
-      list nia_mitigation_partners, nia_mitigation_tier_percents
+      list nia_mitigation_partners, nia_mitigation_tier_percents, lease_providers
       dict excess_demand
       int d, da, dowy, m, y, wateryear, year_index
       str contract_type
@@ -6490,8 +6506,9 @@ cdef class Model():
       all_cap_requests_to_deliver = 0.0
       total_excess_demand = 0.0
       excess_demand = {}
+      lease_providers = self.identify_lease_providers(self.district_list)
       for district_obj in self.district_list:
-        district_obj.set_district_request(t, m-1, year_index-1, self.mead.mead_shortage_tier, self.contract_list)
+        district_obj.set_district_request(t, m-1, year_index, self.mead.mead_shortage_tier, self.contract_list, lease_providers)
 #        print(district_obj.name + ' initial delivery total is ' + str(district_obj.monthly_deliveries['TOTAL'][t]))
 #        print(district_obj.name + ' demand total is ' + str(district_obj.dailydemand[t]))
         # if district_obj.key == "GRC" and year_index == 1:
@@ -6529,7 +6546,7 @@ cdef class Model():
                                             available_excess * district_obj.request_curtailment[t]/total_excess_demand)
 
             # handle excess delivery accounting throughout model variables
-            district_obj.deliveries['EXCESS'][year_index-1] += excess_request_to_deliver
+            district_obj.deliveries['EXCESS'][year_index] += excess_request_to_deliver
             district_obj.monthly_deliveries['EXCESS'][t] += excess_request_to_deliver
             district_obj.monthly_deliveries['TOTAL'][t] += excess_request_to_deliver
             all_cap_requests_to_deliver += excess_request_to_deliver

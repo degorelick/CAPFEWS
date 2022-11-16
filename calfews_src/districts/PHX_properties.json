@@ -1,7 +1,7 @@
 {
   "name": "Phoenix",
   "MDD": 0,
-  "AFY": 186.924,
+  "AFY": 184.108,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

@@ -1,7 +1,7 @@
 {
   "name": "EPCOR",
   "MDD": 0,
-  "AFY": 20.885,
+  "AFY": 20.775,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

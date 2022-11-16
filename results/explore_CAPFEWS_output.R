@@ -44,16 +44,17 @@ for (name in subcontractor_names) {
   
   # organize delivery requests over actual deliveries (by priority class)
   colnames(data) = sub(paste(name, "_", sep = ""), "", colnames(data))
-  colnames(data)[1] = "Demand (kAF)"
-  data_to_plot = data %>% select(`Demand (kAF)`, PTR, MUI, FED, NIA, EXCESS) %>% mutate(Month = c(1:nrow(data)))
+  colnames(data)[1] = "Demand (kAF)"; colnames(data)[3] = "Curtailment"
+  data_to_plot = data %>% select(`Demand (kAF)`, PTR, MUI, FED, NIA, EXCESS, Curtailment) %>% mutate(Month = c(1:nrow(data)))
   request = data_to_plot %>% select(Month, `Demand (kAF)`)
-  deliveries = data_to_plot %>% select(Month, PTR, MUI, FED, NIA, EXCESS) %>% 
-    pivot_longer(cols = c(PTR, MUI, FED, NIA, EXCESS))
+  deliveries = data_to_plot %>% select(Month, PTR, MUI, FED, NIA, EXCESS, Curtailment) %>% 
+    pivot_longer(cols = c(PTR, MUI, FED, NIA, EXCESS, Curtailment))
   
   # plot
   to_show = ggplot() + ggtitle(paste(subcontractor_proper_names[which(subcontractor_names == name)], "Demands (2013-2021)", sep = " ")) +
-    geom_line(data = request, aes(x = Month, y = `Demand (kAF)`), color = "blue3", size = 2) +
-    geom_bar(data = deliveries, aes(x = Month, y = value, fill = name), stat = "identity", position = "stack", color = NA)
+    geom_line(data = request, aes(x = Month, y = `Demand (kAF)`), color = "black", size = 1.5) +
+    geom_bar(data = deliveries, aes(x = Month, y = value, fill = name), stat = "identity", position = "stack", color = NA) +
+    scale_fill_manual(values = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"))
   ggsave(plot = to_show, filename = paste(name, "demand.png", sep = "_"), units = "in", width = 8, height = 5, dpi = 600)
 } 
 

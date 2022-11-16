@@ -100,7 +100,8 @@ for (contract_class in c("PTR", "MUI", "FED", "NIA")) {
                   "type" = "contract",
                   "allocation_priority" = ifelse(test = contract_class %in% c("AGR", "EXC"), yes = 0, no = 1),
                   "storage_priority" = 1,
-                  "reduction" = list("T0" = ifelse(test = contract_class %in% c("MUI", "FED"), 
+                  "reduction" = list("BAU" = 1,
+                                     "T0" = ifelse(test = contract_class %in% c("MUI", "FED"), 
                                                    yes = 1, 
                                                    no = ifelse(test = contract_class %in% c("NIA"), 
                                                                yes = T0_NIA_fraction_remaining, # NIA
@@ -154,6 +155,7 @@ AnnualDemand = UserDemandMonthly %>%
   mutate(Year = lubridate::year(datetime)) %>%
   group_by(Year) %>% summarise_at(vars(`Ak-Chin`:WMAT), sum)
 MaxAnnualDemand = apply(AnnualDemand,2,max)
+MedianAnnualDemand = apply(AnnualDemand,2,median)
 
 # also get AMAs that each district can recharge to
 UserDemandRecharge = read.csv("AMA_deliveries_recharge_byAMA.csv", header = TRUE)
@@ -250,7 +252,7 @@ for (d in entitlement_totals$Code) {
   
   district = list("name" = district_full_name, 
                   "MDD" = 0,
-                  "AFY" = MaxAnnualDemand[which(names(MaxAnnualDemand) == district_full_name)]/1000, # converted to kAF 
+                  "AFY" = MedianAnnualDemand[which(names(MedianAnnualDemand) == district_full_name)]/1000, # converted to kAF 
                   "contract_list" = c("PTR", "MUI", "FED", "NIA"),
                   "turnout_list" = as.list("CAP"), # connected to the cap canal, the canal object json holds the spatial relations
                   "urban_profile" = c(UserDemandSeasonality[which(names(UserDemandSeasonality) == district_full_name)])[[1]],
@@ -412,20 +414,23 @@ Pleasant = list("name" = "Lake Pleasant",
                 "capacity" = pleasant_storage_capacity/1000, # in kAF
                 "has_downstream_target_flow" = FALSE,
                 "env_min_flow" = 
-                  list("T0" = rep(0, n_months),
+                  list("BAU" = rep(0, n_months),
+                       "T0" = rep(0, n_months),
                        "T1" = rep(0, n_months), 
                        "T2a" = rep(0, n_months), 
                        "T2b" = rep(0, n_months), 
                        "T3" = rep(0, n_months), 
                        "DP" = rep(0, n_months)),
                 "temp_releases" = 
-                  list("T0" = rep(0, n_months),
+                  list("BAU" = rep(0, n_months),
+                       "T0" = rep(0, n_months),
                        "T1" = rep(0, n_months), 
                        "T2a" = rep(0, n_months), 
                        "T2b" = rep(0, n_months), 
                        "T3" = rep(0, n_months), 
                        "DP" = rep(0, n_months)),
-                "carryover_target" = list("T0" = pleasant_storage_capacity * carryover_frac/1000,
+                "carryover_target" = list("BAU" = pleasant_storage_capacity * carryover_frac/1000,
+                                          "T0" = pleasant_storage_capacity * carryover_frac/1000,
                                           "T1" = pleasant_storage_capacity * carryover_frac/1000, # a round number, based on last 3 years of EOY storage
                                           "T2a" = pleasant_storage_capacity * carryover_frac/1000, 
                                           "T2b" = pleasant_storage_capacity * carryover_frac/1000, 

@@ -1,7 +1,7 @@
 {
   "name": "Mesa",
   "MDD": 0,
-  "AFY": 54.456,
+  "AFY": 53.191,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

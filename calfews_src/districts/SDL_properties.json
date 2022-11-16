@@ -1,7 +1,7 @@
 {
   "name": "Scottsdale",
   "MDD": 0,
-  "AFY": 81.068,
+  "AFY": 79.937,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

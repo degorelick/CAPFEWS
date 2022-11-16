@@ -1,7 +1,7 @@
 {
   "name": "MSIDD",
   "MDD": 0,
-  "AFY": 104.604,
+  "AFY": 98.374,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

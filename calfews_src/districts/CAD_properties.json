@@ -1,7 +1,7 @@
 {
   "name": "CAIDD",
   "MDD": 0,
-  "AFY": 97.885,
+  "AFY": 92.3085,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

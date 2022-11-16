@@ -1,7 +1,7 @@
 {
   "name": "CAGRD",
   "MDD": 0,
-  "AFY": 53.065,
+  "AFY": 42.2515,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

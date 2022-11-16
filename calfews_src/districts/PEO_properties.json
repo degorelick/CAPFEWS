@@ -1,7 +1,7 @@
 {
   "name": "Peoria",
   "MDD": 0,
-  "AFY": 32.213,
+  "AFY": 30.836,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"

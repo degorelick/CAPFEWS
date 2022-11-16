@@ -1,7 +1,7 @@
 {
   "name": "Glendale",
   "MDD": 0,
-  "AFY": 22.389,
+  "AFY": 22.2965,
   "contract_list": ["PTR", "MUI", "FED", "NIA"],
   "turnout_list": [
     "CAP"
