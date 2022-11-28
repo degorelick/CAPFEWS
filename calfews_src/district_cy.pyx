@@ -230,6 +230,28 @@ cdef class District():
     self.monthly_delivery_cap_on_leases = 0.11
 
 
+  cdef double get_annual_district_entitlements(self, int t, str shortage_tier, list contract_list, list lease_donor_districts) except *:
+    # Tally up all potential available entitled water for the subcontractor (district) THIS YEAR, including leases
+    cdef double total_entitlement
+    total_entitlement = 0.0
+    for contract in contract_list:
+      annual_lease_water_available = 0.0
+      contract_water_available = \
+        contract.allocation[t] * self.project_contract[contract.key]
+
+      # collect some variables for the immediate next step of tallying leases
+      # include leases under Tribal and NIA Priorities
+      # if this user is a tribe that leases to others, and reduces their entitlements for delivery, this is negative
+      if contract.key == "NIA":
+        annual_lease_water_available = self.get_lease_capacity_nia_priority(contract.reduction[shortage_tier])
+      elif contract.key == "FED":
+        annual_lease_water_available = self.get_lease_capacity_fed_priority(contract.reduction[shortage_tier])
+
+      total_entitlement += contract_water_available + annual_lease_water_available
+
+    return total_entitlement
+
+
   cdef void calculate_recharge_delivery(self, int t, int m, str ama_key) except *:
     ## in the CAP model, allocate fraction of subcontractor delivery request for recharge
     ## depending on the AMA, fraction of demands sent for recharge overall, and shortage
@@ -291,6 +313,7 @@ cdef class District():
 
     return leases
 
+
   cdef void set_district_request(self, int t, int month, int yr, str mead_shortage_tier, list contract_list, list lease_donor_districts) except *:
     ## in the CAP model, first runs have urban demands only for districts
     ## so we just want to collect those
@@ -307,8 +330,8 @@ cdef class District():
 
     # what would demand be, if there are no constraints?
     self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month] * (1 + self.growth_rate)**yr
-    if self.key == "GIL":
-      print(self.name + ' demand: ', str(self.dailydemand[t]) + ', month ', str(t))
+#    if self.key == "GIL":
+#      print(self.name + ' demand: ', str(self.dailydemand[t]) + ', month ', str(t))
 
     # factor in whether NIA and/or Ag Mitigation is active, and current long-term leases
     # https://waterbank.az.gov/sites/default/files/NIA%20Mitigation%20Agreement%20Completed%207-18-2019.pdf
@@ -337,8 +360,9 @@ cdef class District():
         lease_water_available = annual_lease_water_available # should be negative
       else:
         lease_water_available = annual_lease_water_available * self.monthly_delivery_cap_on_leases
-      if self.key == "GIL":
-          print(contract.name + ' lease availability: ', str(lease_water_available) + ', month ', str(t))
+
+#      if self.key == "GIL":
+#          print(contract.name + ' lease availability: ', str(lease_water_available) + ', month ', str(t))
 
       # collect contract + lease water for this priority class of water, and see if it has already been dispensed
       # for this year. choose between (a) maximum available to deliver in a given month OR (b) what's left in
@@ -350,18 +374,18 @@ cdef class District():
                                            self.deliveries[contract.key][yr]))
       total_entitled_and_lease_water += class_priority_lease_water
 
-      if self.key == "GIL":
-          print(contract.name + ' total availability: ', str(class_priority_lease_water) + ', month ', str(t))
+#      if self.key == "GIL":
+#          print(contract.name + ' total availability: ', str(class_priority_lease_water) + ', month ', str(t))
 
     # Does request/base demand exceed entitlement (of all rights classes) + leases?
     # if so, record the curtailment
     # if not, assuming deliveries are filled in decreasing order of priority entitlements for accounting
-    if self.dailydemand[t] > total_entitled_and_lease_water:
-      if self.key == "GIL":
-        print(self.name + ' demands NOT met.')
-    else:
-      if self.key == "GIL":
-        print(self.name + ' demands are met.')
+    # if self.dailydemand[t] > total_entitled_and_lease_water:
+    #   if self.key == "GIL":
+    #     print(self.name + ' demands NOT met.')
+    # else:
+    #   if self.key == "GIL":
+    #     print(self.name + ' demands are met.')
 
     self.initial_request_curtailment[t] = max(0.0, self.dailydemand[t] - total_entitled_and_lease_water)
     self.request_curtailment[t] = max(0.0, self.dailydemand[t] - total_entitled_and_lease_water)
@@ -398,8 +422,8 @@ cdef class District():
       self.monthly_deliveries['TOTAL'][t] += this_month_delivery
       this_month_already_delivered += this_month_delivery
 
-      if self.key == "GIL":
-        print(contract.name + ' deliveries: ', str(self.monthly_deliveries[contract.key][t]) + ', month ', str(t))
+#      if self.key == "GIL":
+#        print(contract.name + ' deliveries: ', str(self.monthly_deliveries[contract.key][t]) + ', month ', str(t))
 
     if this_month_already_delivered < self.dailydemand[t] - self.initial_request_curtailment[t]:
       print('Error: Request not met as expected for ' + self.name + ' in timestep ' + str(t))

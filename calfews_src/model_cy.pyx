@@ -6455,6 +6455,65 @@ cdef class Model():
     return lease_provider_district_keys
 
 
+  cdef void project_deliveries(self, int t, int yr, list lease_providers) except *:
+    ## Every WY, CAP's use and excess availability is based on BOY forecast, set here
+    cdef:
+      double excess_availability, projected_total_mead_available, this_month_last_year_delivered_water, last_year_total_delivered_water
+      int months_in_year
+      District district_obj
+    months_in_year = 12
+
+    ## From 2018 - 2022, the following totals were scheduled for delivery (kAF):
+    ##                  2018  2019  2020  2021  2022
+    ##    Excess + Ag :  335   284   338   257    34
+    ##    Tribal:        572   552   490   489   378
+    ##    M&I:           583   611   612   608   595
+    ##    TOTAL:        1490  1348  1440  1353  1007
+    ## GENERALLY: Unless there is a Tier 0 or worse shortage, lots of Excess water is available
+    self.mead.calculate_cap_mead_allocation(t) # one year in the future, or end of sim
+    projected_total_mead_available = self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t]
+
+    # collect this year's entitlements and demands to get idea of how much CAP water will be requested before excess
+    total_entitlement_demand = 0.0
+    for district_obj in self.district_list:
+      total_entitlement_demand += max(0.0,
+                                      min(district_obj.AFY * (1 + district_obj.growth_rate)**yr,
+                                          district_obj.get_annual_district_entitlements(t,
+                                                                                        self.mead.mead_shortage_tier,
+                                                                                        self.contract_list,
+                                                                                        lease_providers)))
+
+    # project remaining excess
+    excess_availability = max(0.0, projected_total_mead_available - total_entitlement_demand)
+    print('Excess projected for year ' + str(yr) + " = " + str(excess_availability))
+    self.mead.cap_excess_allocation[t] = excess_availability # beginning-of-year estimate of availability
+
+    # based on previous year's monthly shape of demand deliveries, determine monthly excess availability
+    # if this is first year of simulation, make flat assumption that each month 8.33% of excess can be delivered
+    # otherwise, rely on last year's total deliveries by month to determine this
+    if yr == 0:
+      for month in range(0, months_in_year):
+        self.mead.current_year_excess_availability[month] = excess_availability * 0.0833
+    else:
+      # how much water did every district get in total last year?
+      last_year_total_delivered_water = 0.001
+      for month in range(t-months_in_year, t):
+        for district_obj in self.district_list:
+          last_year_total_delivered_water += district_obj.monthly_deliveries['TOTAL'][month]
+
+      # set upcoming excess availability based on the fraction of deliveries made each month of last year
+      for month in range(t-months_in_year, t):
+        this_month_last_year_delivered_water = 0.0
+        for district_obj in self.district_list:
+          this_month_last_year_delivered_water += district_obj.monthly_deliveries['TOTAL'][month]
+
+        # use that calculation above to set excess availability for current year's months...
+        self.mead.current_year_excess_availability[month - months_in_year * (yr-1)] = \
+          excess_availability * min(1.0, this_month_last_year_delivered_water/last_year_total_delivered_water)
+
+
+
+
   cdef double simulate_cap(self, int t) except *:
     ###Monthly Operations###
     ##Water Balance on each reservoir
@@ -6462,10 +6521,11 @@ cdef class Model():
     cdef:
       double all_cap_requests_to_deliver, all_cap_requests_to_curtail, \
         total_excess_demand, pleasant_delivered_releases, cumulative_year_diversions, \
-        available_to_pleasant, initial_mead_diversion_estimate, available_excess, excess_request_to_deliver
+        available_to_pleasant, initial_mead_diversion_estimate, available_excess, \
+        excess_request_to_deliver, potential_az_curtailment
       list nia_mitigation_partners, nia_mitigation_tier_percents, lease_providers
       dict excess_demand
-      int d, da, dowy, m, y, wateryear, year_index
+      int d, da, dowy, m, y, wateryear, year_index, months_in_year
       str contract_type
       District district_obj
       Waterbank ama_obj
@@ -6478,15 +6538,35 @@ cdef class Model():
     y = self.year[t]
     wateryear = self.water_year[t]
     year_index = y - self.starting_year
+    months_in_year = 12
 
     #print(m)
 
     ## STEP 0: IDENTIFY TOTAL AVAILABLE COLORADO RIVER WATER FOR CAP AT START OF YEAR, MONTH
     # How much water can CAP get from Mead? Based on Mead elevation and AZ on-river demands
-    if d == 1:
-      self.mead.calculate_cap_mead_allocation(t)
+    # What is the status of entitlements under shortage, when should water be delivered (and how much)?
+    if da == 1:
+      lease_providers = self.identify_lease_providers(self.district_list)
 
-    if da == 1 and d != 1:
+    if d == 1:
+      ## STEP 1a: ACCOUNT FOR EXISTING ENTITLEMENTS
+      # will they be reduced because of a shortage tier condition?
+      print('------------------------------- YEAR ' + str(y) + ' --------------------------------')
+      self.mead.calc_az_mead_curtailment(t+months_in_year-1) # tier shortage at EOY (projection)
+      print('Projection for Mead Condition: ' + self.mead.mead_shortage_tier)
+      print('CAP Colorado River Curtailment: ' + str(self.mead.annual_az_allocation_curtailment))
+
+    if da == 1:
+      for contract_obj in self.contract_list:
+        contract_obj.calc_allocation_cap(t, self.mead.mead_shortage_tier)
+
+    if d == 1:
+      ## STEP 1b: PROJECT DELIVERIES FOR THE UPCOMING YEAR
+      # how much excess water is available, and when should it be scheduled?
+      # What sub-contractors are providing leases? Could be updated year-to-year in future model builds
+      self.project_deliveries(t, year_index, lease_providers)
+
+    if da == 1:
       self.mead.calculate_cap_mead_annual_diversion_remaining(t, m-1)
       self.mead.calculate_cap_mead_annual_excess_remaining(t, m-1)
 
@@ -6494,29 +6574,23 @@ cdef class Model():
       ## STEP 0a: TAKE ACCOUNTING OF MEAD AVAILABILITY
       # SET INITIAL DIVERSION BASED ON REMAINING ALLOCATION AND HAVASU PUMPING CAPACITY
       initial_mead_diversion_estimate = \
-        min(self.mead.cap_allocation[t],
+        min(self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t],
             self.mead.monthly_diversion_capacity * cfs_tafd * self.days_in_month[self.non_leap_year][m-1])
-      print('1) Available Mead: ' + str(self.mead.cap_allocation[t]))
-
-      ## STEP 1a: ACCOUNT FOR EXISTING ENTITLEMENTS
-      for contract_obj in self.contract_list:
-        contract_obj.calc_allocation_cap(t, self.mead.mead_shortage_tier)
+      print('1a) Available Mead CAP Allocation: ' + str(self.mead.cap_allocation[t]))
+      print('1b) Available Mead Excess: ' + str(self.mead.cap_excess_allocation[t]))
+      print('1c) Available Mead: ' + str(self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t]))
 
       ## STEP 1b: SUBCONTRACTORS REQUEST DELIVERIES FOR UPCOMING MONTH, FACTORING IN LEASE AGREEMENTS
       all_cap_requests_to_deliver = 0.0
       total_excess_demand = 0.0
       excess_demand = {}
-      lease_providers = self.identify_lease_providers(self.district_list)
       for district_obj in self.district_list:
         district_obj.set_district_request(t, m-1, year_index, self.mead.mead_shortage_tier, self.contract_list, lease_providers)
-#        print(district_obj.name + ' initial delivery total is ' + str(district_obj.monthly_deliveries['TOTAL'][t]))
-#        print(district_obj.name + ' demand total is ' + str(district_obj.dailydemand[t]))
-        # if district_obj.key == "GRC" and year_index == 1:
-        #   print(district_obj.dailydemand[t])
-        #   print(district_obj.monthly_deliveries['TOTAL'][t])
         all_cap_requests_to_deliver += district_obj.monthly_deliveries['TOTAL'][t]
         excess_demand[district_obj.key] = district_obj.request_curtailment[t]
         total_excess_demand += district_obj.request_curtailment[t]
+#        print(district_obj.name + ' initial delivery total is ' + str(district_obj.monthly_deliveries['TOTAL'][t]))
+#        print(district_obj.name + ' demand total is ' + str(district_obj.dailydemand[t]))
 
       print('2) All Initial Requests For Delivery: ' + str(all_cap_requests_to_deliver))
       print('3) All Curtailed Requests: ' + str(total_excess_demand))

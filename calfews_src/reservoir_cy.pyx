@@ -71,6 +71,7 @@ cdef class Reservoir():
     self.mead_shortage_tier = 'BAU'
     self.pleasant_target_elev = [0.0 for _ in range(12)]
     self.cap_diversion_pump_frac = [0.0 for _ in range(12)]
+    self.current_year_excess_availability = [0.0 for _ in range(12)]
     self.cap_diversion = [0.0 for _ in range(self.T)]
     self.capacity = 0.0
     self.monthly_diversion_capacity = 0.0
@@ -206,6 +207,7 @@ cdef class Reservoir():
     self.contract_flooded = [0.0 for _ in range(self.T)]
 
     self.net_pleasant_pumping = [0.0 for _ in range(self.T)]
+    self.annual_az_allocation_curtailment = 0.0
 
 
   cdef void step_pleasant(self, int t, int m) except *:
@@ -307,18 +309,20 @@ cdef class Reservoir():
   cdef void calculate_cap_mead_annual_excess_remaining(self, int t, int m) except *:
     ## how much water in a given year remains to be diverted to the CAP system for excess?
     cdef:
-      double cumulative_cap_diversion
-      int start_of_year_timestep
+      double cumulative_unused_excess_cap_diversion
+      int start_of_year_timestep, months_in_year
 
-    cumulative_cap_diversion = 0.0
+    cumulative_unused_excess_cap_diversion = 0.0
+    months_in_year = 12
     start_of_year_timestep = t - m
 
     # COUNT THE DIVERSIONS UP FROM ALL PREVIOUS MONTHS THIS YEAR TO KNOW WHATS LEFT
-    for month in range(start_of_year_timestep, t):
-      cumulative_cap_diversion += self.cap_excess[month]
+    for month in range(0, m+1):
+#      print(month)
+      cumulative_unused_excess_cap_diversion += self.current_year_excess_availability[month] - self.cap_excess[start_of_year_timestep+month]
 
-    self.cap_excess_allocation[t] = max(self.cap_excess_allocation[start_of_year_timestep] - cumulative_cap_diversion,
-                                        0.0)  # non-negativity constraint
+    self.cap_excess_allocation[t] = \
+      max(0.0, self.current_year_excess_availability[m] + cumulative_unused_excess_cap_diversion)
 
 
   cdef void calculate_cap_mead_annual_diversion_remaining(self, int t, int m) except *:
@@ -343,17 +347,19 @@ cdef class Reservoir():
     cap_baseline_lower_basin_allocation = 1490.0  # kAF/yr allocation for CAP, without cuts
     cap_system_losses = 75.0 # annual system losses, kAF/yr (5% of allocation to CAP)
 
-    cdef double az_curtailment
-    az_curtailment = self.calc_az_mead_curtailment(t)
-
-    self.cap_allocation[t] = cap_baseline_lower_basin_allocation - az_curtailment - cap_system_losses
+    # set allocations for beginning of current year
+    # based on curtailment according to EOY Mead projection done at BOY
+    self.cap_allocation[t] = \
+      cap_baseline_lower_basin_allocation - self.annual_az_allocation_curtailment - cap_system_losses
 
     # also estimate excess water availability based on this and AZ full allocation
-    self.cap_excess_allocation[t] = max(0.0, self.az_capacity - az_curtailment - cap_system_losses - self.cap_allocation[t] - self.az_on_river_demand)
+    # self.cap_excess_allocation[t] = \
+    #   max(0.0,
+    #       self.az_capacity - self.annual_az_allocation_curtailment - cap_system_losses - self.cap_allocation[t] - self.az_on_river_demand)
 
 
-  cdef double calc_az_mead_curtailment(self, int t) except *:
-    cdef double curtailment, guidelines_curtailment, dcp_curtailment
+  cdef void calc_az_mead_curtailment(self, int t) except *:
+    cdef double guidelines_curtailment, dcp_curtailment
     if self.elevation[t] < 1025.0: # Tier 3
       guidelines_curtailment = 480000.0
       dcp_curtailment = 240000.0
@@ -380,8 +386,7 @@ cdef class Reservoir():
       self.mead_shortage_tier = 'BAU'
 
     # convert from AF to kAF
-    curtailment = (guidelines_curtailment + dcp_curtailment)/self.kAFtoAF
-    return curtailment
+    self.annual_az_allocation_curtailment = (guidelines_curtailment + dcp_curtailment)/self.kAFtoAF
 
   cdef void find_available_storage(self, int t, int m, int da, int dowy):
     ##this function uses the linear regression variables calculated in find_release_func (called before simulation loop) to figure out how

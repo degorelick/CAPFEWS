@@ -1572,6 +1572,7 @@ struct __pyx_vtabstruct_11calfews_src_11district_cy_District {
   double (*get_lease_capacity_nia_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
   double (*get_lease_capacity_fed_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
   void (*calculate_recharge_delivery)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, PyObject *);
+  double (*get_annual_district_entitlements)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, PyObject *, PyObject *, PyObject *);
 };
 static struct __pyx_vtabstruct_11calfews_src_11district_cy_District *__pyx_vtabptr_11calfews_src_11district_cy_District;
 

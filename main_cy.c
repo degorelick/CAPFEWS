@@ -1281,7 +1281,7 @@ struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap {
   PyObject *scenario;
 };
 
-/* "calfews_src/model_cy.pxd":120
+/* "calfews_src/model_cy.pxd":122
  * 
  * ######### init
  *   cdef tuple northern_initialization_routine(self, scenario=*)             # <<<<<<<<<<<<<<
@@ -1293,7 +1293,7 @@ struct __pyx_opt_args_11calfews_src_8model_cy_5Model_northern_initialization_rou
   PyObject *scenario;
 };
 
-/* "calfews_src/model_cy.pxd":126
+/* "calfews_src/model_cy.pxd":128
  *   cdef void initialize_delta_ops(self) except *
  * 
  *   cdef void southern_initialization_routine(self, scenario=*) except *             # <<<<<<<<<<<<<<
@@ -1305,7 +1305,7 @@ struct __pyx_opt_args_11calfews_src_8model_cy_5Model_southern_initialization_rou
   PyObject *scenario;
 };
 
-/* "calfews_src/model_cy.pxd":134
+/* "calfews_src/model_cy.pxd":136
  *   cdef void predict_delta_gains(self) except *
  * 
  *   cdef void initialize_water_districts(self, scenario=*) except *             # <<<<<<<<<<<<<<
@@ -1365,6 +1365,7 @@ struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir {
   double pump_inflow_capacity;
   double hydropower_generation_capacity;
   double monthly_diversion_capacity;
+  double annual_az_allocation_curtailment;
   int is_Canal;
   int is_District;
   int is_Private;
@@ -1443,6 +1444,7 @@ struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir {
   PyObject *cap_diversion;
   PyObject *cap_excess;
   PyObject *cap_excess_allocation;
+  PyObject *current_year_excess_availability;
   PyObject *env_min_flow;
   PyObject *temp_releases;
   PyObject *tocs_rule;
@@ -2388,7 +2390,7 @@ struct __pyx_vtabstruct_11calfews_src_12reservoir_cy_Reservoir {
   void (*calculate_cap_mead_allocation)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   void (*calculate_cap_mead_annual_diversion_remaining)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
   void (*calculate_cap_mead_annual_excess_remaining)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
-  double (*calc_az_mead_curtailment)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
+  void (*calc_az_mead_curtailment)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   double (*calculate_pleasant_area)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   double (*calculate_pleasant_storage)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, double);
   void (*set_pleasant_pumping)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int, double);
@@ -2492,6 +2494,7 @@ struct __pyx_vtabstruct_11calfews_src_11district_cy_District {
   double (*get_lease_capacity_nia_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
   double (*get_lease_capacity_fed_priority)(struct __pyx_obj_11calfews_src_11district_cy_District *, double);
   void (*calculate_recharge_delivery)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, int, PyObject *);
+  double (*get_annual_district_entitlements)(struct __pyx_obj_11calfews_src_11district_cy_District *, int, PyObject *, PyObject *, PyObject *);
 };
 static struct __pyx_vtabstruct_11calfews_src_11district_cy_District *__pyx_vtabptr_11calfews_src_11district_cy_District;
 
@@ -2612,6 +2615,7 @@ struct __pyx_vtabstruct_11calfews_src_8model_cy_Model {
   double (*simulate_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int);
   void (*initialize_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap *__pyx_optional_args);
   PyObject *(*identify_lease_providers)(struct __pyx_obj_11calfews_src_8model_cy_Model *, PyObject *);
+  void (*project_deliveries)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int, int, PyObject *);
   PyObject *(*northern_initialization_routine)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_northern_initialization_routine *__pyx_optional_args);
   void (*initialize_northern_res)(struct __pyx_obj_11calfews_src_8model_cy_Model *);
   void (*initialize_delta_ops)(struct __pyx_obj_11calfews_src_8model_cy_Model *);

@@ -468,16 +468,12 @@ Historical_CAPDiversion_Organized = Historical_CAPDiversion %>%
 az_capacity = 2800
 az_on_river_demand = az_capacity - mean(Historical_CAPDiversion_Organized$CAP_div)/1000
 
+cap_excess_preferr
+
 Mead = list("name" = "Lake Mead",
             "capacity" = 999999,
             "az_capacity" = az_capacity, # in kAF/yr
             "cap_allocation_capacity" = 1600, # in kAF/yr
-            # "az_availability" = list("T0" = 2800,
-            #                          "T1" = 2800 - 512, # in kAF/yr
-            #                          "T2a" = 2800 - 592, 
-            #                          "T2b" = 2800 - 640, 
-            #                          "T3" = 2800 - 720, 
-            #                          "DP" = 2800 - 1400),
             "az_on_river_demand" = az_on_river_demand, # in kAF/yr
             "monthly_diversion_capacity" = markwilmer_pumping_capacity) # in cfs
 mead_json = toJSON(Mead, pretty = TRUE, dataframe = "columns", simplifyDataFrame = TRUE, auto_unbox = TRUE)

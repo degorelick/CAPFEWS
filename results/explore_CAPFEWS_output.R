@@ -110,7 +110,7 @@ Pleasant = CO[,grep("pleasant", colnames(CO))] # keep storage, CAP storage, net 
 Mead = CO[,grep("mead", colnames(CO))] # keep elevation, cap diversion
 
 Reservoirs = data_frame(Month = c(1:nrow(CO)))
-Reservoirs$`CAP Diversion` = Mead$mead_cap_diversion
+Reservoirs$`CAP Diversion (kAF)` = Mead$mead_cap_diversion
 Reservoirs$`Mead Elevation (ft)` = Mead$mead_elevation
 Reservoirs$`Pleasant Storage (kAF)` = Pleasant$pleasant_S
 Reservoirs$`Pleasant CAP Allocation (kAF)` = Pleasant$pleasant_cap_allocation

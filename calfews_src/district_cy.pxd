@@ -106,5 +106,7 @@ cdef class District():
 
   cdef void calculate_recharge_delivery(self, int t, int m, str ama_key) except *
 
+  cdef double get_annual_district_entitlements(self, int t, str shortage_tier, list contract_list, list lease_donor_districts) except *
+
 
   

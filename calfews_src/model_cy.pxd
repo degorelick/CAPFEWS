@@ -116,6 +116,8 @@ cdef class Model():
 
   cdef list identify_lease_providers(self, list districts)
 
+  cdef void project_deliveries(self, int t, int yr, list lease_providers) except *
+
 ######### init
   cdef tuple northern_initialization_routine(self, scenario=*)
 
