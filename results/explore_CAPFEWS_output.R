@@ -111,14 +111,16 @@ Mead = CO[,grep("mead", colnames(CO))] # keep elevation, cap diversion
 
 Reservoirs = data_frame(Month = c(1:nrow(CO)))
 Reservoirs$`CAP Diversion (kAF)` = Mead$mead_cap_diversion
-Reservoirs$`Mead Elevation (ft)` = Mead$mead_elevation
+Reservoirs$`Mead Allocation (kAF)` = Mead$mead_cap_allocation
 Reservoirs$`Pleasant Storage (kAF)` = Pleasant$pleasant_S
 Reservoirs$`Pleasant CAP Allocation (kAF)` = Pleasant$pleasant_cap_allocation
 Reservoirs$`Pleasant Net Pumping (kAF)` = Pleasant$pleasant_net_pleasant_pumping
 
 Reservoirs = Reservoirs %>% pivot_longer(-Month)
 to_show = ggplot() + ggtitle("CAP System Reservoir Conditions (2013-2021)") +
-  geom_line(data = Reservoirs, aes(x = Month, y = value, color = name), size = 3) +
-  facet_grid(name~., scales = "free_y", switch = "y") + ylab("") + guides(color = FALSE)
+  geom_line(data = Reservoirs, aes(x = Month, y = value, color = name), size = 2) +
+  geom_area(data = Reservoirs, aes(x = Month, y = value, fill = name), alpha = 0.4, outline.type = "upper") +
+  facet_wrap(.~name, scales = "free_y", ncol = 1) + ylab("") + guides(color = FALSE, fill = FALSE) +
+  theme(strip.text = element_text(size = 15, face = "bold"))
 ggsave(plot = to_show, filename = "reservoirs.png", units = "in", width = 9, height = 10, dpi = 600)
 
