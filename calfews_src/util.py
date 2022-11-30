@@ -332,17 +332,18 @@ def model_attribute_loop_generator_cap(output_list, clean_output, modelcap):
         pass
 
   for canal_obj in modelcap.canal_list:
-    for node_key, node_series in canal_obj.daily_flow.items():
+    for node_key, node_series in canal_obj.turnout_delivery.items():
       try:
-        att, name = model_attribute_nonzero(node_series, np.string_(canal_obj.name + '_' + node_key + '_flow'),
+        att, name = model_attribute_nonzero(node_series, np.string_(canal_obj.name + '_' + node_key + '_delivery'),
                                             clean_output)
         if list(att):
           yield list(att), name
       except:
         pass
-    for node_key, node_series in canal_obj.daily_turnout.items():
+
+    for node_key, node_series in canal_obj.finances.items():
       try:
-        att, name = model_attribute_nonzero(node_series, np.string_(canal_obj.name + '_' + node_key + '_turnout'),
+        att, name = model_attribute_nonzero(node_series, np.string_(canal_obj.name + '_' + node_key),
                                             clean_output)
         if list(att):
           yield list(att), name

@@ -6522,7 +6522,7 @@ cdef class Model():
       double all_cap_requests_to_deliver, all_cap_requests_to_curtail, \
         total_excess_demand, pleasant_delivered_releases, cumulative_year_diversions, \
         available_to_pleasant, initial_mead_diversion_estimate, available_excess, \
-        excess_request_to_deliver, potential_az_curtailment
+        excess_request_to_deliver, potential_az_curtailment, power_price
       list nia_mitigation_partners, nia_mitigation_tier_percents, lease_providers
       dict excess_demand
       int d, da, dowy, m, y, wateryear, year_index, months_in_year
@@ -6549,7 +6549,7 @@ cdef class Model():
       lease_providers = self.identify_lease_providers(self.district_list)
 
     if d == 1:
-      ## STEP 1a: ACCOUNT FOR EXISTING ENTITLEMENTS
+      ## STEP 1: ACCOUNT FOR EXISTING ENTITLEMENTS
       # will they be reduced because of a shortage tier condition?
       print('------------------------------- YEAR ' + str(y) + ' --------------------------------')
       self.mead.calc_az_mead_curtailment(t+months_in_year-1) # tier shortage at EOY (projection)
@@ -6561,17 +6561,18 @@ cdef class Model():
         contract_obj.calc_allocation_cap(t, self.mead.mead_shortage_tier)
 
     if d == 1:
-      ## STEP 1b: PROJECT DELIVERIES FOR THE UPCOMING YEAR
+      ## STEP 2: PROJECT DELIVERIES FOR THE UPCOMING YEAR
       # how much excess water is available, and when should it be scheduled?
       # What sub-contractors are providing leases? Could be updated year-to-year in future model builds
       self.project_deliveries(t, year_index, lease_providers)
 
     if da == 1:
+      ## STEP 3: UPDATE ACCOUNTING OF AVAILABLE WATER LEFT TO BE DELIVERED
       self.mead.calculate_cap_mead_annual_diversion_remaining(t, m-1)
       self.mead.calculate_cap_mead_annual_excess_remaining(t, m-1)
 
     if da == 1:
-      ## STEP 0a: TAKE ACCOUNTING OF MEAD AVAILABILITY
+      ## STEP 4: TAKE ACCOUNTING OF MEAD AVAILABILITY
       # SET INITIAL DIVERSION BASED ON REMAINING ALLOCATION AND HAVASU PUMPING CAPACITY
       initial_mead_diversion_estimate = \
         min(self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t],
@@ -6580,7 +6581,7 @@ cdef class Model():
       print('1b) Available Mead Excess: ' + str(self.mead.cap_excess_allocation[t]))
       print('1c) Available Mead: ' + str(self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t]))
 
-      ## STEP 1b: SUBCONTRACTORS REQUEST DELIVERIES FOR UPCOMING MONTH, FACTORING IN LEASE AGREEMENTS
+      ## STEP 5: SUBCONTRACTORS REQUEST DELIVERIES FOR UPCOMING MONTH, FACTORING IN LEASE AGREEMENTS
       all_cap_requests_to_deliver = 0.0
       total_excess_demand = 0.0
       excess_demand = {}
@@ -6595,7 +6596,7 @@ cdef class Model():
       print('2) All Initial Requests For Delivery: ' + str(all_cap_requests_to_deliver))
       print('3) All Curtailed Requests: ' + str(total_excess_demand))
 
-      ## STEP 1c: DETERMINE IF ANY TAKERS FOR EXCESS WATER
+      ## STEP 6: DETERMINE IF ANY TAKERS FOR EXCESS WATER
       ## Start with total available excess - all the water left that CAP can divert, constrained by pumping capacity
       available_excess = max(0.0,
                              min(self.mead.cap_excess_allocation[t], # excess water that on-river AZ users don't consume
@@ -6630,6 +6631,7 @@ cdef class Model():
       print('5) All Final Requests (Contract + Excess) To Deliver: ' + str(all_cap_requests_to_deliver))
       print('5a) Excess from Mead Delivered: ' + str(self.mead.cap_excess[t]))
 
+      ## STEP 7: DETERMINE NET PUMPING FOR LAKE PLEASANT
       # What is the storage target for Lake Pleasant? IN THOUSANDS OF AF
       # This factors in seasonality (i.e. in winter, CAP is filling Pleasant rather than draining)
       available_to_pleasant = max(0.0,
@@ -6649,6 +6651,7 @@ cdef class Model():
       print('6) Initial Pumping-to-Pleasant Availability: ' + str(available_to_pleasant))
       print('7) Initial Net Pleasant Pumping: ' + str(self.pleasant.net_pleasant_pumping[t]))
 
+      ## STEP 8: UPDATE LAKE MEAD DIVERSION BASED ON LAKE PLEASANT OPERATIONS
       # Based on Lake Pleasant operating goals, determine what fraction of water to-be-delivered
       # comes from Pleasant as releases vs. comes from Mead directly as Colorado diversion
       # if net pleasant deliveries are negative, this means water is delivered from pleasant to subcontractors
@@ -6683,7 +6686,7 @@ cdef class Model():
       if -1 * self.pleasant.net_pleasant_pumping[t] > all_cap_requests_to_deliver:
         print('Weird vibes in year ' + str(y) + ', month ' + str(m) + ': more released from Pleasant than requested...')
 
-      ## STEP 1d: DELIVERIES MARKED FOR RECHARGE ARE SENT TO AMA BANKING FOR STORAGE CREDIT
+      ## STEP 9: DELIVERIES MARKED FOR RECHARGE ARE SENT TO AMA BANKING FOR STORAGE CREDIT
       for district_obj in self.district_list:
         for ama_obj in self.waterbank_list:
           if district_obj.key in ama_obj.participant_list:
@@ -6693,63 +6696,97 @@ cdef class Model():
             ama_obj.storage[district_obj.key] += district_obj.recharge_contribution[ama_obj.key][t]
             ama_obj.bank_timeseries[district_obj.key][t] += district_obj.recharge_contribution[ama_obj.key][t]
 
-      ## STEP 4: RUN MONTHLY WATER BALANCE FOR DELIVERIES
+      ## STEP 10: RUN MONTHLY WATER BALANCE FOR DELIVERIES
       # no formal water balance process for Lake Mead
       self.pleasant.step_pleasant(t, m-1)
 
-      ## STEP 5: UPDATE DELIVERIES BASED ON WATER BALANCE CONSTRAINTS
-      # ensuring that the Mead allocation is not less than what is scheduled for delivery
-      # if self.mead.cap_allocation[t] < self.mead.cap_diversion[t]:
-      #   print('Issue here! Too much being diverted from Mead')
-      #   all_cap_requests_to_curtail = self.mead.cap_diversion[t] - self.mead.cap_allocation[t]
-      #   print('Use must be reduced by ' + str(all_cap_requests_to_curtail))
-      #
-      #   # curtail the overall diversion
-      #   self.mead.cap_diversion[t] = self.mead.cap_allocation[t]
-      #
-      #
-      #   total_excess_demand = 0.0
-      #   excess_demand = {}
-      #   for district_obj in self.district_list:
-      #     district_obj.reset_district_request(t, m-1, year_index-1,
-      #                                          self.mead.mead_shortage_tier, self.contract_list,
-      #                                          all_cap_requests_to_curtail)
-      #     all_cap_requests_to_deliver += district_obj.dailydemand[t]
-      #     excess_demand[district_obj.key] = district_obj.request_curtailment[t]
-      #     total_excess_demand += district_obj.request_curtailment[t]
+      ## STEP 11: MAKE DELIVERIES OFFICIAL VIA CANAL OBJECT ACCOUNTING
+      for turnout in self.capcanal.capacity['node']:
+        for district_obj in self.capcanal.turnout_districts[turnout]:
+          self.capcanal.turnout_delivery[turnout][t] += district_obj.monthly_deliveries['TOTAL'][t]
+
+          for ama_obj in self.capcanal.turnout_banks[turnout]:
+            if district_obj.key in ama_obj.participant_list:
+              self.capcanal.turnout_delivery[turnout][t] += district_obj.recharge_contribution[ama_obj.key][t]
+
+      # special case for Waddell/Pleasant pumping numbers at Waddell "turnout"
+      self.capcanal.turnout_delivery['WAD'][t] += self.pleasant.net_pleasant_pumping[t]
+
+      ## STEP 12: CALCULATE MONTHLY VARIABLE PUMPING POWER COSTS
+      # based on random monthly power price, generated between low and high historical (2014-2021) at Palo Verde hub
+      power_price = np.random.uniform(low = self.capcanal.power_price['low'][m-1],
+                                      high = self.capcanal.power_price['high'][m-1])
+
+      # if some colorado river diversion is for pleasant, calculate prices separately
+      if self.pleasant.net_pleasant_pumping[t] > 0.0:
+        # power cost to divert colorado river into lake pleasant
+        # (multiplied by a factor of pleasant elevation to determine pumping power need, in kWH per kAF)
+        # (this factor is taken from formula in CAP projection spreadsheets)
+        self.capcanal.finances['pleasant_pumping_cost'][t] = \
+          self.pleasant.net_pleasant_pumping[t] *  \
+          (float(self.capcanal.pumping_power_rate['mead'][self.capcanal.pumping_power_rate['node'].index("WAD")]) +
+           (self.pleasant.elevation[t] - 1526.8) / 0.7702) * self.kAFtoAF * power_price
+
+        # power cost to deliver to subcontractors and AMAs
+        for turnout in self.capcanal.capacity['node']:
+          # skip NA conditions
+          if turnout == 'none':
+            continue
+
+          self.capcanal.finances['delivery_pumping_cost'][t] += \
+            self.capcanal.turnout_delivery[turnout][t] * \
+            float(self.capcanal.pumping_power_rate['mead'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
+            self.kAFtoAF * power_price
+
+      else:
+        # if some deliveries are due to lake pleasant releases, use these releases
+        # to meet requests for subcontractors at highest-cost pumping turnouts before colorado diversions
+        remaining_pleasant_to_deliver = -1 * self.pleasant.net_pleasant_pumping[t]
+        for turnout in reversed(self.capcanal.capacity['node']):
+          # skip NA conditions
+          if turnout == 'none':
+            continue
+
+          # if pleasant releases cover full turnout request, use them
+          if self.capcanal.turnout_delivery[turnout][t] <= remaining_pleasant_to_deliver:
+            self.capcanal.finances['delivery_pumping_cost'][t] += \
+              self.capcanal.turnout_delivery[turnout][t] * \
+              float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
+              self.kAFtoAF * power_price
+            remaining_pleasant_to_deliver -= self.capcanal.turnout_delivery[turnout][t]
+
+          # if pleasant releases have been exhausted, let mead diversions take over
+          else:
+            # remaining pleasant deliveries
+            self.capcanal.finances['delivery_pumping_cost'][t] += \
+              remaining_pleasant_to_deliver * \
+              float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
+              self.kAFtoAF * power_price
+
+            # rest are mead deliveries
+            self.capcanal.finances['delivery_pumping_cost'][t] += \
+              (self.capcanal.turnout_delivery[turnout][t] - remaining_pleasant_to_deliver) * \
+              float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
+              self.kAFtoAF * power_price
+
+            remaining_pleasant_to_deliver = 0.0
+
+      self.capcanal.finances['total_pumping_cost'][t] = \
+        self.capcanal.finances['delivery_pumping_cost'][t] + self.capcanal.finances['pleasant_pumping_cost'][t]
+
+      ## STEP 13: CALCULATE MONTHLY VOLUMETRIC WATER DELIVERY RATE REVENUES
 
 
-
-      ## STEP 1e: MAKE DELIVERIES OFFICIAL VIA CANAL OBJECT ACCOUNTING
-      # for reservoir_obj in [self.pineflat, self.success, self.kaweah, self.isabella]:
-      #     for canal_obj in self.reservoir_canal[reservoir_obj.key]:
-      #         self.set_canal_direction(flow_type)
-      #         total_canal_demand = self.search_canal_demand(dowy, canal_obj, reservoir_obj.key, canal_obj.name,
-      #                                                       'normal', flow_type, wateryear, 'delivery', {}, [])
-      #         available_flow = 0.0
-      #         for zz in total_canal_demand:
-      #             available_flow += total_canal_demand[zz]
-      #         excess_water, unmet_demand = self.distribute_canal_deliveries(dowy, canal_obj, reservoir_obj.key,
-      #                                                                       canal_obj.name, available_flow,
-      #                                                                       self.canal_district_len[canal_obj.name],
-      #                                                                       wateryear, 'normal', flow_type, 'delivery',
-      #                                                                       [])
-
-      ## STEP 2: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
+      ## STEP 14: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
 
 
-      ## STEP 3: CAP BUDGET, RESERVE FUND USE, AND WATER RATE SET FOR UPCOMING YEAR
+      ## STEP 15: CAP BUDGET, RESERVE FUND USE, AND WATER RATE SET FOR UPCOMING YEAR
 
 
+      ## STEP 16: TRIGGER POTENTIAL MITIGATION - NEW SHORT-TERM LEASES, ETC.
 
 
-      ## STEP 5: CALCULATE ANNUAL WATER AND POWER REVENUES
-
-
-      ## STEP 6: TRIGGER POTENTIAL MITIGATION - NEW SHORT-TERM LEASES, ETC.
-
-
-      ## STEP 7: IMPLEMENT RECONCILIATION OF THE BUDGET
+      ## STEP 17: IMPLEMENT RECONCILIATION OF THE BUDGET
 
     return self.mead.cap_allocation[t]
 
@@ -6775,8 +6812,8 @@ cdef class Model():
     self.canal_district = {}
     self.canal_district['CAP'] = [self.mead,  # cap canal starts with lake mead input
                                   self.hvid,  # little harquahala
-                                  self.pleasant, # lake pleasant
                                   self.phoenix, self.scottsdale, self.glendale, self.mwd, self.peoria, self.asld, self.fmyn, self.goodyear, self.surprise, self.wmat, self.srpmic, self.scat, self.epcor, self.tempe, self.amaphoenix,  # hassayampa
+                                  self.pleasant,  # lake pleasant
                                   self.gric, self.akchin, self.mesa, self.azwc, self.chandler, self.gilbert, self.msidd, self.hidd, self.caidd, self.awba, self.cagrd, self.other, self.amapinal,  # salt gila
                                   self.orovalley,  # picacho
                                   self.amatucson, self.tucson, self.tohono,  # brawley
@@ -6785,6 +6822,28 @@ cdef class Model():
     self.canal_district_len = {}
     for key in ['CAP']:
       self.canal_district_len[key] = len(self.canal_district[key])
+
+    ## Include a linkage dictionary to show which districts, reservoirs, waterbanks are at which CAP turnouts
+    self.capcanal.turnout_districts = {}
+    self.capcanal.turnout_banks = {}
+    self.capcanal.turnout_reservoirs = {}
+    for key in self.capcanal.capacity['node']:
+      self.capcanal.turnout_districts[key] = []
+      self.capcanal.turnout_banks[key] = []
+      self.capcanal.turnout_reservoirs[key] = []
+
+    self.capcanal.turnout_districts['LHQ'] = [self.hvid]
+    self.capcanal.turnout_districts['HSY'] = [self.phoenix, self.scottsdale, self.glendale, self.mwd, self.peoria, self.asld, self.fmyn, self.goodyear, self.surprise, self.wmat, self.srpmic, self.scat, self.epcor, self.tempe]
+    self.capcanal.turnout_districts['SGL'] = [self.gric, self.akchin, self.mesa, self.azwc, self.chandler, self.gilbert, self.msidd, self.hidd, self.caidd, self.awba, self.cagrd, self.other]
+    self.capcanal.turnout_districts['PIC'] = [self.orovalley]
+    self.capcanal.turnout_districts['BRW'] = [self.tucson, self.tohono]
+    self.capcanal.turnout_districts['BLK'] = [self.asarco]
+
+    self.capcanal.turnout_banks['HSY'] = [self.amaphoenix]
+    self.capcanal.turnout_banks['SGL'] = [self.amapinal]
+    self.capcanal.turnout_banks['BRW'] = [self.amatucson]
+
+    self.capcanal.turnout_reservoirs['WAD'] = [self.pleasant]
 
     ### After the canal structure is defined, each of the nodes on the list
     ### has a demand initialized.  There are many different types of demands
@@ -6808,6 +6867,16 @@ cdef class Model():
         canal_obj.demand[z] = np.zeros(canal_obj.num_sites)
         canal_obj.turnout_frac[z] = np.zeros(canal_obj.num_sites)
         canal_obj.recovery_flow_frac[z] = np.ones(canal_obj.num_sites)
+
+      canal_obj.turnout_delivery = {}
+      for i in range(len(canal_obj.capacity['node'])):
+        canal_obj.turnout_delivery[canal_obj.capacity['node'][i]] = np.zeros(self.T)
+
+      # hold canal-wide financial accounts here for export
+      canal_obj.finances = {}
+      for account in ['delivery_pumping_cost', 'pleasant_pumping_cost', 'total_pumping_cost',
+                      'total_sales']:
+        canal_obj.finances[account] = np.zeros(self.T)
 
     ##There is 1 canal (CAP) directly connected to surface water storage
     ##It has priority (obviously

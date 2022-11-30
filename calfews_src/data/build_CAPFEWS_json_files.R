@@ -15,13 +15,50 @@ library(jsonlite); library(dplyr); library(tidyverse)
 # turnouts named by pumping plant immediately "upstream"
 # only turnouts where top users have action are included
 # final capacity node is always zero - a dummy to tell model to recycle
-turnout_names = c("LHQ", "WAD", "HSY", "SGL", "BRD", "PIC", "RED", "SAN", "BRW", "SND", "BLK", "none")
+turnout_names = c("LHQ", "HSY", "WAD", "SGL", "BRD", "PIC", "RED", "SAN", "BRW", "SND", "BLK", "none")
+
+# pumping power used (kWH per AF) of water delivered
+# counts are cumulative for each turnout, assuming power needed to pump from lake mead
+# pumping rate into Pleasant (kWH per AF): (Elevation-1526.8)/0.7702
+pumping_power_rate_from_mead = c(957 + 122 + 128, 
+                                 957 + 122 + 128 + 219, 
+                                 957 + 122 + 128 + 219,
+                                 957 + 122 + 128 + 219 + 97,
+                                 957 + 122 + 128 + 219 + 97 + 160,
+                                 957 + 122 + 128 + 219 + 97 + 160 + 250,
+                                 957 + 122 + 128 + 219 + 97 + 160 + 250 + 260,
+                                 957 + 122 + 128 + 219 + 97 + 160 + 250 + 260 + 100 + 118,
+                                 957 + 122 + 128 + 219 + 97 + 160 + 250 + 260 + 100 + 118 + 250,
+                                 957 + 122 + 128 + 219 + 97 + 160 + 250 + 260 + 100 + 118 + 250 + 190 + 340,
+                                 957 + 122 + 128 + 219 + 97 + 160 + 250 + 260 + 100 + 118 + 250 + 190 + 340 + 450,
+                                 NA)
+pumping_power_rate_from_pleasant = c(0, 
+                                     0, 
+                                     0,
+                                     97,
+                                     97 + 160,
+                                     97 + 160 + 250,
+                                     97 + 160 + 250 + 260,
+                                     97 + 160 + 250 + 260 + 100 + 118,
+                                     97 + 160 + 250 + 260 + 100 + 118 + 250,
+                                     97 + 160 + 250 + 260 + 100 + 118 + 250 + 190 + 340,
+                                     97 + 160 + 250 + 260 + 100 + 118 + 250 + 190 + 340 + 450,
+                                     NA)
+
+
+# range of potential monthly energy prices for CAP pumping
+Historical_EnergyPrices = read.csv("Palo Verde Energy Prices.csv", header = TRUE)
+top_range = apply(Historical_EnergyPrices[,2:9], 1, max)
+low_range = apply(Historical_EnergyPrices[,2:9], 1, min)
+power_price = data.frame(low = low_range,
+                         high = top_range)
+
 
 # capacity of turnouts to move water. turnouts can have "normal" "reverse" and "closed" settings
 # only Waddell (WAD) can go normal and reverse (fill and spill from Lake Pleasant)
 # others assume to have infinite normal capacity for now
 normal_capacities = rep(999999, length(turnout_names)); normal_capacities[length(normal_capacities)] = 0
-reverse_capacities = rep(0, length(turnout_names)); reverse_capacities[2] = 999999
+reverse_capacities = rep(0, length(turnout_names)); reverse_capacities[3] = 999999
 closed_capacities = rep(0, length(turnout_names))
 
 capacities = data.frame(node = turnout_names,
@@ -31,12 +68,17 @@ capacities = data.frame(node = turnout_names,
 turnout = data.frame(normal = normal_capacities[1:(length(normal_capacities)-1)],
                      reverse = reverse_capacities[1:(length(reverse_capacities)-1)],
                      closed = closed_capacities[1:(length(closed_capacities)-1)])
+pumping_power_rate = data.frame(node = turnout_names,
+                                mead = pumping_power_rate_from_mead,
+                                pleasant = pumping_power_rate_from_pleasant)
 
 ## write the final json
 canal_json = toJSON(list("name" = "CAP",
                          "annual_diversion_capacity" = 1666, # in kAF/yr, based on historical data annual max
                          "capacity" = capacities, 
-                         "turnout" = turnout), 
+                         "turnout" = turnout,
+                         "pumping_power_rate" = pumping_power_rate,
+                         "power_price" = power_price), 
                     pretty = TRUE, dataframe = "columns", simplifyDataFrame = TRUE, auto_unbox = TRUE)
 write(canal_json, "../CAPFEWS/calfews_src/canals/CAP_properties.json")
 
@@ -480,9 +522,4 @@ mead_json = toJSON(Mead, pretty = TRUE, dataframe = "columns", simplifyDataFrame
 write(mead_json, paste("../CAPFEWS/calfews_src/reservoir/", "MDE", "_properties.json", sep = ""))
 
 
-### Hold other code that may be helpful --------------------------------
-# read in entitlements and collect AMA information to associate districts and waterbanks with turnouts
-entitlement_totals = read.csv("user_entitlements.csv", header = TRUE)
-User_turnouts = entitlement_totals %>% select(User, Code, Turnout)
-AMA_turnouts = data.frame("AMA" = c("Phoenix", "Pinal", "Tucson"),
-                          "Turnout" = c("HSY", "SGL", "BRW"))
+

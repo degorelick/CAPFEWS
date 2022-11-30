@@ -1127,7 +1127,7 @@ struct __pyx_ctuple_double__and_double {
 struct __pyx_ctuple_double__and_double__and_int;
 typedef struct __pyx_ctuple_double__and_double__and_int __pyx_ctuple_double__and_double__and_int;
 
-/* "canal_cy.pxd":23
+/* "canal_cy.pxd":24
  *   cdef dict find_priority_fractions(self, double node_capacity, dict type_fractions, list type_list, int canal_loc, str flow_dir)
  * 
  *   cdef (double, double, int) update_canal_use(self, double available_flow, double location_delivery, str flow_dir, int canal_loc, int starting_point, int canal_size, list type_list)             # <<<<<<<<<<<<<<
@@ -1448,6 +1448,13 @@ struct __pyx_obj_11calfews_src_8canal_cy_Canal {
   PyObject *demand;
   PyObject *ownership_shares;
   PyObject *restricted_capacity_available;
+  PyObject *turnout_districts;
+  PyObject *turnout_banks;
+  PyObject *turnout_reservoirs;
+  PyObject *pumping_power_rate;
+  PyObject *turnout_delivery;
+  PyObject *finances;
+  PyObject *power_price;
 };
 
 
