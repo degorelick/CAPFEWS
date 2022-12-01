@@ -6439,6 +6439,86 @@ cdef class Model():
   #############################     Main simulation (CAP Model Sys)     ###############################################
   #####################################################################################################################
 
+  cdef void set_delivery_rate(self, int t, int yr, double inflation_rate) except *:
+    ## Based on forecasted water availability, set CAP water delivery rates
+    ## Rates are charged to subcontractors/districts based on the following:
+    ##   REDUCTION OF RATE COMPONENTS W/TAXES ARE CAPITAL CHARGE, ENERGY CHARGE, AND FIXED OM&R CHARGE
+    ##   Delivered federal/indian/tribal priority water: pay Fixed OM&R + Energy (Pumping) Rates - Stabilization
+    ##   Delivered M&I priority water: pay Fixed OM&R + Energy (Pumping) Rates - Stabilization
+    ##   Delivered NIA priority water: pay Fixed OM&R + Energy (Pumping) Rates - Stabilization**********
+    ##   Delivered Excess water to Irrigation Districts: pay Energy (Pumping) Rates - Stabilization
+    ##   Delivered Excess water to M&I: pay Fixed OM&R + Energy (Pumping) Rates - Stabilization
+    ##   Delivered Excess water to Tribes: pay Fixed OM&R + Energy (Pumping) Rates - Stabilization
+    ## Other notes:
+    ## - in 2019-2024 official rates, it is noted that it is CAP Board policy to never raise pumping energy rate more than $4/AF per year
+    ## - for M&I (and NIA??) priority deliveries, full capital charge is paid regardless of deliveries, so it is NOT included in official "rate"
+    ## - for P3 rights: just pay energy rate??????????????
+
+    # as a baseline for rates, default to approved CAP rates for 2020 (before Tier 0 Shortage of 2021)
+    # https://library.cap-az.com/documents/departments/finance/Final-CAWCD-2022-2026-Water-Rate-Schedule.pdf
+    self.capcanal.finances['property_tax_use'][t] = -26.0 * self.kAFtoAF  # rates in $/kAF
+    self.capcanal.finances['energy_charge'][t] = 56.0 * self.kAFtoAF  # rates in $/kAF
+    self.capcanal.finances['capital_charge'][t] = 82.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+    self.capcanal.finances['fixed_omr_charge'][t] = 99.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+    self.capcanal.finances['storage_omr_charge'][t] = 13.0 * self.kAFtoAF  # rates in $/kAF, using Phoenix AMA value
+
+    # storage for gw rates do not seem to change year-to-year
+    self.capcanal.finances['storage_capital_charge'][t] = 15.0 * self.kAFtoAF  # rates in $/kAF, using Phoenix AMA value
+    self.capcanal.finances['stabilization_use'][t] = 0.0 * self.kAFtoAF  # rates in $/kAF
+
+    # based on firm 2021 rates
+    if self.mead.mead_shortage_tier == "T0":
+      self.capcanal.finances['property_tax_use'][t] = -26.0 * self.kAFtoAF  # rates in $/kAF
+      self.capcanal.finances['energy_charge'][t] = 78.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t] # rates in $/kAF
+      self.capcanal.finances['capital_charge'][t] = 79.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+      self.capcanal.finances['fixed_omr_charge'][t] = 130.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+
+    # based on firm 2022 rates
+    if self.mead.mead_shortage_tier == "T1":
+      self.capcanal.finances['property_tax_use'][t] = -13.0 * self.kAFtoAF  # rates in $/kAF
+      self.capcanal.finances['energy_charge'][t] = 78.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t] # rates in $/kAF
+      self.capcanal.finances['capital_charge'][t] = 66.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+      self.capcanal.finances['fixed_omr_charge'][t] = 165.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+
+      # no rate stabilization available after this
+      if yr < 2025:
+        self.capcanal.finances['stabilization_use'][t] = -12.0 * self.kAFtoAF  # rates in $/kAF
+
+    # based on provisional 2023 rate
+    if self.mead.mead_shortage_tier == "T2a":
+      self.capcanal.finances['property_tax_use'][t] = -13.0 * self.kAFtoAF  # rates in $/kAF
+      self.capcanal.finances['energy_charge'][t] = 78.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t] # rates in $/kAF
+      self.capcanal.finances['capital_charge'][t] = 66.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+      self.capcanal.finances['fixed_omr_charge'][t] = 175.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+
+      # no rate stabilization available after this
+      if yr < 2025:
+        self.capcanal.finances['stabilization_use'][t] = -12.0 * self.kAFtoAF  # rates in $/kAF
+
+    # based on provisional 2024 rate
+    if self.mead.mead_shortage_tier == "T2b":
+      self.capcanal.finances['property_tax_use'][t] = -13.0 * self.kAFtoAF  # rates in $/kAF
+      self.capcanal.finances['energy_charge'][t] = 78.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t] # rates in $/kAF
+      self.capcanal.finances['capital_charge'][t] = 66.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+      self.capcanal.finances['fixed_omr_charge'][t] = 190.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+
+      # no rate stabilization available after this
+      if yr < 2025:
+        self.capcanal.finances['stabilization_use'][t] = -12.0 * self.kAFtoAF  # rates in $/kAF
+
+    # based on provisional 2024 rate
+    if self.mead.mead_shortage_tier == "T3" or self.mead.mead_shortage_tier == "DP":
+      self.capcanal.finances['property_tax_use'][t] = -13.0 * self.kAFtoAF  # rates in $/kAF
+      self.capcanal.finances['energy_charge'][t] = 78.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t] # rates in $/kAF
+      self.capcanal.finances['capital_charge'][t] = 66.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+      self.capcanal.finances['fixed_omr_charge'][t] = 205.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
+
+      # no rate stabilization available after this
+      if yr < 2025:
+        self.capcanal.finances['stabilization_use'][t] = -12.0 * self.kAFtoAF  # rates in $/kAF
+
+
+
   cdef list identify_lease_providers(self, list districts):
     ## Cycle through districts and identify which provide leases
     ## so that they can be treated differently in the delivery requesting functions
@@ -6522,7 +6602,8 @@ cdef class Model():
       double all_cap_requests_to_deliver, all_cap_requests_to_curtail, \
         total_excess_demand, pleasant_delivered_releases, cumulative_year_diversions, \
         available_to_pleasant, initial_mead_diversion_estimate, available_excess, \
-        excess_request_to_deliver, potential_az_curtailment, power_price
+        excess_request_to_deliver, potential_az_curtailment, power_price, \
+        total_mui_previous_year, total_fed_previous_year, total_nia_previous_year, total_exc_previous_year, total_delivery_request
       list nia_mitigation_partners, nia_mitigation_tier_percents, lease_providers
       dict excess_demand
       int d, da, dowy, m, y, wateryear, year_index, months_in_year
@@ -6607,7 +6688,7 @@ cdef class Model():
 
       # if it is the last month of the WY/CY and there is excess water in Mead that CAP can divert,
       # let it be passed as excess to sub-contractors or otherwise used below
-      if m == 12:
+      if m == months_in_year:
         available_excess = max(available_excess,
                                self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t] - all_cap_requests_to_deliver)
 
@@ -6642,7 +6723,7 @@ cdef class Model():
 
       # if it is the last month of the WY/CY and there is excess water in Mead that CAP can divert, put it
       # in Lake Pleasant if the lake is low. ASSUME END OF WY AND END OF CY ARE SAME: DECEMBER
-      if m == 12:
+      if m == months_in_year:
         available_to_pleasant = max(available_to_pleasant,
                                     self.mead.cap_allocation[t] + self.mead.cap_excess_allocation[t] - self.mead.cap_excess[t] - all_cap_requests_to_deliver)
 
@@ -6725,7 +6806,7 @@ cdef class Model():
         self.capcanal.finances['pleasant_pumping_cost'][t] = \
           self.pleasant.net_pleasant_pumping[t] *  \
           (float(self.capcanal.pumping_power_rate['mead'][self.capcanal.pumping_power_rate['node'].index("WAD")]) +
-           (self.pleasant.elevation[t] - 1526.8) / 0.7702) * self.kAFtoAF * power_price
+           (self.pleasant.elevation[t] - 1526.8) / 0.7702) * self.kAFtoAF * power_price / MWh_KWh
 
         # power cost to deliver to subcontractors and AMAs
         for turnout in self.capcanal.capacity['node']:
@@ -6736,7 +6817,7 @@ cdef class Model():
           self.capcanal.finances['delivery_pumping_cost'][t] += \
             self.capcanal.turnout_delivery[turnout][t] * \
             float(self.capcanal.pumping_power_rate['mead'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
-            self.kAFtoAF * power_price
+            self.kAFtoAF * power_price / MWh_KWh
 
       else:
         # if some deliveries are due to lake pleasant releases, use these releases
@@ -6752,7 +6833,7 @@ cdef class Model():
             self.capcanal.finances['delivery_pumping_cost'][t] += \
               self.capcanal.turnout_delivery[turnout][t] * \
               float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
-              self.kAFtoAF * power_price
+              self.kAFtoAF * power_price / MWh_KWh
             remaining_pleasant_to_deliver -= self.capcanal.turnout_delivery[turnout][t]
 
           # if pleasant releases have been exhausted, let mead diversions take over
@@ -6761,13 +6842,13 @@ cdef class Model():
             self.capcanal.finances['delivery_pumping_cost'][t] += \
               remaining_pleasant_to_deliver * \
               float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
-              self.kAFtoAF * power_price
+              self.kAFtoAF * power_price / MWh_KWh
 
             # rest are mead deliveries
             self.capcanal.finances['delivery_pumping_cost'][t] += \
               (self.capcanal.turnout_delivery[turnout][t] - remaining_pleasant_to_deliver) * \
               float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
-              self.kAFtoAF * power_price
+              self.kAFtoAF * power_price / MWh_KWh
 
             remaining_pleasant_to_deliver = 0.0
 
@@ -6775,6 +6856,67 @@ cdef class Model():
         self.capcanal.finances['delivery_pumping_cost'][t] + self.capcanal.finances['pleasant_pumping_cost'][t]
 
       ## STEP 13: CALCULATE MONTHLY VOLUMETRIC WATER DELIVERY RATE REVENUES
+      self.set_delivery_rate(t, y, 0.03)
+      for district_obj in self.district_list:
+        # to assess capital and fixed OM&R charges, need total deliveries from previous year
+        # if this is the first year of simulation, use priority entitlement caps
+        if year_index == 0:
+          total_delivery_request = district_obj.project_contract['MUI'] * self.municipal.allocation[year_index] + \
+                                   district_obj.project_contract['FED'] * self.tribal.allocation[year_index] + \
+                                   district_obj.project_contract['PTR'] * self.pthree.allocation[year_index] + \
+                                   district_obj.project_contract['NIA'] * self.nia.allocation[year_index]
+
+          # assumed year 0 priority class deliveries constrained by smaller of demand OR entitlement
+          if total_delivery_request == 0.0:
+            total_mui_previous_year = 0.0
+            total_nia_previous_year = 0.0
+            total_fed_previous_year = 0.0
+          else:
+            total_mui_previous_year = min(district_obj.project_contract['MUI'] * self.municipal.allocation[year_index],
+                                          district_obj.AFY * district_obj.project_contract['MUI'] * self.municipal.allocation[year_index] / total_delivery_request)
+            total_nia_previous_year = min(district_obj.project_contract['NIA'] * self.nia.allocation[year_index],
+                                          district_obj.AFY * district_obj.project_contract['NIA'] * self.nia.allocation[year_index] / total_delivery_request)
+            total_fed_previous_year = min(district_obj.project_contract['FED'] * self.tribal.allocation[year_index],
+                                          district_obj.AFY * district_obj.project_contract['FED'] * self.tribal.allocation[year_index] / total_delivery_request)
+
+          # similar calculation for excess deliveries
+          total_exc_previous_year = max(0.0, district_obj.AFY - total_delivery_request)
+        else:
+          total_mui_previous_year = district_obj.deliveries['MUI'][year_index - 1]
+          total_nia_previous_year = district_obj.deliveries['NIA'][year_index - 1]
+          total_fed_previous_year = district_obj.deliveries['FED'][year_index - 1]
+          total_exc_previous_year = district_obj.deliveries['EXCESS'][year_index - 1]
+
+        # for deliveries of each priority class, charge rates differently
+        self.capcanal.finances['total_sales'][t] += \
+          district_obj.monthly_deliveries['PTR'][t] * self.capcanal.finances['energy_charge'][t]
+        self.capcanal.finances['total_sales'][t] += \
+          district_obj.monthly_deliveries['MUI'][t] * self.capcanal.finances['energy_charge'][t] + \
+          total_mui_previous_year * (self.capcanal.finances['capital_charge'][t] + self.capcanal.finances['fixed_omr_charge'][t]) / months_in_year
+        self.capcanal.finances['total_sales'][t] += \
+          district_obj.monthly_deliveries['FED'][t] * self.capcanal.finances['energy_charge'][t] + \
+          total_fed_previous_year * (self.capcanal.finances['fixed_omr_charge'][t]) / months_in_year
+        self.capcanal.finances['total_sales'][t] += \
+          district_obj.monthly_deliveries['NIA'][t] * self.capcanal.finances['energy_charge'][t] + \
+          total_nia_previous_year * (self.capcanal.finances['fixed_omr_charge'][t]) / months_in_year
+
+        # for excess water, different rates charged whether or not water goes to irrigation/ag district or not...
+        # (assumption here: any excess to IDDs is for 'Ag Excess')
+        if district_obj in self.cap_ag_districts:
+          self.capcanal.finances['total_sales'][t] += \
+            district_obj.monthly_deliveries['EXCESS'][t] * self.capcanal.finances['energy_charge'][t]
+        else:
+          self.capcanal.finances['total_sales'][t] += \
+            district_obj.monthly_deliveries['EXCESS'][t] * self.capcanal.finances['energy_charge'][t] + \
+            total_exc_previous_year * (self.capcanal.finances['fixed_omr_charge'][t]) / months_in_year
+
+        # get additional revenues for CAP from deliveries to AMA recharge as well
+        # (assumption: all 3 AMAs have same rate fees, but may not be true)
+        for ama_obj in self.waterbank_list:
+          if district_obj.key in ama_obj.participant_list:
+            self.capcanal.finances['total_sales'][t] += \
+              ama_obj.bank_timeseries[district_obj.key][t] * \
+              (self.capcanal.finances['storage_omr_charge'][t] + self.capcanal.finances['storage_capital_charge'][t])
 
 
       ## STEP 14: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
@@ -6845,6 +6987,9 @@ cdef class Model():
 
     self.capcanal.turnout_reservoirs['WAD'] = [self.pleasant]
 
+    # for financial calculations, also record list of ag subcontractors
+    self.cap_ag_districts = [self.hvid, self.msidd, self.hidd, self.caidd]
+
     ### After the canal structure is defined, each of the nodes on the list
     ### has a demand initialized.  There are many different types of demands
     ### depending on the surface water availabilities
@@ -6875,7 +7020,9 @@ cdef class Model():
       # hold canal-wide financial accounts here for export
       canal_obj.finances = {}
       for account in ['delivery_pumping_cost', 'pleasant_pumping_cost', 'total_pumping_cost',
-                      'total_sales']:
+                      'energy_charge', 'capital_charge', 'fixed_omr_charge', 'storage_omr_charge',
+                      'storage_capital_charge', 'stabilization_use', 'total_sales',
+                      'stabilization_account', 'property_tax_use']:
         canal_obj.finances[account] = np.zeros(self.T)
 
     ##There is 1 canal (CAP) directly connected to surface water storage

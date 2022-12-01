@@ -26,7 +26,7 @@ cdef class Model():
                 first_d_of_month, sensitivity_sample_names, sensitivity_sample, sensitivity_factors, running_fnf, \
                 reservoir_list, city_list, swp_allocation, annual_SWP, hro_pumping, district_list, forecastSRI, contract_list, \
                 waterbank_list, canal_list, observed_trp, cvp_allocation, trp_pumping, observed_hro, private_list, annual_CVP, \
-                ytd_pump_hro, ytd_pump_trp, observed_hro_pred, urban_list, leiu_list
+                ytd_pump_hro, ytd_pump_trp, observed_hro_pred, urban_list, leiu_list, cap_ag_districts
 
 
     public dict delta_gains_regression, canal_reservoir, canal_contract, canal_priority, reservoir_contract, contract_turnouts, \
@@ -117,6 +117,8 @@ cdef class Model():
   cdef list identify_lease_providers(self, list districts)
 
   cdef void project_deliveries(self, int t, int yr, list lease_providers) except *
+
+  cdef void set_delivery_rate(self, int t, int yr, double inflation_rate) except *
 
 ######### init
   cdef tuple northern_initialization_routine(self, scenario=*)

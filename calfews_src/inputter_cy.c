@@ -1272,7 +1272,7 @@ struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap {
   PyObject *scenario;
 };
 
-/* "model_cy.pxd":122
+/* "model_cy.pxd":124
  * 
  * ######### init
  *   cdef tuple northern_initialization_routine(self, scenario=*)             # <<<<<<<<<<<<<<
@@ -1284,7 +1284,7 @@ struct __pyx_opt_args_11calfews_src_8model_cy_5Model_northern_initialization_rou
   PyObject *scenario;
 };
 
-/* "model_cy.pxd":128
+/* "model_cy.pxd":130
  *   cdef void initialize_delta_ops(self) except *
  * 
  *   cdef void southern_initialization_routine(self, scenario=*) except *             # <<<<<<<<<<<<<<
@@ -1296,7 +1296,7 @@ struct __pyx_opt_args_11calfews_src_8model_cy_5Model_southern_initialization_rou
   PyObject *scenario;
 };
 
-/* "model_cy.pxd":136
+/* "model_cy.pxd":138
  *   cdef void predict_delta_gains(self) except *
  * 
  *   cdef void initialize_water_districts(self, scenario=*) except *             # <<<<<<<<<<<<<<
@@ -1905,6 +1905,7 @@ struct __pyx_obj_11calfews_src_8model_cy_Model {
   PyObject *observed_hro_pred;
   PyObject *urban_list;
   PyObject *leiu_list;
+  PyObject *cap_ag_districts;
   PyObject *delta_gains_regression;
   PyObject *canal_reservoir;
   PyObject *canal_contract;
@@ -2651,6 +2652,7 @@ struct __pyx_vtabstruct_11calfews_src_8model_cy_Model {
   void (*initialize_cap)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_initialize_cap *__pyx_optional_args);
   PyObject *(*identify_lease_providers)(struct __pyx_obj_11calfews_src_8model_cy_Model *, PyObject *);
   void (*project_deliveries)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int, int, PyObject *);
+  void (*set_delivery_rate)(struct __pyx_obj_11calfews_src_8model_cy_Model *, int, int, double);
   PyObject *(*northern_initialization_routine)(struct __pyx_obj_11calfews_src_8model_cy_Model *, struct __pyx_opt_args_11calfews_src_8model_cy_5Model_northern_initialization_routine *__pyx_optional_args);
   void (*initialize_northern_res)(struct __pyx_obj_11calfews_src_8model_cy_Model *);
   void (*initialize_delta_ops)(struct __pyx_obj_11calfews_src_8model_cy_Model *);
