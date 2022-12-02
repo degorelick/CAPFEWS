@@ -86,8 +86,8 @@ cdef class main_cy():
       if v == 'localfile':
         scenario[k] = self.results_folder + '/' + k + '_scenario.json'
 
-    if self.model_mode == 'central_arizona_project':
-      self.flow_input_source = 'historic' # historic or crss
+    # if self.model_mode == 'central_arizona_project':
+    #   self.flow_input_source = 'historic' # historic or crss
 
     ### copy runtime file for future use
     shutil.copy(self.runtime_file, self.results_folder + '/' + self.runtime_file)
@@ -103,8 +103,15 @@ cdef class main_cy():
       # FIRST COLUMN OF DATA NEEDS TO BE DATETIME
       # if i dont need to generate syntethic data, or i have everything in this initial csv
       # then set input_data_file = base_data_file
-      base_data_file = 'calfews_src/data/input/cap-data.csv'
-      expected_release_datafile = 'calfews_src/data/input/cap-data.csv'
+      if self.flow_input_source == "historic":
+        base_data_file = 'calfews_src/data/input/cap-data.csv'
+        expected_release_datafile = 'calfews_src/data/input/cap-data.csv'
+      else:
+        base_data_file = 'calfews_src/data/input/cap-data-crss-1.csv'
+        expected_release_datafile = 'calfews_src/data/input/cap-data-crss-1.csv'
+
+      print(base_data_file)
+
       new_inputs = Inputter(base_data_file, expected_release_datafile, self.model_mode, self.results_folder)
       if new_inputs.has_full_inputs[self.flow_input_type][self.flow_input_source]:
         input_data_file = new_inputs.flow_input_source[self.flow_input_type][self.flow_input_source]

@@ -6460,9 +6460,9 @@ cdef class Model():
     self.capcanal.finances['energy_charge'][t] = 56.0 * self.kAFtoAF  # rates in $/kAF
     self.capcanal.finances['capital_charge'][t] = 82.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
     self.capcanal.finances['fixed_omr_charge'][t] = 99.0 * self.kAFtoAF + self.capcanal.finances['property_tax_use'][t]  # rates in $/kAF
-    self.capcanal.finances['storage_omr_charge'][t] = 13.0 * self.kAFtoAF  # rates in $/kAF, using Phoenix AMA value
 
     # storage for gw rates do not seem to change year-to-year
+    self.capcanal.finances['storage_omr_charge'][t] = 13.0 * self.kAFtoAF  # rates in $/kAF, using Phoenix AMA value
     self.capcanal.finances['storage_capital_charge'][t] = 15.0 * self.kAFtoAF  # rates in $/kAF, using Phoenix AMA value
     self.capcanal.finances['stabilization_use'][t] = 0.0 * self.kAFtoAF  # rates in $/kAF
 

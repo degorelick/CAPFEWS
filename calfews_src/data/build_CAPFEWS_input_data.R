@@ -35,7 +35,27 @@ CRSS_ShortageSummary = readxl::read_xlsx("PNNL.xlsx", sheet = "Shortage")
 ##    PNNL.xlsx - CRSS Mead elevation, CAP diversion request traces, 2023-2054 by month
 ##      can use averages like 24MS for initial tests?
 CRSS_CAPDiversion_Organized = NA
-CRSS_MeadElevation_Organized = NA
+
+
+CRSS_MeadElevation_Organized = CRSS_MeadElevation %>% select(`Jan 2022 CRSS`:Run31) %>%
+  filter(!is.na(`Jan 2022 CRSS`)) %>%
+  mutate(datetime = lubridate::make_datetime(
+    year = lubridate::year(`Jan 2022 CRSS`), month = lubridate::month(`Jan 2022 CRSS`))) %>% 
+  select(-`Jan 2022 CRSS`)
+colnames(CRSS_MeadElevation_Organized)[1:(ncol(CRSS_MeadElevation_Organized)-1)] = 1:(ncol(CRSS_MeadElevation_Organized)-1)
+CRSS_MeadElevation_Organized = CRSS_MeadElevation_Organized %>%
+  pivot_longer(cols = -datetime, names_to = 'realization', values_to = 'MDE_ele') %>%
+  arrange(realization, datetime)
+
+# separate into different realization files
+for (r in unique(CRSS_MeadElevation_Organized$realization)) {
+  write.table(CRSS_MeadElevation_Organized %>% filter(realization == r), 
+              paste("../CAPFEWS/calfews_src/data/input/cap-data-crss-", r, ".csv", sep = ""), 
+              sep = ",", row.names = FALSE, col.names = TRUE)
+}
+
+
+  
 
 ##    forecast Historical 2008 to 2021.xlsx - top table colorado river diversions, by month
 ##    (im collecting this with some new code, but CO River diversions is the same as

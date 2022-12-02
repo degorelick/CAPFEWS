@@ -285,12 +285,23 @@ for (d in entitlement_totals$Code) {
   growth_rate = c(
     round((AnnualDemand[6,district_full_name] - AnnualDemand[2,district_full_name])/AnnualDemand[2,district_full_name]/5, 
           digits = 2))[[1]]
-  if (is.na(growth_rate)) {growth_rate = 0.0}
   # if growth rate is too extreme, replace with 2020-2021 rate...
-  # if (abs(growth_rate) > 0.1) {
-  #   growth_rate = round((AnnualDemand[5,district_full_name] - AnnualDemand[6,district_full_name])/AnnualDemand[5,district_full_name], 
-  #                       digits = 1)
-  # }
+  if (is.na(growth_rate)) {growth_rate = 0.0}
+  if (abs(growth_rate) > 0.05) {
+    growth_rate = c(round((AnnualDemand[5,district_full_name] - AnnualDemand[4,district_full_name])/AnnualDemand[5,district_full_name],
+                        digits = 1))[[1]]
+  }
+  if (is.na(growth_rate)) {growth_rate = 0.0}
+  # if growth rate is STILL too extreme, replace restrict within +/- 5%/yr
+  if (abs(growth_rate) > 0.05) {
+    if (growth_rate < 0) {
+      growth_rate = -0.05
+    } else {
+      growth_rate = 0.05
+    }
+    
+  }
+  if (is.na(growth_rate)) {growth_rate = 0.0}
   
   district = list("name" = district_full_name, 
                   "MDD" = 0,
@@ -509,8 +520,6 @@ Historical_CAPDiversion_Organized = Historical_CAPDiversion %>%
 
 az_capacity = 2800
 az_on_river_demand = az_capacity - mean(Historical_CAPDiversion_Organized$CAP_div)/1000
-
-cap_excess_preferr
 
 Mead = list("name" = "Lake Mead",
             "capacity" = 999999,

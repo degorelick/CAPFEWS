@@ -4,7 +4,7 @@
   "flow_input_source":{
     "cap_data": {
       "historic": "calfews_src/data/input/cap-data.csv",
-      "crss": "calfews_src/data/input/cap-data.csv"
+      "crss": "calfews_src/data/input/cap-data-crss-1.csv"
       },
     "observations":{
       "CDEC": "calfews_src/data/input/calfews_src-data-sim.csv", 
@@ -76,7 +76,7 @@
   "export_series":{
     "cap_data": {
       "historic": "calfews_src/data/input/cap-data.csv",
-      "crss": "calfews_src/data/input/cap-data.csv"
+      "crss": "calfews_src/data/input/cap-data-crss-1.csv"
       },
     "observations":{
       "CDEC": "calfews_src-data-CDEC_19052016",
