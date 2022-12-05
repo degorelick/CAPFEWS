@@ -285,6 +285,25 @@ RCRG_seasonality = Historical_Deliveries_ForRecharge_Organized %>%
   pivot_wider(names_from = User, values_from = total_recharge)
 RCRG_seasonality = apply(RCRG_seasonality, 2, function(x) {x/sum(x, na.rm = TRUE)})
 
+# # calculate max and min share of demand delivered in each month
+# RCRG_seasonality = Historical_Deliveries_ForRecharge_Organized %>% 
+#   mutate(Month = lubridate::month(datetime)) %>%
+#   select(Year, Month, User, deliveries) %>%
+#   group_by(Year, Month, User) %>% summarize(total_recharge = sum(deliveries)) %>%
+#   pivot_wider(names_from = User, values_from = total_recharge)
+# 
+# max_fracs = matrix(NA, nrow = 12, ncol = ncol(RCRG_seasonality))
+# min_fracs = matrix(NA, nrow = 12, ncol = ncol(RCRG_seasonality))
+# for (y in unique(RCRG_seasonality$Year)) {
+#   RCRG_seasonality_Y = RCRG_seasonality %>% filter(Year == y)
+#   RCRG_seasonality_YY = apply(RCRG_seasonality_Y, 2, function(x) {x/sum(x, na.rm = TRUE)})
+#   for (r in 1:nrow(RCRG_seasonality_YY)) {
+#     for (col in 1:ncol(RCRG_seasonality_YY)) {
+#       
+#     }
+#   }
+# }
+
 # add missing users in deliveries file with zeroes
 RCRG_seasonality = as.data.frame(RCRG_seasonality)
 for (missing_user in setdiff(UsersToKeep, colnames(RCRG_seasonality))) {

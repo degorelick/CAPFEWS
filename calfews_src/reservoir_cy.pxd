@@ -60,7 +60,7 @@ cdef class Reservoir():
 
   cdef void calculate_cap_mead_annual_excess_remaining(self, int t, int m) except *
 
-  cdef void calc_az_mead_curtailment(self, int t) except *
+  cdef void calc_az_mead_curtailment(self, int t, int year) except *
 
   cdef double calculate_pleasant_area(self, int t) except *
 

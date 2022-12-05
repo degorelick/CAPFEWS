@@ -6557,7 +6557,7 @@ cdef class Model():
     total_entitlement_demand = 0.0
     for district_obj in self.district_list:
       total_entitlement_demand += max(0.0,
-                                      min(district_obj.AFY * (1 + district_obj.growth_rate)**yr,
+                                      min(district_obj.last_year_demand[yr],
                                           district_obj.get_annual_district_entitlements(t,
                                                                                         self.mead.mead_shortage_tier,
                                                                                         self.contract_list,
@@ -6633,7 +6633,7 @@ cdef class Model():
       ## STEP 1: ACCOUNT FOR EXISTING ENTITLEMENTS
       # will they be reduced because of a shortage tier condition?
       print('------------------------------- YEAR ' + str(y) + ' --------------------------------')
-      self.mead.calc_az_mead_curtailment(t+months_in_year-1) # tier shortage at EOY (projection)
+      self.mead.calc_az_mead_curtailment(t+months_in_year-1, y) # tier shortage at EOY (projection)
       print('Projection for Mead Condition: ' + self.mead.mead_shortage_tier)
       print('CAP Colorado River Curtailment: ' + str(self.mead.annual_az_allocation_curtailment))
 

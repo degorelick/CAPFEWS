@@ -1033,7 +1033,7 @@ struct __pyx_opt_args_11calfews_src_11district_cy_8District_set_demand_priority;
 struct __pyx_ctuple_double__and_double__and_double;
 typedef struct __pyx_ctuple_double__and_double__and_double __pyx_ctuple_double__and_double__and_double;
 
-/* "district_cy.pxd":45
+/* "district_cy.pxd":47
  *   cdef double set_request_constraints(self, double demand, str search_type, list contract_list, double bank_space, double bank_capacity, int dowy, int wateryear) except *
  * 
  *   cdef dict set_demand_priority(self, list priority_list, list contract_list, double demand, double delivery, double demand_constraint, str search_type, str contract_canal, str message=*)             # <<<<<<<<<<<<<<
@@ -1045,7 +1045,7 @@ struct __pyx_opt_args_11calfews_src_11district_cy_8District_set_demand_priority 
   PyObject *message;
 };
 
-/* "district_cy.pxd":85
+/* "district_cy.pxd":87
  *   cdef double record_direct_delivery(self, double delivery, int wateryear)
  * 
  *   cdef (double, double, double) set_deliveries(self, dict priorities, dict type_fractions, list type_list, str search_type, int toggle_district_recharge, str member_name, int wateryear)             # <<<<<<<<<<<<<<
@@ -1505,9 +1505,10 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   double current_requested;
   double epsilon;
   double AFY;
-  double growth_rate;
   double monthly_delivery_cap_on_annual_entitlement;
   double monthly_delivery_cap_on_leases;
+  double max_growth_rate;
+  double min_growth_rate;
   int is_Canal;
   int is_District;
   int is_Private;
@@ -1557,6 +1558,8 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   PyObject *ama_used;
   PyObject *ama_share;
   PyObject *initial_request_curtailment;
+  PyObject *growth_rate;
+  PyObject *last_year_demand;
   PyObject *project_contract;
   PyObject *rights;
   PyObject *service;
@@ -2137,7 +2140,7 @@ struct __pyx_vtabstruct_11calfews_src_12reservoir_cy_Reservoir {
   void (*calculate_cap_mead_allocation)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   void (*calculate_cap_mead_annual_diversion_remaining)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
   void (*calculate_cap_mead_annual_excess_remaining)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
-  void (*calc_az_mead_curtailment)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
+  void (*calc_az_mead_curtailment)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
   double (*calculate_pleasant_area)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   double (*calculate_pleasant_storage)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, double);
   void (*set_pleasant_pumping)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int, double);

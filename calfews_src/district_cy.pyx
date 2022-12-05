@@ -50,7 +50,7 @@ cdef class District():
     self.ama_used = ["none"]
     self.ama_share = [0.0]
     self.recharge_contribution = {}
-    self.growth_rate = 0.0
+    self.growth_rate = [0.0 for _ in range(self.T)]
 
     for k, v in json.load(open('calfews_src/districts/%s_properties.json' % key)).items():
       setattr(self, k, v)
@@ -229,6 +229,9 @@ cdef class District():
     self.monthly_delivery_cap_on_annual_entitlement = 0.50
     self.monthly_delivery_cap_on_leases = 0.11
 
+    self.last_year_demand = [0.0 for _ in range(model.number_years+2)]
+    self.last_year_demand[0] = self.AFY
+
 
   cdef double get_annual_district_entitlements(self, int t, str shortage_tier, list contract_list, list lease_donor_districts) except *:
     # Tally up all potential available entitled water for the subcontractor (district) THIS YEAR, including leases
@@ -329,8 +332,24 @@ cdef class District():
     fed_shortage_frac = 1.0
 
     # what would demand be, if there are no constraints?
-    self.dailydemand[t] = self.monthlydemand[mead_shortage_tier][month] * (1 + self.growth_rate)**yr
-#    if self.key == "GIL":
+    # NEW: growth rate will randomly be within the max/min ranges of year-to-year
+    #   change in deliveries for each user. As well, monthly demand shape can be
+    #   +/- 5% of historical average fraction of annual demand for each calendar month
+    if month == 0:
+      self.growth_rate[t] = np.random.uniform(low=self.min_growth_rate,
+                                              high=self.max_growth_rate)
+    else:
+      self.growth_rate[t] = self.growth_rate[t-1]
+
+
+    self.dailydemand[t] = self.urban_profile[month-1] * np.random.uniform(low=0.95, high=1.05) * \
+                          self.last_year_demand[yr] * (1 + self.growth_rate[t])
+
+    # this will record what most recent full year's demands were, for projecting next year's growth
+    if month+1 == 12:
+      for m in range(t-11,t):
+        self.last_year_demand[yr+1] += self.dailydemand[m]
+    #    if self.key == "GIL":
 #      print(self.name + ' demand: ', str(self.dailydemand[t]) + ', month ', str(t))
 
     # factor in whether NIA and/or Ag Mitigation is active, and current long-term leases

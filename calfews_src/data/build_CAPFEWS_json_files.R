@@ -279,29 +279,25 @@ for (d in entitlement_totals$Code) {
   if (district_full_name == "CAGRD") {priority_to_recharge = 1}
   
   # identify demand growth rates for each user
-  # will do this as a 2017-2021 5-year average annual delivery change
-  # while removing outliers (or using them to inform uncertainty ranges)
-  plot(AnnualDemand$Year,c(AnnualDemand[,district_full_name])[[1]]); title(district_full_name)
-  growth_rate = c(
-    round((AnnualDemand[6,district_full_name] - AnnualDemand[2,district_full_name])/AnnualDemand[2,district_full_name]/5, 
-          digits = 2))[[1]]
-  # if growth rate is too extreme, replace with 2020-2021 rate...
-  if (is.na(growth_rate)) {growth_rate = 0.0}
-  if (abs(growth_rate) > 0.05) {
-    growth_rate = c(round((AnnualDemand[5,district_full_name] - AnnualDemand[4,district_full_name])/AnnualDemand[5,district_full_name],
-                        digits = 1))[[1]]
+  # identify range of year-to-year change in deliveries/demand
+  # which will be sampled randomly from in model for change factor
+  growth_rates = c()
+  for (y in 2:nrow(AnnualDemand)) {
+    growth_rates = c(growth_rates, 
+                     round((AnnualDemand[y,district_full_name] - AnnualDemand[y-1,district_full_name])/AnnualDemand[y-1,district_full_name], digits = 2)[[1]])
   }
-  if (is.na(growth_rate)) {growth_rate = 0.0}
-  # if growth rate is STILL too extreme, replace restrict within +/- 5%/yr
-  if (abs(growth_rate) > 0.05) {
-    if (growth_rate < 0) {
-      growth_rate = -0.05
-    } else {
-      growth_rate = 0.05
-    }
-    
+  growth_rates[is.na(growth_rates)] = 0.0
+  max_growth_rate = max(growth_rates)
+  min_growth_rate = min(growth_rates)
+  
+  # make sure this doesn't take demand to zero, or infinite
+  if (min_growth_rate < -0.25) {
+    min_growth_rate = -0.25
   }
-  if (is.na(growth_rate)) {growth_rate = 0.0}
+  if (max_growth_rate > 0.25) {
+    max_growth_rate = 0.25
+  }
+  
   
   district = list("name" = district_full_name, 
                   "MDD" = 0,
@@ -325,7 +321,8 @@ for (d in entitlement_totals$Code) {
                   # "ag_mitigation_taker" = FALSE,
                   "ama_used" = as.list(ama_used),
                   "ama_share" = as.list(ama_share),
-                  "growth_rate" = growth_rate,
+                  "min_growth_rate" = min_growth_rate,
+                  "max_growth_rate" = max_growth_rate,
                   "zone" = "zone15" # THIS IS FOR CROP/IRRIGATION PURPOSES - CAP MODEL DOESN'T USE THIS INFORMATION SO IT DEFAULTS TO CA VALUES AND IGNORES THEM
                   )
   

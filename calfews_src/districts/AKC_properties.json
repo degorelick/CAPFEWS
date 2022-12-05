@@ -33,6 +33,7 @@
     0.9,
     0.1
   ],
-  "growth_rate": 0.05,
+  "min_growth_rate": -0.01,
+  "max_growth_rate": 0.14,
   "zone": "zone15"
 }

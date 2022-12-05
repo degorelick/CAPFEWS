@@ -6,6 +6,7 @@
 
 rm(list=ls()) # clear memory
 setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results') # set directory
+setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results_crss') # set directory
 
 ### read output from hdf5 file ------------------------------------------------
 # to do this, run: install.packages("BiocManager")
@@ -33,6 +34,8 @@ write.table(CO, "results.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 # need results file, read in as "CO" dataframe, from previous section
 library(tidyverse)
 setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results') # set directory
+setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results_crss') # set directory
+
 CO = read.csv("results.csv", header = TRUE)
 entitlement_totals = read.csv("C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/Data/user_entitlements.csv", header = TRUE)
 
@@ -123,4 +126,24 @@ to_show = ggplot() + ggtitle("CAP System Reservoir Conditions (2013-2021)") +
   facet_wrap(.~name, scales = "free_y", ncol = 1) + ylab("") + guides(color = FALSE, fill = FALSE) +
   theme(strip.text = element_text(size = 15, face = "bold"))
 ggsave(plot = to_show, filename = "reservoirs.png", units = "in", width = 9, height = 10, dpi = 600)
+
+
+### plot power costs and water delivery revenues --------------------------------------
+Finances = CO[,grep("CAP", colnames(CO))]
+TurnoutDelivery = Finances[,grep("delivery", colnames(Finances))]
+Finances = Finances[,13:ncol(Finances)]
+
+FinPlot = data_frame(Month = c(1:nrow(CO)), Year = rep(2023:2054, each = 12))
+FinPlot$`Pumping Energy Variable Cost ($1000)` = -Finances$CAP_total_pumping_cost/1000
+FinPlot$`Total Water Delivery Revenue ($1000)` = Finances$CAP_total_sales/1000
+
+FinPlot = FinPlot %>% pivot_longer(-c(Month,Year), values_to = "value") %>% group_by(Year, name) %>%
+  summarise(Total_Dollars = sum(value))
+to_show = ggplot() + ggtitle("Simulated Future Pumping Costs and\n Water Delivery Revenue (2023-2054)") +
+  geom_bar(data = FinPlot, aes(x = Year, y = Total_Dollars, fill = name), color = NA, stat = "identity", position = "stack") +
+  theme(legend.position = c(0.98,0.98), legend.justification = c(1,1),
+        legend.title = element_blank()) + ylab("$1000 USD")
+ggsave(plot = to_show, filename = "Financing.png", units = "in", width = 8, height = 5, dpi = 600)
+
+
 

@@ -1152,7 +1152,7 @@ struct __pyx_opt_args_11calfews_src_11district_cy_8District_set_demand_priority;
 struct __pyx_ctuple_double__and_double__and_double;
 typedef struct __pyx_ctuple_double__and_double__and_double __pyx_ctuple_double__and_double__and_double;
 
-/* "district_cy.pxd":45
+/* "district_cy.pxd":47
  *   cdef double set_request_constraints(self, double demand, str search_type, list contract_list, double bank_space, double bank_capacity, int dowy, int wateryear) except *
  * 
  *   cdef dict set_demand_priority(self, list priority_list, list contract_list, double demand, double delivery, double demand_constraint, str search_type, str contract_canal, str message=*)             # <<<<<<<<<<<<<<
@@ -1164,7 +1164,7 @@ struct __pyx_opt_args_11calfews_src_11district_cy_8District_set_demand_priority 
   PyObject *message;
 };
 
-/* "district_cy.pxd":85
+/* "district_cy.pxd":87
  *   cdef double record_direct_delivery(self, double delivery, int wateryear)
  * 
  *   cdef (double, double, double) set_deliveries(self, dict priorities, dict type_fractions, list type_list, str search_type, int toggle_district_recharge, str member_name, int wateryear)             # <<<<<<<<<<<<<<
@@ -1718,9 +1718,10 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   double current_requested;
   double epsilon;
   double AFY;
-  double growth_rate;
   double monthly_delivery_cap_on_annual_entitlement;
   double monthly_delivery_cap_on_leases;
+  double max_growth_rate;
+  double min_growth_rate;
   int is_Canal;
   int is_District;
   int is_Private;
@@ -1770,6 +1771,8 @@ struct __pyx_obj_11calfews_src_11district_cy_District {
   PyObject *ama_used;
   PyObject *ama_share;
   PyObject *initial_request_curtailment;
+  PyObject *growth_rate;
+  PyObject *last_year_demand;
   PyObject *project_contract;
   PyObject *rights;
   PyObject *service;
@@ -2398,7 +2401,7 @@ struct __pyx_vtabstruct_11calfews_src_12reservoir_cy_Reservoir {
   void (*calculate_cap_mead_allocation)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   void (*calculate_cap_mead_annual_diversion_remaining)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
   void (*calculate_cap_mead_annual_excess_remaining)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
-  void (*calc_az_mead_curtailment)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
+  void (*calc_az_mead_curtailment)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int);
   double (*calculate_pleasant_area)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int);
   double (*calculate_pleasant_storage)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, double);
   void (*set_pleasant_pumping)(struct __pyx_obj_11calfews_src_12reservoir_cy_Reservoir *, int, int, double);
@@ -3978,7 +3981,7 @@ static const char __pyx_k_calfews_src_data_input_calfews_s[] = "calfews_src/data
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension %d (got %d and %d)";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
-static const char __pyx_k_calfews_src_data_input_cap_data_2[] = "calfews_src/data/input/cap-data-crss.csv";
+static const char __pyx_k_calfews_src_data_input_cap_data_2[] = "calfews_src/data/input/cap-data-crss-1.csv";
 static const char __pyx_k_Incompatible_checksums_0x_x_vs_0_2[] = "Incompatible checksums (0x%x vs (0xb068931, 0x82a3537, 0x6ae9995) = (name))";
 static PyObject *__pyx_kp_u_;
 static PyObject *__pyx_kp_u_0_csv;
@@ -5424,7 +5427,7 @@ static int __pyx_f_7main_cy_7main_cy_initialize_cap(struct __pyx_obj_7main_cy_ma
  *         base_data_file = 'calfews_src/data/input/cap-data.csv'
  *         expected_release_datafile = 'calfews_src/data/input/cap-data.csv'             # <<<<<<<<<<<<<<
  *       else:
- *         base_data_file = 'calfews_src/data/input/cap-data-crss.csv'
+ *         base_data_file = 'calfews_src/data/input/cap-data-crss-1.csv'
  */
       __Pyx_INCREF(__pyx_kp_u_calfews_src_data_input_cap_data);
       __pyx_v_expected_release_datafile = __pyx_kp_u_calfews_src_data_input_cap_data;
@@ -5442,8 +5445,8 @@ static int __pyx_f_7main_cy_7main_cy_initialize_cap(struct __pyx_obj_7main_cy_ma
     /* "main_cy.pyx":110
  *         expected_release_datafile = 'calfews_src/data/input/cap-data.csv'
  *       else:
- *         base_data_file = 'calfews_src/data/input/cap-data-crss.csv'             # <<<<<<<<<<<<<<
- *         expected_release_datafile = 'calfews_src/data/input/cap-data-crss.csv'
+ *         base_data_file = 'calfews_src/data/input/cap-data-crss-1.csv'             # <<<<<<<<<<<<<<
+ *         expected_release_datafile = 'calfews_src/data/input/cap-data-crss-1.csv'
  * 
  */
     /*else*/ {
@@ -5452,8 +5455,8 @@ static int __pyx_f_7main_cy_7main_cy_initialize_cap(struct __pyx_obj_7main_cy_ma
 
       /* "main_cy.pyx":111
  *       else:
- *         base_data_file = 'calfews_src/data/input/cap-data-crss.csv'
- *         expected_release_datafile = 'calfews_src/data/input/cap-data-crss.csv'             # <<<<<<<<<<<<<<
+ *         base_data_file = 'calfews_src/data/input/cap-data-crss-1.csv'
+ *         expected_release_datafile = 'calfews_src/data/input/cap-data-crss-1.csv'             # <<<<<<<<<<<<<<
  * 
  *       print(base_data_file)
  */
@@ -5463,7 +5466,7 @@ static int __pyx_f_7main_cy_7main_cy_initialize_cap(struct __pyx_obj_7main_cy_ma
     __pyx_L22:;
 
     /* "main_cy.pyx":113
- *         expected_release_datafile = 'calfews_src/data/input/cap-data-crss.csv'
+ *         expected_release_datafile = 'calfews_src/data/input/cap-data-crss-1.csv'
  * 
  *       print(base_data_file)             # <<<<<<<<<<<<<<
  * 

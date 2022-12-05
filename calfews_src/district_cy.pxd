@@ -11,7 +11,8 @@ cdef class District():
                 total_banked_storage, min_direct_recovery, turnback_sales, turnback_purchases, annual_private_pumping, \
                 irrseasondemand, recharge_rate, last_days_demand_regression_error, recovery_capacity_remain, table_a_request, \
                 current_recharge_storage, current_requested, epsilon, \
-                AFY, growth_rate, monthly_delivery_cap_on_annual_entitlement, monthly_delivery_cap_on_leases
+                AFY, monthly_delivery_cap_on_annual_entitlement, monthly_delivery_cap_on_leases, max_growth_rate, \
+                min_growth_rate
 
     public int is_Canal, is_District, is_Private, is_Waterbank, is_Reservoir, T, turnback_use, must_fill, seasonal_connection, \
                 thismonthuse, monthusecounter, monthemptycounter, has_private, has_pesticide, has_pmp, k_close_wateryear, iter_count, \
@@ -25,7 +26,8 @@ cdef class District():
     public list contract_list, turnout_list, crop_list, urban_profile, participant_list, contract_list_all, non_contract_delivery_list, \
                 recharge_rate_series, max_leiu_recharge, max_direct_recharge, delivery_location_list, private_fraction, recharge_decline, \
                 lease_partner, lease_quantity, lease_priority, recharge_profile, contract_list_cap, \
-                dcp_shortage_tiers, request_curtailment, non_contract_list_cap, ama_used, ama_share, initial_request_curtailment
+                dcp_shortage_tiers, request_curtailment, non_contract_list_cap, ama_used, ama_share, \
+                initial_request_curtailment, growth_rate, last_year_demand
 
     public dict project_contract, rights, service, inleiucap, deliveries, current_balance, paper_balance, turnback_pool, \
                 projected_supply, carryover, recharge_carryover, delivery_carryover, contract_carryover_list, dynamic_recharge_cap, \

@@ -358,7 +358,7 @@ cdef class Reservoir():
     #       self.az_capacity - self.annual_az_allocation_curtailment - cap_system_losses - self.cap_allocation[t] - self.az_on_river_demand)
 
 
-  cdef void calc_az_mead_curtailment(self, int t) except *:
+  cdef void calc_az_mead_curtailment(self, int t, int year) except *:
     cdef double guidelines_curtailment, dcp_curtailment
     if self.elevation[t] < 1025.0: # Tier 3
       guidelines_curtailment = 480000.0
@@ -379,6 +379,10 @@ cdef class Reservoir():
     elif self.elevation[t] < 1090.0: # Tier 0
       guidelines_curtailment = 0.0
       dcp_curtailment = 192000.0
+
+      # first official T0 year was 2020, where there were cuts
+      if year < 2020:
+        dcp_curtailment = 0.0
       self.mead_shortage_tier = 'T0'
     else:
       guidelines_curtailment = 0.0

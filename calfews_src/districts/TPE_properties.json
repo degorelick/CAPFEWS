@@ -31,6 +31,7 @@
   "ama_share": [
     1
   ],
-  "growth_rate": 0.03,
+  "min_growth_rate": -0.12,
+  "max_growth_rate": 0.16,
   "zone": "zone15"
 }
