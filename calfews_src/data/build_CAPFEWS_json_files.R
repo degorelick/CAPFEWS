@@ -5,7 +5,7 @@
 ### -----------------------------------------------------
 
 rm(list=ls()) # clear memory
-setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/Data') # set directory
+setwd('C:/Users/rkleiman/CAPFEWS') # set directory
 library(jsonlite); library(dplyr); library(tidyverse)
 
 ### Write Canal JSON ------------------------------------
@@ -47,7 +47,7 @@ pumping_power_rate_from_pleasant = c(0,
 
 
 # range of potential monthly energy prices for CAP pumping
-Historical_EnergyPrices = read.csv("Palo Verde Energy Prices.csv", header = TRUE)
+Historical_EnergyPrices = read.csv("AllCapData/Palo Verde Energy Prices.csv", header = TRUE)
 top_range = apply(Historical_EnergyPrices[,2:9], 1, max)
 low_range = apply(Historical_EnergyPrices[,2:9], 1, min)
 power_price = data.frame(low = low_range,
@@ -90,8 +90,8 @@ write(canal_json, "../CAPFEWS/calfews_src/canals/CAP_properties.json")
 ## write JSON for CAP canal contractors rights (contracts)
 ## write a separate contract for each CAP water priority class (P3, M&I, Indian, NIA)
 ##  Ag and Excess will have priority zero - not filled until others satisfied
-entitlement_totals = read.csv("user_entitlements.csv", header = TRUE)
-entitlement_totals_normalized = read.csv("user_entitlements_fractions.csv", header = TRUE)
+entitlement_totals = read.csv("AllCapData/user_entitlements.csv", header = TRUE)
+entitlement_totals_normalized = read.csv("AllCapData/user_entitlements_fractions.csv", header = TRUE)
 
 # estimate how many entitlements remain in each priority class under each DCP shortage tier
 NIA_unentitled_reserve = 119065 # from 2022 subcontracting status report, uncontracted
@@ -187,8 +187,8 @@ for (contract_class in c("PTR", "MUI", "FED", "NIA")) {
 ## each user needs its own JSON file 
 
 # read in demand data, extract annual delivery request growth trends and 2021 levels
-UserDemandSeasonality = read.csv("user_seasonality_deliveries.csv", header = TRUE)
-UserDemandMonthly = read.csv("user_monthly_deliveries.csv", header = TRUE)
+UserDemandSeasonality = read.csv("AllCapData/user_seasonality_deliveries.csv", header = TRUE)
+UserDemandMonthly = read.csv("AllCapData/user_monthly_deliveries.csv", header = TRUE)
 colnames(UserDemandSeasonality)[c(1,4,20,29)] = c("Ak-Chin", "AZ State Land", "Oro Valley", "Tohono O'odham")
 colnames(UserDemandMonthly)[c(2,5,21,30)] = c("Ak-Chin", "AZ State Land", "Oro Valley", "Tohono O'odham")
 UserDemandSeasonality[is.na(UserDemandSeasonality)] = 0
@@ -200,7 +200,7 @@ MaxAnnualDemand = apply(AnnualDemand,2,max)
 MedianAnnualDemand = apply(AnnualDemand,2,median)
 
 # also get AMAs that each district can recharge to
-UserDemandRecharge = read.csv("AMA_deliveries_recharge_byAMA.csv", header = TRUE)
+UserDemandRecharge = read.csv("AllCapData/AMA_deliveries_recharge_byAMA.csv", header = TRUE)
 UserDemandRecharge[is.na(UserDemandRecharge)] = 0
 
 ama_users = UserDemandRecharge %>% group_by(AMA) %>% summarise(across(-datetime, sum))
@@ -209,18 +209,18 @@ ama_users_frac$AMA = ama_users$AMA
 colnames(ama_users_frac)[c(1,11,18)] = c("Ak-Chin", "Oro Valley", "Tohono O'odham")
 
 # read in recharge seasonality and fraction of total deliveries
-UserDemandRecharge = read.csv("AMA_total_deliveries_recharge.csv", header = TRUE)
-UserDemandRechargeMonthly = read.csv("user_deliveries_recharge_seasonality.csv", header = TRUE)
-UserDemandRechargeMonthlyFraction = read.csv("user_deliveries_recharge_seasonality_fraction.csv", header = TRUE)
+UserDemandRecharge = read.csv("AllCapData/AMA_total_deliveries_recharge.csv", header = TRUE)
+UserDemandRechargeMonthly = read.csv("AllCapData/user_deliveries_recharge_seasonality.csv", header = TRUE)
+UserDemandRechargeMonthlyFraction = read.csv("AllCapData/user_deliveries_recharge_seasonality_fraction.csv", header = TRUE)
 colnames(UserDemandRechargeMonthlyFraction)[c(2,5,21,30)] = c("Ak-Chin", "AZ State Land", "Oro Valley", "Tohono O'odham")
 
 # also read in entitlements, to assign contract fractions
-entitlement_totals = read.csv("user_entitlements.csv", header = TRUE)
-entitlement_fractions = read.csv("user_entitlements_fractions.csv", header = TRUE)
+entitlement_totals = read.csv("AllCapData/user_entitlements.csv", header = TRUE)
+entitlement_fractions = read.csv("AllCapData/user_entitlements_fractions.csv", header = TRUE)
 
 # read in lease information
-leases_amount = read.csv("user_lease.csv", header = TRUE)
-lease_priority = read.csv("user_lease_priorities.csv", header = TRUE)
+leases_amount = read.csv("AllCapData/user_lease.csv", header = TRUE)
+lease_priority = read.csv("AllCapData/user_lease_priorities.csv", header = TRUE)
 
 # set Ag Mitigation Agreement Parameters for select subcontractors
 ag_mitigation_trigger_tiers = c("T1", "T2a", "T2b")
@@ -327,7 +327,7 @@ for (d in entitlement_totals$Code) {
                   )
   
   districts_json = toJSON(district, pretty = TRUE, dataframe = "columns", simplifyDataFrame = TRUE, auto_unbox = TRUE)
-  write(districts_json, paste("../CAPFEWS/calfews_src/districts/", d, "_properties.json", sep = ""))
+  write(districts_json, paste("C:/Users/rkleiman/CAPFEWS/calfews_src/districts/", d, "_properties.json", sep = ""))
 }
 
 

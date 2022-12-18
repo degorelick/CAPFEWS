@@ -6633,6 +6633,10 @@ cdef class Model():
       ## STEP 1: ACCOUNT FOR EXISTING ENTITLEMENTS
       # will they be reduced because of a shortage tier condition?
       print('------------------------------- YEAR ' + str(y) + ' --------------------------------')
+
+      if y<self.year[t-1]: #testing because crss simulation is spitting out 2023 and 2024 at the end
+        print('ERROR!')
+
       self.mead.calc_az_mead_curtailment(t+months_in_year-1, y) # tier shortage at EOY (projection)
       print('Projection for Mead Condition: ' + self.mead.mead_shortage_tier)
       print('CAP Colorado River Curtailment: ' + str(self.mead.annual_az_allocation_curtailment))

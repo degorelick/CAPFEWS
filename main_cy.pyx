@@ -55,14 +55,16 @@ cdef class main_cy():
     self.output_list = config['output_list']
     self.clean_output = bool(strtobool(config['clean_output']))
     self.save_full = bool(strtobool(config['save_full']))
+    if flow_input_source=='':
+        self.flow_input_source = config['flow_input_source']
+    else:
+        self.flow_input_source=flow_input_source
     if model_mode == '':
       self.model_mode = config['model_mode']
       self.flow_input_type = config['flow_input_type']
-      self.flow_input_source = config['flow_input_source']
     else:
       self.model_mode = model_mode
       self.flow_input_type = flow_input_type
-      self.flow_input_source = flow_input_source
     self.results_folder = results_folder
 
 
@@ -87,7 +89,7 @@ cdef class main_cy():
         scenario[k] = self.results_folder + '/' + k + '_scenario.json'
 
     # if self.model_mode == 'central_arizona_project':
-    #   self.flow_input_source = 'historic' # historic or crss
+    #   self.flow_input_source = 'crss' # historic or crss #TODO CRSS need to change this for ?
 
     ### copy runtime file for future use
     shutil.copy(self.runtime_file, self.results_folder + '/' + self.runtime_file)
@@ -98,7 +100,7 @@ cdef class main_cy():
 
     # data for actual simulation
     if self.model_mode == 'central_arizona_project':
-      demand_type = 'cap_historic' # or crss projections
+      demand_type = 'crss_projections' # or crss projections #TODO crss here
 
       # FIRST COLUMN OF DATA NEEDS TO BE DATETIME
       # if i dont need to generate syntethic data, or i have everything in this initial csv
@@ -107,8 +109,8 @@ cdef class main_cy():
         base_data_file = 'calfews_src/data/input/cap-data.csv'
         expected_release_datafile = 'calfews_src/data/input/cap-data.csv'
       else:
-        base_data_file = 'calfews_src/data/input/cap-data-crss-1.csv'
-        expected_release_datafile = 'calfews_src/data/input/cap-data-crss-1.csv'
+        base_data_file = 'calfews_src/data/input/cap-data-'+str(self.flow_input_source)+'.csv'
+        expected_release_datafile = 'calfews_src/data/input/cap-data-'+str(self.flow_input_source)+'.csv'
 
       print(base_data_file)
 
