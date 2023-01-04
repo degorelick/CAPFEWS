@@ -1455,6 +1455,7 @@ struct __pyx_obj_11calfews_src_8canal_cy_Canal {
   PyObject *turnout_delivery;
   PyObject *finances;
   PyObject *power_price;
+  PyObject *monthly_power_price;
 };
 
 

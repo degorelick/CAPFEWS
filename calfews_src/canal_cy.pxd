@@ -13,7 +13,7 @@ cdef class Canal():
     public list turnout_use, flow
 
     public dict capacity, turnout, flow_directions, daily_turnout, turnout_frac, recovery_flow_frac, daily_flow, demand, ownership_shares, restricted_capacity_available, \
-      turnout_districts, turnout_banks, turnout_reservoirs, pumping_power_rate, turnout_delivery, finances, power_price
+      turnout_districts, turnout_banks, turnout_reservoirs, pumping_power_rate, turnout_delivery, finances, power_price, monthly_power_price
 
   cdef void find_turnout_adjustment(self, double demand_constraint, str flow_dir, int canal_loc, list type_list)
 

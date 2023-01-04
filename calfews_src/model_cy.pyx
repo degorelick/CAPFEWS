@@ -6602,7 +6602,7 @@ cdef class Model():
       double all_cap_requests_to_deliver, all_cap_requests_to_curtail, \
         total_excess_demand, pleasant_delivered_releases, cumulative_year_diversions, \
         available_to_pleasant, initial_mead_diversion_estimate, available_excess, \
-        excess_request_to_deliver, potential_az_curtailment, power_price, \
+        excess_request_to_deliver, potential_az_curtailment, power_price, monthly_power_price, \
         total_mui_previous_year, total_fed_previous_year, total_nia_previous_year, total_exc_previous_year, total_delivery_request
       list nia_mitigation_partners, nia_mitigation_tier_percents, lease_providers
       dict excess_demand
@@ -6799,9 +6799,9 @@ cdef class Model():
 
       ## STEP 12: CALCULATE MONTHLY VARIABLE PUMPING POWER COSTS
       # based on random monthly power price, generated between low and high historical (2014-2021) at Palo Verde hub
-      power_price = np.random.uniform(low = self.capcanal.power_price['low'][m-1],
-                                      high = self.capcanal.power_price['high'][m-1])
-
+      monthly_power_price = np.random.uniform(low = self.capcanal.monthly_power_price['low'][m-1],
+                                      high = self.capcanal.monthly_power_price['high'][m-1])
+      power_price = monthly_power_price
       # if some colorado river diversion is for pleasant, calculate prices separately
       if self.pleasant.net_pleasant_pumping[t] > 0.0:
         # power cost to divert colorado river into lake pleasant

@@ -50,7 +50,7 @@ pumping_power_rate_from_pleasant = c(0,
 Historical_EnergyPrices = read.csv("AllCapData/Palo Verde Energy Prices.csv", header = TRUE)
 top_range = apply(Historical_EnergyPrices[,2:9], 1, max)
 low_range = apply(Historical_EnergyPrices[,2:9], 1, min)
-power_price = data.frame(low = low_range,
+monthly_power_price = data.frame(low = low_range,
                          high = top_range)
 
 
@@ -78,7 +78,7 @@ canal_json = toJSON(list("name" = "CAP",
                          "capacity" = capacities, 
                          "turnout" = turnout,
                          "pumping_power_rate" = pumping_power_rate,
-                         "power_price" = power_price), 
+                         "monthly_power_price" = monthly_power_price), 
                     pretty = TRUE, dataframe = "columns", simplifyDataFrame = TRUE, auto_unbox = TRUE)
 write(canal_json, "../CAPFEWS/calfews_src/canals/CAP_properties.json")
 
@@ -340,10 +340,10 @@ AMA_turnouts = data.frame("AMA" = c("Phoenix", "Pinal", "Tucson"),
                           "Code" = c("PXA", "PNA", "TSA"),
                           "Turnout" = c("HSY", "SGL", "BRW"))
 
-UserDemandRecharge = read.csv("AMA_deliveries_recharge_byAMA.csv", header = TRUE)
+UserDemandRecharge = read.csv("AllCAPData/AMA_deliveries_recharge_byAMA.csv", header = TRUE)
 UserDemandRecharge[is.na(UserDemandRecharge)] = 0
 
-entitlement_totals = read.csv("user_entitlements.csv", header = TRUE)
+entitlement_totals = read.csv("AllCAPData/user_entitlements.csv", header = TRUE)
 users_codes = entitlement_totals %>% select(User, Code)
 
 # fix some names when reading in files
@@ -422,7 +422,7 @@ pleasant_monthly_CAPDiversionPumping_projections = # in fraction of CAP diversio
 # from table of elevations and storage, create a storage calculation function
 # used excel to get a rough polynomial storage function:
 #  Volume = 28846633 + -18579.4*Elevation + -12.8222*Elevation^2 + 0.008269*Elevation^3
-pleasant_table = read.csv("Pleasant_StorageToElevation_Chart.csv", header = TRUE)
+pleasant_table = read.csv("AllCAPData/Pleasant_StorageToElevation_Chart.csv", header = TRUE)
 plot(pleasant_table$Elevation_ft, pleasant_table$Volume_AF)
 get_pleasant_volume_from_elevation = function(elev, intercept, a1, a2, a3) {
   volume = intercept + a1 * elev + a2 * elev^2 + a3 * elev^3
@@ -506,7 +506,7 @@ markwilmer_pumping_capacity = 3000 # cubic ft per sec: https://www.usbr.gov/lc/p
 
 # amount of demand by AZ users that are senior to CAP is estimated by subtracting
 # historic CAP diversions from the AZ 2.8 MAF allocation and taking average
-Historical_CAPDiversion = read.csv("CAP_diversions_summary_2008_to_2021.csv", header = TRUE)
+Historical_CAPDiversion = read.csv("AllCAPData/CAP_diversions_summary_2008_to_2021.csv", header = TRUE)
 Historical_CAPDiversion_Organized = Historical_CAPDiversion %>% 
   filter(Group == "COLORADO RIVER DIVERSIONS") %>%
   select(Jan:Mar, Apr:Jun, Jul:Sep, Oct:Dec, Year) %>%

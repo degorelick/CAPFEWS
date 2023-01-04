@@ -1041,6 +1041,7 @@ struct __pyx_obj_11calfews_src_8canal_cy_Canal {
   PyObject *turnout_delivery;
   PyObject *finances;
   PyObject *power_price;
+  PyObject *monthly_power_price;
 };
 
 
@@ -1909,7 +1910,7 @@ static const char __pyx_k_pyx_unpickle_Canal[] = "__pyx_unpickle_Canal";
 static const char __pyx_k_calfews_src_canal_cy[] = "calfews_src.canal_cy";
 static const char __pyx_k_normalize_ownership_shares[] = "normalize_ownership_shares";
 static const char __pyx_k_calfews_src_canals_s_properties[] = "calfews_src/canals/%s_properties.json";
-static const char __pyx_k_Incompatible_checksums_0x_x_vs_0[] = "Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))";
+static const char __pyx_k_Incompatible_checksums_0x_x_vs_0[] = "Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))";
 static PyObject *__pyx_n_s_Canal;
 static PyObject *__pyx_kp_s_Incompatible_checksums_0x_x_vs_0;
 static PyObject *__pyx_n_s_PickleError;
@@ -2061,6 +2062,9 @@ static int __pyx_pf_11calfews_src_8canal_cy_5Canal_8finances_4__del__(struct __p
 static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_11power_price___get__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self); /* proto */
 static int __pyx_pf_11calfews_src_8canal_cy_5Canal_11power_price_2__set__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static int __pyx_pf_11calfews_src_8canal_cy_5Canal_11power_price_4__del__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price___get__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self); /* proto */
+static int __pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price_2__set__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static int __pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price_4__del__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_12__setstate_cython__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
@@ -2071,9 +2075,9 @@ static PyObject *__pyx_float_0_0;
 static PyObject *__pyx_float_1_0;
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
-static PyObject *__pyx_int_26179424;
-static PyObject *__pyx_int_192066259;
-static PyObject *__pyx_int_208062013;
+static PyObject *__pyx_int_115593626;
+static PyObject *__pyx_int_200635943;
+static PyObject *__pyx_int_216810967;
 static PyObject *__pyx_codeobj_;
 static PyObject *__pyx_tuple__2;
 static PyObject *__pyx_tuple__4;
@@ -6377,7 +6381,7 @@ static int __pyx_pf_11calfews_src_8canal_cy_5Canal_4flow_4__del__(struct __pyx_o
  *     public list turnout_use, flow
  * 
  *     public dict capacity, turnout, flow_directions, daily_turnout, turnout_frac, recovery_flow_frac, daily_flow, demand, ownership_shares, restricted_capacity_available, \             # <<<<<<<<<<<<<<
- *       turnout_districts, turnout_banks, turnout_reservoirs, pumping_power_rate, turnout_delivery, finances, power_price
+ *       turnout_districts, turnout_banks, turnout_reservoirs, pumping_power_rate, turnout_delivery, finances, power_price, monthly_power_price
  * 
  */
 
@@ -7614,7 +7618,7 @@ static int __pyx_pf_11calfews_src_8canal_cy_5Canal_29restricted_capacity_availab
 /* "calfews_src/canal_cy.pxd":16
  * 
  *     public dict capacity, turnout, flow_directions, daily_turnout, turnout_frac, recovery_flow_frac, daily_flow, demand, ownership_shares, restricted_capacity_available, \
- *       turnout_districts, turnout_banks, turnout_reservoirs, pumping_power_rate, turnout_delivery, finances, power_price             # <<<<<<<<<<<<<<
+ *       turnout_districts, turnout_banks, turnout_reservoirs, pumping_power_rate, turnout_delivery, finances, power_price, monthly_power_price             # <<<<<<<<<<<<<<
  * 
  *   cdef void find_turnout_adjustment(self, double demand_constraint, str flow_dir, int canal_loc, list type_list)
  */
@@ -8480,6 +8484,129 @@ static int __pyx_pf_11calfews_src_8canal_cy_5Canal_11power_price_4__del__(struct
   return __pyx_r;
 }
 
+/* Python wrapper */
+static PyObject *__pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price___get__(((struct __pyx_obj_11calfews_src_8canal_cy_Canal *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price___get__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceCall("__get__", __pyx_f[1], 16, 0, __PYX_ERR(1, 16, __pyx_L1_error));
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_self->monthly_power_price);
+  __pyx_r = __pyx_v_self->monthly_power_price;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("calfews_src.canal_cy.Canal.monthly_power_price.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_TraceReturn(__pyx_r, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price_2__set__(((struct __pyx_obj_11calfews_src_8canal_cy_Canal *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price_2__set__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self, PyObject *__pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_TraceCall("__set__", __pyx_f[1], 16, 0, __PYX_ERR(1, 16, __pyx_L1_error));
+  if (!(likely(PyDict_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_v_value)->tp_name), 0))) __PYX_ERR(1, 16, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_value;
+  __Pyx_INCREF(__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_self->monthly_power_price);
+  __Pyx_DECREF(__pyx_v_self->monthly_power_price);
+  __pyx_v_self->monthly_power_price = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("calfews_src.canal_cy.Canal.monthly_power_price.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static int __pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_5__del__(PyObject *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__del__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price_4__del__(((struct __pyx_obj_11calfews_src_8canal_cy_Canal *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_11calfews_src_8canal_cy_5Canal_19monthly_power_price_4__del__(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v_self) {
+  int __pyx_r;
+  __Pyx_TraceDeclarations
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__del__", 0);
+  __Pyx_TraceCall("__del__", __pyx_f[1], 16, 0, __PYX_ERR(1, 16, __pyx_L1_error));
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  __Pyx_GOTREF(__pyx_v_self->monthly_power_price);
+  __Pyx_DECREF(__pyx_v_self->monthly_power_price);
+  __pyx_v_self->monthly_power_price = ((PyObject*)Py_None);
+
+  /* function exit code */
+  __pyx_r = 0;
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("calfews_src.canal_cy.Canal.monthly_power_price.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_TraceReturn(Py_None, 0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     cdef tuple state
@@ -8532,7 +8659,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
   /* "(tree fragment)":5
  *     cdef object _dict
  *     cdef bint use_setstate
- *     state = (self.annual_diversion_capacity, self.capacity, self.daily_flow, self.daily_turnout, self.demand, self.epsilon, self.finances, self.flow, self.flow_directions, self.has_expansion, self.is_Canal, self.is_District, self.is_Private, self.is_Reservoir, self.is_Waterbank, self.key, self.locked, self.name, self.num_sites, self.open_for_delivery, self.ownership_shares, self.power_price, self.pumping_power_rate, self.recovery_feeder, self.recovery_flow_frac, self.restricted_capacity_available, self.turnout, self.turnout_banks, self.turnout_delivery, self.turnout_districts, self.turnout_frac, self.turnout_reservoirs, self.turnout_use, self.unrestricted_access)             # <<<<<<<<<<<<<<
+ *     state = (self.annual_diversion_capacity, self.capacity, self.daily_flow, self.daily_turnout, self.demand, self.epsilon, self.finances, self.flow, self.flow_directions, self.has_expansion, self.is_Canal, self.is_District, self.is_Private, self.is_Reservoir, self.is_Waterbank, self.key, self.locked, self.monthly_power_price, self.name, self.num_sites, self.open_for_delivery, self.ownership_shares, self.power_price, self.pumping_power_rate, self.recovery_feeder, self.recovery_flow_frac, self.restricted_capacity_available, self.turnout, self.turnout_banks, self.turnout_delivery, self.turnout_districts, self.turnout_frac, self.turnout_reservoirs, self.turnout_use, self.unrestricted_access)             # <<<<<<<<<<<<<<
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:
  */
@@ -8562,7 +8689,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
   __Pyx_GOTREF(__pyx_t_12);
   __pyx_t_13 = __Pyx_PyInt_From_int(__pyx_v_self->unrestricted_access); if (unlikely(!__pyx_t_13)) __PYX_ERR(2, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_14 = PyTuple_New(34); if (unlikely(!__pyx_t_14)) __PYX_ERR(2, 5, __pyx_L1_error)
+  __pyx_t_14 = PyTuple_New(35); if (unlikely(!__pyx_t_14)) __PYX_ERR(2, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_1);
@@ -8606,53 +8733,56 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
   PyTuple_SET_ITEM(__pyx_t_14, 15, __pyx_v_self->key);
   __Pyx_GIVEREF(__pyx_t_9);
   PyTuple_SET_ITEM(__pyx_t_14, 16, __pyx_t_9);
+  __Pyx_INCREF(__pyx_v_self->monthly_power_price);
+  __Pyx_GIVEREF(__pyx_v_self->monthly_power_price);
+  PyTuple_SET_ITEM(__pyx_t_14, 17, __pyx_v_self->monthly_power_price);
   __Pyx_INCREF(__pyx_v_self->name);
   __Pyx_GIVEREF(__pyx_v_self->name);
-  PyTuple_SET_ITEM(__pyx_t_14, 17, __pyx_v_self->name);
+  PyTuple_SET_ITEM(__pyx_t_14, 18, __pyx_v_self->name);
   __Pyx_GIVEREF(__pyx_t_10);
-  PyTuple_SET_ITEM(__pyx_t_14, 18, __pyx_t_10);
+  PyTuple_SET_ITEM(__pyx_t_14, 19, __pyx_t_10);
   __Pyx_GIVEREF(__pyx_t_11);
-  PyTuple_SET_ITEM(__pyx_t_14, 19, __pyx_t_11);
+  PyTuple_SET_ITEM(__pyx_t_14, 20, __pyx_t_11);
   __Pyx_INCREF(__pyx_v_self->ownership_shares);
   __Pyx_GIVEREF(__pyx_v_self->ownership_shares);
-  PyTuple_SET_ITEM(__pyx_t_14, 20, __pyx_v_self->ownership_shares);
+  PyTuple_SET_ITEM(__pyx_t_14, 21, __pyx_v_self->ownership_shares);
   __Pyx_INCREF(__pyx_v_self->power_price);
   __Pyx_GIVEREF(__pyx_v_self->power_price);
-  PyTuple_SET_ITEM(__pyx_t_14, 21, __pyx_v_self->power_price);
+  PyTuple_SET_ITEM(__pyx_t_14, 22, __pyx_v_self->power_price);
   __Pyx_INCREF(__pyx_v_self->pumping_power_rate);
   __Pyx_GIVEREF(__pyx_v_self->pumping_power_rate);
-  PyTuple_SET_ITEM(__pyx_t_14, 22, __pyx_v_self->pumping_power_rate);
+  PyTuple_SET_ITEM(__pyx_t_14, 23, __pyx_v_self->pumping_power_rate);
   __Pyx_GIVEREF(__pyx_t_12);
-  PyTuple_SET_ITEM(__pyx_t_14, 23, __pyx_t_12);
+  PyTuple_SET_ITEM(__pyx_t_14, 24, __pyx_t_12);
   __Pyx_INCREF(__pyx_v_self->recovery_flow_frac);
   __Pyx_GIVEREF(__pyx_v_self->recovery_flow_frac);
-  PyTuple_SET_ITEM(__pyx_t_14, 24, __pyx_v_self->recovery_flow_frac);
+  PyTuple_SET_ITEM(__pyx_t_14, 25, __pyx_v_self->recovery_flow_frac);
   __Pyx_INCREF(__pyx_v_self->restricted_capacity_available);
   __Pyx_GIVEREF(__pyx_v_self->restricted_capacity_available);
-  PyTuple_SET_ITEM(__pyx_t_14, 25, __pyx_v_self->restricted_capacity_available);
+  PyTuple_SET_ITEM(__pyx_t_14, 26, __pyx_v_self->restricted_capacity_available);
   __Pyx_INCREF(__pyx_v_self->turnout);
   __Pyx_GIVEREF(__pyx_v_self->turnout);
-  PyTuple_SET_ITEM(__pyx_t_14, 26, __pyx_v_self->turnout);
+  PyTuple_SET_ITEM(__pyx_t_14, 27, __pyx_v_self->turnout);
   __Pyx_INCREF(__pyx_v_self->turnout_banks);
   __Pyx_GIVEREF(__pyx_v_self->turnout_banks);
-  PyTuple_SET_ITEM(__pyx_t_14, 27, __pyx_v_self->turnout_banks);
+  PyTuple_SET_ITEM(__pyx_t_14, 28, __pyx_v_self->turnout_banks);
   __Pyx_INCREF(__pyx_v_self->turnout_delivery);
   __Pyx_GIVEREF(__pyx_v_self->turnout_delivery);
-  PyTuple_SET_ITEM(__pyx_t_14, 28, __pyx_v_self->turnout_delivery);
+  PyTuple_SET_ITEM(__pyx_t_14, 29, __pyx_v_self->turnout_delivery);
   __Pyx_INCREF(__pyx_v_self->turnout_districts);
   __Pyx_GIVEREF(__pyx_v_self->turnout_districts);
-  PyTuple_SET_ITEM(__pyx_t_14, 29, __pyx_v_self->turnout_districts);
+  PyTuple_SET_ITEM(__pyx_t_14, 30, __pyx_v_self->turnout_districts);
   __Pyx_INCREF(__pyx_v_self->turnout_frac);
   __Pyx_GIVEREF(__pyx_v_self->turnout_frac);
-  PyTuple_SET_ITEM(__pyx_t_14, 30, __pyx_v_self->turnout_frac);
+  PyTuple_SET_ITEM(__pyx_t_14, 31, __pyx_v_self->turnout_frac);
   __Pyx_INCREF(__pyx_v_self->turnout_reservoirs);
   __Pyx_GIVEREF(__pyx_v_self->turnout_reservoirs);
-  PyTuple_SET_ITEM(__pyx_t_14, 31, __pyx_v_self->turnout_reservoirs);
+  PyTuple_SET_ITEM(__pyx_t_14, 32, __pyx_v_self->turnout_reservoirs);
   __Pyx_INCREF(__pyx_v_self->turnout_use);
   __Pyx_GIVEREF(__pyx_v_self->turnout_use);
-  PyTuple_SET_ITEM(__pyx_t_14, 32, __pyx_v_self->turnout_use);
+  PyTuple_SET_ITEM(__pyx_t_14, 33, __pyx_v_self->turnout_use);
   __Pyx_GIVEREF(__pyx_t_13);
-  PyTuple_SET_ITEM(__pyx_t_14, 33, __pyx_t_13);
+  PyTuple_SET_ITEM(__pyx_t_14, 34, __pyx_t_13);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
   __pyx_t_3 = 0;
@@ -8671,7 +8801,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
 
   /* "(tree fragment)":6
  *     cdef bint use_setstate
- *     state = (self.annual_diversion_capacity, self.capacity, self.daily_flow, self.daily_turnout, self.demand, self.epsilon, self.finances, self.flow, self.flow_directions, self.has_expansion, self.is_Canal, self.is_District, self.is_Private, self.is_Reservoir, self.is_Waterbank, self.key, self.locked, self.name, self.num_sites, self.open_for_delivery, self.ownership_shares, self.power_price, self.pumping_power_rate, self.recovery_feeder, self.recovery_flow_frac, self.restricted_capacity_available, self.turnout, self.turnout_banks, self.turnout_delivery, self.turnout_districts, self.turnout_frac, self.turnout_reservoirs, self.turnout_use, self.unrestricted_access)
+ *     state = (self.annual_diversion_capacity, self.capacity, self.daily_flow, self.daily_turnout, self.demand, self.epsilon, self.finances, self.flow, self.flow_directions, self.has_expansion, self.is_Canal, self.is_District, self.is_Private, self.is_Reservoir, self.is_Waterbank, self.key, self.locked, self.monthly_power_price, self.name, self.num_sites, self.open_for_delivery, self.ownership_shares, self.power_price, self.pumping_power_rate, self.recovery_feeder, self.recovery_flow_frac, self.restricted_capacity_available, self.turnout, self.turnout_banks, self.turnout_delivery, self.turnout_districts, self.turnout_frac, self.turnout_reservoirs, self.turnout_use, self.unrestricted_access)
  *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
  *     if _dict is not None:
  *         state += (_dict,)
@@ -8682,7 +8812,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
   __pyx_t_14 = 0;
 
   /* "(tree fragment)":7
- *     state = (self.annual_diversion_capacity, self.capacity, self.daily_flow, self.daily_turnout, self.demand, self.epsilon, self.finances, self.flow, self.flow_directions, self.has_expansion, self.is_Canal, self.is_District, self.is_Private, self.is_Reservoir, self.is_Waterbank, self.key, self.locked, self.name, self.num_sites, self.open_for_delivery, self.ownership_shares, self.power_price, self.pumping_power_rate, self.recovery_feeder, self.recovery_flow_frac, self.restricted_capacity_available, self.turnout, self.turnout_banks, self.turnout_delivery, self.turnout_districts, self.turnout_frac, self.turnout_reservoirs, self.turnout_use, self.unrestricted_access)
+ *     state = (self.annual_diversion_capacity, self.capacity, self.daily_flow, self.daily_turnout, self.demand, self.epsilon, self.finances, self.flow, self.flow_directions, self.has_expansion, self.is_Canal, self.is_District, self.is_Private, self.is_Reservoir, self.is_Waterbank, self.key, self.locked, self.monthly_power_price, self.name, self.num_sites, self.open_for_delivery, self.ownership_shares, self.power_price, self.pumping_power_rate, self.recovery_feeder, self.recovery_flow_frac, self.restricted_capacity_available, self.turnout, self.turnout_banks, self.turnout_delivery, self.turnout_districts, self.turnout_frac, self.turnout_reservoirs, self.turnout_use, self.unrestricted_access)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
@@ -8715,12 +8845,12 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
  *         state += (_dict,)
  *         use_setstate = True             # <<<<<<<<<<<<<<
  *     else:
- *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None
+ *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.monthly_power_price is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None
  */
     __pyx_v_use_setstate = 1;
 
     /* "(tree fragment)":7
- *     state = (self.annual_diversion_capacity, self.capacity, self.daily_flow, self.daily_turnout, self.demand, self.epsilon, self.finances, self.flow, self.flow_directions, self.has_expansion, self.is_Canal, self.is_District, self.is_Private, self.is_Reservoir, self.is_Waterbank, self.key, self.locked, self.name, self.num_sites, self.open_for_delivery, self.ownership_shares, self.power_price, self.pumping_power_rate, self.recovery_feeder, self.recovery_flow_frac, self.restricted_capacity_available, self.turnout, self.turnout_banks, self.turnout_delivery, self.turnout_districts, self.turnout_frac, self.turnout_reservoirs, self.turnout_use, self.unrestricted_access)
+ *     state = (self.annual_diversion_capacity, self.capacity, self.daily_flow, self.daily_turnout, self.demand, self.epsilon, self.finances, self.flow, self.flow_directions, self.has_expansion, self.is_Canal, self.is_District, self.is_Private, self.is_Reservoir, self.is_Waterbank, self.key, self.locked, self.monthly_power_price, self.name, self.num_sites, self.open_for_delivery, self.ownership_shares, self.power_price, self.pumping_power_rate, self.recovery_feeder, self.recovery_flow_frac, self.restricted_capacity_available, self.turnout, self.turnout_banks, self.turnout_delivery, self.turnout_districts, self.turnout_frac, self.turnout_reservoirs, self.turnout_use, self.unrestricted_access)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
@@ -8732,9 +8862,9 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
   /* "(tree fragment)":11
  *         use_setstate = True
  *     else:
- *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None             # <<<<<<<<<<<<<<
+ *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.monthly_power_price is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, None), state
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, None), state
  */
   /*else*/ {
     __pyx_t_15 = (__pyx_v_self->capacity != ((PyObject*)Py_None));
@@ -8793,93 +8923,100 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
       __pyx_t_16 = __pyx_t_15;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_15 = (__pyx_v_self->name != ((PyObject*)Py_None));
+    __pyx_t_15 = (__pyx_v_self->monthly_power_price != ((PyObject*)Py_None));
     __pyx_t_17 = (__pyx_t_15 != 0);
     if (!__pyx_t_17) {
     } else {
       __pyx_t_16 = __pyx_t_17;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_17 = (__pyx_v_self->ownership_shares != ((PyObject*)Py_None));
+    __pyx_t_17 = (__pyx_v_self->name != ((PyObject*)Py_None));
     __pyx_t_15 = (__pyx_t_17 != 0);
     if (!__pyx_t_15) {
     } else {
       __pyx_t_16 = __pyx_t_15;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_15 = (__pyx_v_self->power_price != ((PyObject*)Py_None));
+    __pyx_t_15 = (__pyx_v_self->ownership_shares != ((PyObject*)Py_None));
     __pyx_t_17 = (__pyx_t_15 != 0);
     if (!__pyx_t_17) {
     } else {
       __pyx_t_16 = __pyx_t_17;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_17 = (__pyx_v_self->pumping_power_rate != ((PyObject*)Py_None));
+    __pyx_t_17 = (__pyx_v_self->power_price != ((PyObject*)Py_None));
     __pyx_t_15 = (__pyx_t_17 != 0);
     if (!__pyx_t_15) {
     } else {
       __pyx_t_16 = __pyx_t_15;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_15 = (__pyx_v_self->recovery_flow_frac != ((PyObject*)Py_None));
+    __pyx_t_15 = (__pyx_v_self->pumping_power_rate != ((PyObject*)Py_None));
     __pyx_t_17 = (__pyx_t_15 != 0);
     if (!__pyx_t_17) {
     } else {
       __pyx_t_16 = __pyx_t_17;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_17 = (__pyx_v_self->restricted_capacity_available != ((PyObject*)Py_None));
+    __pyx_t_17 = (__pyx_v_self->recovery_flow_frac != ((PyObject*)Py_None));
     __pyx_t_15 = (__pyx_t_17 != 0);
     if (!__pyx_t_15) {
     } else {
       __pyx_t_16 = __pyx_t_15;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_15 = (__pyx_v_self->turnout != ((PyObject*)Py_None));
+    __pyx_t_15 = (__pyx_v_self->restricted_capacity_available != ((PyObject*)Py_None));
     __pyx_t_17 = (__pyx_t_15 != 0);
     if (!__pyx_t_17) {
     } else {
       __pyx_t_16 = __pyx_t_17;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_17 = (__pyx_v_self->turnout_banks != ((PyObject*)Py_None));
+    __pyx_t_17 = (__pyx_v_self->turnout != ((PyObject*)Py_None));
     __pyx_t_15 = (__pyx_t_17 != 0);
     if (!__pyx_t_15) {
     } else {
       __pyx_t_16 = __pyx_t_15;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_15 = (__pyx_v_self->turnout_delivery != ((PyObject*)Py_None));
+    __pyx_t_15 = (__pyx_v_self->turnout_banks != ((PyObject*)Py_None));
     __pyx_t_17 = (__pyx_t_15 != 0);
     if (!__pyx_t_17) {
     } else {
       __pyx_t_16 = __pyx_t_17;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_17 = (__pyx_v_self->turnout_districts != ((PyObject*)Py_None));
+    __pyx_t_17 = (__pyx_v_self->turnout_delivery != ((PyObject*)Py_None));
     __pyx_t_15 = (__pyx_t_17 != 0);
     if (!__pyx_t_15) {
     } else {
       __pyx_t_16 = __pyx_t_15;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_15 = (__pyx_v_self->turnout_frac != ((PyObject*)Py_None));
+    __pyx_t_15 = (__pyx_v_self->turnout_districts != ((PyObject*)Py_None));
     __pyx_t_17 = (__pyx_t_15 != 0);
     if (!__pyx_t_17) {
     } else {
       __pyx_t_16 = __pyx_t_17;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_17 = (__pyx_v_self->turnout_reservoirs != ((PyObject*)Py_None));
+    __pyx_t_17 = (__pyx_v_self->turnout_frac != ((PyObject*)Py_None));
     __pyx_t_15 = (__pyx_t_17 != 0);
     if (!__pyx_t_15) {
     } else {
       __pyx_t_16 = __pyx_t_15;
       goto __pyx_L4_bool_binop_done;
     }
-    __pyx_t_15 = (__pyx_v_self->turnout_use != ((PyObject*)Py_None));
+    __pyx_t_15 = (__pyx_v_self->turnout_reservoirs != ((PyObject*)Py_None));
     __pyx_t_17 = (__pyx_t_15 != 0);
-    __pyx_t_16 = __pyx_t_17;
+    if (!__pyx_t_17) {
+    } else {
+      __pyx_t_16 = __pyx_t_17;
+      goto __pyx_L4_bool_binop_done;
+    }
+    __pyx_t_17 = (__pyx_v_self->turnout_use != ((PyObject*)Py_None));
+    __pyx_t_15 = (__pyx_t_17 != 0);
+    __pyx_t_16 = __pyx_t_15;
     __pyx_L4_bool_binop_done:;
     __pyx_v_use_setstate = __pyx_t_16;
   }
@@ -8887,20 +9024,20 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
 
   /* "(tree fragment)":12
  *     else:
- *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None
+ *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.monthly_power_price is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, None), state
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, None), state
  *     else:
  */
   __pyx_t_16 = (__pyx_v_use_setstate != 0);
   if (__pyx_t_16) {
 
     /* "(tree fragment)":13
- *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None
+ *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.monthly_power_price is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None
  *     if use_setstate:
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, None), state             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, None), state             # <<<<<<<<<<<<<<
  *     else:
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, state)
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, state)
  */
     __Pyx_XDECREF(__pyx_r);
     __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_pyx_unpickle_Canal); if (unlikely(!__pyx_t_13)) __PYX_ERR(2, 13, __pyx_L1_error)
@@ -8910,9 +9047,9 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     PyTuple_SET_ITEM(__pyx_t_14, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_192066259);
-    __Pyx_GIVEREF(__pyx_int_192066259);
-    PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_int_192066259);
+    __Pyx_INCREF(__pyx_int_216810967);
+    __Pyx_GIVEREF(__pyx_int_216810967);
+    PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_int_216810967);
     __Pyx_INCREF(Py_None);
     __Pyx_GIVEREF(Py_None);
     PyTuple_SET_ITEM(__pyx_t_14, 2, Py_None);
@@ -8933,17 +9070,17 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
 
     /* "(tree fragment)":12
  *     else:
- *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None
+ *         use_setstate = self.capacity is not None or self.daily_flow is not None or self.daily_turnout is not None or self.demand is not None or self.finances is not None or self.flow is not None or self.flow_directions is not None or self.key is not None or self.monthly_power_price is not None or self.name is not None or self.ownership_shares is not None or self.power_price is not None or self.pumping_power_rate is not None or self.recovery_flow_frac is not None or self.restricted_capacity_available is not None or self.turnout is not None or self.turnout_banks is not None or self.turnout_delivery is not None or self.turnout_districts is not None or self.turnout_frac is not None or self.turnout_reservoirs is not None or self.turnout_use is not None
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, None), state
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, None), state
  *     else:
  */
   }
 
   /* "(tree fragment)":15
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, None), state
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, None), state
  *     else:
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, state)             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, state)             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_Canal__set_state(self, __pyx_state)
  */
@@ -8956,9 +9093,9 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     PyTuple_SET_ITEM(__pyx_t_14, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_192066259);
-    __Pyx_GIVEREF(__pyx_int_192066259);
-    PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_int_192066259);
+    __Pyx_INCREF(__pyx_int_216810967);
+    __Pyx_GIVEREF(__pyx_int_216810967);
+    PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_int_216810967);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
     PyTuple_SET_ITEM(__pyx_t_14, 2, __pyx_v_state);
@@ -9010,7 +9147,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_10__reduce_cython__(str
 
 /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, state)
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_Canal__set_state(self, __pyx_state)
  */
@@ -9040,7 +9177,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_12__setstate_cython__(s
   __Pyx_TraceCall("__setstate_cython__", __pyx_f[2], 16, 0, __PYX_ERR(2, 16, __pyx_L1_error));
 
   /* "(tree fragment)":17
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, state)
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, state)
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_Canal__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
  */
@@ -9051,7 +9188,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy_5Canal_12__setstate_cython__(s
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_Canal, (type(self), 0xb72b2d3, state)
+ *         return __pyx_unpickle_Canal, (type(self), 0xcec45d7, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_Canal__set_state(self, __pyx_state)
  */
@@ -9174,9 +9311,9 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UN
   /* "(tree fragment)":4
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
- *     if __pyx_checksum not in (0xb72b2d3, 0xc66c63d, 0x18f7760):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum not in (0xcec45d7, 0x6e3d19a, 0xbf57627):             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
  */
   __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -9187,9 +9324,9 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UN
 
     /* "(tree fragment)":5
  *     cdef object __pyx_result
- *     if __pyx_checksum not in (0xb72b2d3, 0xc66c63d, 0x18f7760):
+ *     if __pyx_checksum not in (0xcec45d7, 0x6e3d19a, 0xbf57627):
  *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
- *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
  *     __pyx_result = Canal.__new__(__pyx_type)
  */
     __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 5, __pyx_L1_error)
@@ -9208,9 +9345,9 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UN
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
     /* "(tree fragment)":6
- *     if __pyx_checksum not in (0xb72b2d3, 0xc66c63d, 0x18f7760):
+ *     if __pyx_checksum not in (0xcec45d7, 0x6e3d19a, 0xbf57627):
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)             # <<<<<<<<<<<<<<
+ *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)             # <<<<<<<<<<<<<<
  *     __pyx_result = Canal.__new__(__pyx_type)
  *     if __pyx_state is not None:
  */
@@ -9243,15 +9380,15 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UN
     /* "(tree fragment)":4
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
- *     if __pyx_checksum not in (0xb72b2d3, 0xc66c63d, 0x18f7760):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum not in (0xcec45d7, 0x6e3d19a, 0xbf57627):             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
  */
   }
 
   /* "(tree fragment)":7
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
  *     __pyx_result = Canal.__new__(__pyx_type)             # <<<<<<<<<<<<<<
  *     if __pyx_state is not None:
  *         __pyx_unpickle_Canal__set_state(<Canal> __pyx_result, __pyx_state)
@@ -9277,7 +9414,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UN
   __pyx_t_4 = 0;
 
   /* "(tree fragment)":8
- *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
  *     __pyx_result = Canal.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_Canal__set_state(<Canal> __pyx_result, __pyx_state)
@@ -9300,7 +9437,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UN
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
     /* "(tree fragment)":8
- *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
  *     __pyx_result = Canal.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_Canal__set_state(<Canal> __pyx_result, __pyx_state)
@@ -9313,7 +9450,7 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UN
  *         __pyx_unpickle_Canal__set_state(<Canal> __pyx_result, __pyx_state)
  *     return __pyx_result             # <<<<<<<<<<<<<<
  * cdef __pyx_unpickle_Canal__set_state(Canal __pyx_result, tuple __pyx_state):
- *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.name = __pyx_state[17]; __pyx_result.num_sites = __pyx_state[18]; __pyx_result.open_for_delivery = __pyx_state[19]; __pyx_result.ownership_shares = __pyx_state[20]; __pyx_result.power_price = __pyx_state[21]; __pyx_result.pumping_power_rate = __pyx_state[22]; __pyx_result.recovery_feeder = __pyx_state[23]; __pyx_result.recovery_flow_frac = __pyx_state[24]; __pyx_result.restricted_capacity_available = __pyx_state[25]; __pyx_result.turnout = __pyx_state[26]; __pyx_result.turnout_banks = __pyx_state[27]; __pyx_result.turnout_delivery = __pyx_state[28]; __pyx_result.turnout_districts = __pyx_state[29]; __pyx_result.turnout_frac = __pyx_state[30]; __pyx_result.turnout_reservoirs = __pyx_state[31]; __pyx_result.turnout_use = __pyx_state[32]; __pyx_result.unrestricted_access = __pyx_state[33]
+ *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.monthly_power_price = __pyx_state[17]; __pyx_result.name = __pyx_state[18]; __pyx_result.num_sites = __pyx_state[19]; __pyx_result.open_for_delivery = __pyx_state[20]; __pyx_result.ownership_shares = __pyx_state[21]; __pyx_result.power_price = __pyx_state[22]; __pyx_result.pumping_power_rate = __pyx_state[23]; __pyx_result.recovery_feeder = __pyx_state[24]; __pyx_result.recovery_flow_frac = __pyx_state[25]; __pyx_result.restricted_capacity_available = __pyx_state[26]; __pyx_result.turnout = __pyx_state[27]; __pyx_result.turnout_banks = __pyx_state[28]; __pyx_result.turnout_delivery = __pyx_state[29]; __pyx_result.turnout_districts = __pyx_state[30]; __pyx_result.turnout_frac = __pyx_state[31]; __pyx_result.turnout_reservoirs = __pyx_state[32]; __pyx_result.turnout_use = __pyx_state[33]; __pyx_result.unrestricted_access = __pyx_state[34]
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v___pyx_result);
@@ -9347,8 +9484,8 @@ static PyObject *__pyx_pf_11calfews_src_8canal_cy___pyx_unpickle_Canal(CYTHON_UN
  *         __pyx_unpickle_Canal__set_state(<Canal> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_Canal__set_state(Canal __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.name = __pyx_state[17]; __pyx_result.num_sites = __pyx_state[18]; __pyx_result.open_for_delivery = __pyx_state[19]; __pyx_result.ownership_shares = __pyx_state[20]; __pyx_result.power_price = __pyx_state[21]; __pyx_result.pumping_power_rate = __pyx_state[22]; __pyx_result.recovery_feeder = __pyx_state[23]; __pyx_result.recovery_flow_frac = __pyx_state[24]; __pyx_result.restricted_capacity_available = __pyx_state[25]; __pyx_result.turnout = __pyx_state[26]; __pyx_result.turnout_banks = __pyx_state[27]; __pyx_result.turnout_delivery = __pyx_state[28]; __pyx_result.turnout_districts = __pyx_state[29]; __pyx_result.turnout_frac = __pyx_state[30]; __pyx_result.turnout_reservoirs = __pyx_state[31]; __pyx_result.turnout_use = __pyx_state[32]; __pyx_result.unrestricted_access = __pyx_state[33]
- *     if len(__pyx_state) > 34 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.monthly_power_price = __pyx_state[17]; __pyx_result.name = __pyx_state[18]; __pyx_result.num_sites = __pyx_state[19]; __pyx_result.open_for_delivery = __pyx_state[20]; __pyx_result.ownership_shares = __pyx_state[21]; __pyx_result.power_price = __pyx_state[22]; __pyx_result.pumping_power_rate = __pyx_state[23]; __pyx_result.recovery_feeder = __pyx_state[24]; __pyx_result.recovery_flow_frac = __pyx_state[25]; __pyx_result.restricted_capacity_available = __pyx_state[26]; __pyx_result.turnout = __pyx_state[27]; __pyx_result.turnout_banks = __pyx_state[28]; __pyx_result.turnout_delivery = __pyx_state[29]; __pyx_result.turnout_districts = __pyx_state[30]; __pyx_result.turnout_frac = __pyx_state[31]; __pyx_result.turnout_reservoirs = __pyx_state[32]; __pyx_result.turnout_use = __pyx_state[33]; __pyx_result.unrestricted_access = __pyx_state[34]
+ *     if len(__pyx_state) > 35 and hasattr(__pyx_result, '__dict__'):
  */
 
 static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state(struct __pyx_obj_11calfews_src_8canal_cy_Canal *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
@@ -9374,9 +9511,9 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
   /* "(tree fragment)":12
  *     return __pyx_result
  * cdef __pyx_unpickle_Canal__set_state(Canal __pyx_result, tuple __pyx_state):
- *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.name = __pyx_state[17]; __pyx_result.num_sites = __pyx_state[18]; __pyx_result.open_for_delivery = __pyx_state[19]; __pyx_result.ownership_shares = __pyx_state[20]; __pyx_result.power_price = __pyx_state[21]; __pyx_result.pumping_power_rate = __pyx_state[22]; __pyx_result.recovery_feeder = __pyx_state[23]; __pyx_result.recovery_flow_frac = __pyx_state[24]; __pyx_result.restricted_capacity_available = __pyx_state[25]; __pyx_result.turnout = __pyx_state[26]; __pyx_result.turnout_banks = __pyx_state[27]; __pyx_result.turnout_delivery = __pyx_state[28]; __pyx_result.turnout_districts = __pyx_state[29]; __pyx_result.turnout_frac = __pyx_state[30]; __pyx_result.turnout_reservoirs = __pyx_state[31]; __pyx_result.turnout_use = __pyx_state[32]; __pyx_result.unrestricted_access = __pyx_state[33]             # <<<<<<<<<<<<<<
- *     if len(__pyx_state) > 34 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[34])
+ *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.monthly_power_price = __pyx_state[17]; __pyx_result.name = __pyx_state[18]; __pyx_result.num_sites = __pyx_state[19]; __pyx_result.open_for_delivery = __pyx_state[20]; __pyx_result.ownership_shares = __pyx_state[21]; __pyx_result.power_price = __pyx_state[22]; __pyx_result.pumping_power_rate = __pyx_state[23]; __pyx_result.recovery_feeder = __pyx_state[24]; __pyx_result.recovery_flow_frac = __pyx_state[25]; __pyx_result.restricted_capacity_available = __pyx_state[26]; __pyx_result.turnout = __pyx_state[27]; __pyx_result.turnout_banks = __pyx_state[28]; __pyx_result.turnout_delivery = __pyx_state[29]; __pyx_result.turnout_districts = __pyx_state[30]; __pyx_result.turnout_frac = __pyx_state[31]; __pyx_result.turnout_reservoirs = __pyx_state[32]; __pyx_result.turnout_use = __pyx_state[33]; __pyx_result.unrestricted_access = __pyx_state[34]             # <<<<<<<<<<<<<<
+ *     if len(__pyx_state) > 35 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[35])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -9561,6 +9698,18 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
   }
   __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 17, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
+  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v___pyx_result->monthly_power_price);
+  __Pyx_DECREF(__pyx_v___pyx_result->monthly_power_price);
+  __pyx_v___pyx_result->monthly_power_price = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+  if (unlikely(__pyx_v___pyx_state == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+    __PYX_ERR(2, 12, __pyx_L1_error)
+  }
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 18, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF(__pyx_v___pyx_result->name);
@@ -9571,7 +9720,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 18, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 19, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -9580,7 +9729,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 19, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 20, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -9589,7 +9738,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 20, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 21, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9601,7 +9750,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 21, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 22, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9613,7 +9762,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 22, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 23, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9625,7 +9774,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 23, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 24, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -9634,7 +9783,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 24, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 25, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9646,7 +9795,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 25, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 26, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9658,7 +9807,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 26, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 27, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9670,7 +9819,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 27, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 28, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9682,7 +9831,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 28, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 29, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9694,7 +9843,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 29, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 30, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9706,7 +9855,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 30, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 31, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9718,7 +9867,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 31, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 32, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9730,7 +9879,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 32, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 33, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_1);
@@ -9742,7 +9891,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     __PYX_ERR(2, 12, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 33, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 34, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 12, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -9750,16 +9899,16 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
 
   /* "(tree fragment)":13
  * cdef __pyx_unpickle_Canal__set_state(Canal __pyx_result, tuple __pyx_state):
- *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.name = __pyx_state[17]; __pyx_result.num_sites = __pyx_state[18]; __pyx_result.open_for_delivery = __pyx_state[19]; __pyx_result.ownership_shares = __pyx_state[20]; __pyx_result.power_price = __pyx_state[21]; __pyx_result.pumping_power_rate = __pyx_state[22]; __pyx_result.recovery_feeder = __pyx_state[23]; __pyx_result.recovery_flow_frac = __pyx_state[24]; __pyx_result.restricted_capacity_available = __pyx_state[25]; __pyx_result.turnout = __pyx_state[26]; __pyx_result.turnout_banks = __pyx_state[27]; __pyx_result.turnout_delivery = __pyx_state[28]; __pyx_result.turnout_districts = __pyx_state[29]; __pyx_result.turnout_frac = __pyx_state[30]; __pyx_result.turnout_reservoirs = __pyx_state[31]; __pyx_result.turnout_use = __pyx_state[32]; __pyx_result.unrestricted_access = __pyx_state[33]
- *     if len(__pyx_state) > 34 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[34])
+ *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.monthly_power_price = __pyx_state[17]; __pyx_result.name = __pyx_state[18]; __pyx_result.num_sites = __pyx_state[19]; __pyx_result.open_for_delivery = __pyx_state[20]; __pyx_result.ownership_shares = __pyx_state[21]; __pyx_result.power_price = __pyx_state[22]; __pyx_result.pumping_power_rate = __pyx_state[23]; __pyx_result.recovery_feeder = __pyx_state[24]; __pyx_result.recovery_flow_frac = __pyx_state[25]; __pyx_result.restricted_capacity_available = __pyx_state[26]; __pyx_result.turnout = __pyx_state[27]; __pyx_result.turnout_banks = __pyx_state[28]; __pyx_result.turnout_delivery = __pyx_state[29]; __pyx_result.turnout_districts = __pyx_state[30]; __pyx_result.turnout_frac = __pyx_state[31]; __pyx_result.turnout_reservoirs = __pyx_state[32]; __pyx_result.turnout_use = __pyx_state[33]; __pyx_result.unrestricted_access = __pyx_state[34]
+ *     if len(__pyx_state) > 35 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[35])
  */
   if (unlikely(__pyx_v___pyx_state == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
     __PYX_ERR(2, 13, __pyx_L1_error)
   }
   __pyx_t_5 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(2, 13, __pyx_L1_error)
-  __pyx_t_6 = ((__pyx_t_5 > 34) != 0);
+  __pyx_t_6 = ((__pyx_t_5 > 35) != 0);
   if (__pyx_t_6) {
   } else {
     __pyx_t_4 = __pyx_t_6;
@@ -9772,9 +9921,9 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
   if (__pyx_t_4) {
 
     /* "(tree fragment)":14
- *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.name = __pyx_state[17]; __pyx_result.num_sites = __pyx_state[18]; __pyx_result.open_for_delivery = __pyx_state[19]; __pyx_result.ownership_shares = __pyx_state[20]; __pyx_result.power_price = __pyx_state[21]; __pyx_result.pumping_power_rate = __pyx_state[22]; __pyx_result.recovery_feeder = __pyx_state[23]; __pyx_result.recovery_flow_frac = __pyx_state[24]; __pyx_result.restricted_capacity_available = __pyx_state[25]; __pyx_result.turnout = __pyx_state[26]; __pyx_result.turnout_banks = __pyx_state[27]; __pyx_result.turnout_delivery = __pyx_state[28]; __pyx_result.turnout_districts = __pyx_state[29]; __pyx_result.turnout_frac = __pyx_state[30]; __pyx_result.turnout_reservoirs = __pyx_state[31]; __pyx_result.turnout_use = __pyx_state[32]; __pyx_result.unrestricted_access = __pyx_state[33]
- *     if len(__pyx_state) > 34 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[34])             # <<<<<<<<<<<<<<
+ *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.monthly_power_price = __pyx_state[17]; __pyx_result.name = __pyx_state[18]; __pyx_result.num_sites = __pyx_state[19]; __pyx_result.open_for_delivery = __pyx_state[20]; __pyx_result.ownership_shares = __pyx_state[21]; __pyx_result.power_price = __pyx_state[22]; __pyx_result.pumping_power_rate = __pyx_state[23]; __pyx_result.recovery_feeder = __pyx_state[24]; __pyx_result.recovery_flow_frac = __pyx_state[25]; __pyx_result.restricted_capacity_available = __pyx_state[26]; __pyx_result.turnout = __pyx_state[27]; __pyx_result.turnout_banks = __pyx_state[28]; __pyx_result.turnout_delivery = __pyx_state[29]; __pyx_result.turnout_districts = __pyx_state[30]; __pyx_result.turnout_frac = __pyx_state[31]; __pyx_result.turnout_reservoirs = __pyx_state[32]; __pyx_result.turnout_use = __pyx_state[33]; __pyx_result.unrestricted_access = __pyx_state[34]
+ *     if len(__pyx_state) > 35 and hasattr(__pyx_result, '__dict__'):
+ *         __pyx_result.__dict__.update(__pyx_state[35])             # <<<<<<<<<<<<<<
  */
     __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 14, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
@@ -9785,7 +9934,7 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       __PYX_ERR(2, 14, __pyx_L1_error)
     }
-    __pyx_t_8 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 34, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 14, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 35, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 14, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_10 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
@@ -9807,9 +9956,9 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
 
     /* "(tree fragment)":13
  * cdef __pyx_unpickle_Canal__set_state(Canal __pyx_result, tuple __pyx_state):
- *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.name = __pyx_state[17]; __pyx_result.num_sites = __pyx_state[18]; __pyx_result.open_for_delivery = __pyx_state[19]; __pyx_result.ownership_shares = __pyx_state[20]; __pyx_result.power_price = __pyx_state[21]; __pyx_result.pumping_power_rate = __pyx_state[22]; __pyx_result.recovery_feeder = __pyx_state[23]; __pyx_result.recovery_flow_frac = __pyx_state[24]; __pyx_result.restricted_capacity_available = __pyx_state[25]; __pyx_result.turnout = __pyx_state[26]; __pyx_result.turnout_banks = __pyx_state[27]; __pyx_result.turnout_delivery = __pyx_state[28]; __pyx_result.turnout_districts = __pyx_state[29]; __pyx_result.turnout_frac = __pyx_state[30]; __pyx_result.turnout_reservoirs = __pyx_state[31]; __pyx_result.turnout_use = __pyx_state[32]; __pyx_result.unrestricted_access = __pyx_state[33]
- *     if len(__pyx_state) > 34 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[34])
+ *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.monthly_power_price = __pyx_state[17]; __pyx_result.name = __pyx_state[18]; __pyx_result.num_sites = __pyx_state[19]; __pyx_result.open_for_delivery = __pyx_state[20]; __pyx_result.ownership_shares = __pyx_state[21]; __pyx_result.power_price = __pyx_state[22]; __pyx_result.pumping_power_rate = __pyx_state[23]; __pyx_result.recovery_feeder = __pyx_state[24]; __pyx_result.recovery_flow_frac = __pyx_state[25]; __pyx_result.restricted_capacity_available = __pyx_state[26]; __pyx_result.turnout = __pyx_state[27]; __pyx_result.turnout_banks = __pyx_state[28]; __pyx_result.turnout_delivery = __pyx_state[29]; __pyx_result.turnout_districts = __pyx_state[30]; __pyx_result.turnout_frac = __pyx_state[31]; __pyx_result.turnout_reservoirs = __pyx_state[32]; __pyx_result.turnout_use = __pyx_state[33]; __pyx_result.unrestricted_access = __pyx_state[34]
+ *     if len(__pyx_state) > 35 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
+ *         __pyx_result.__dict__.update(__pyx_state[35])
  */
   }
 
@@ -9817,8 +9966,8 @@ static PyObject *__pyx_f_11calfews_src_8canal_cy___pyx_unpickle_Canal__set_state
  *         __pyx_unpickle_Canal__set_state(<Canal> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_Canal__set_state(Canal __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.name = __pyx_state[17]; __pyx_result.num_sites = __pyx_state[18]; __pyx_result.open_for_delivery = __pyx_state[19]; __pyx_result.ownership_shares = __pyx_state[20]; __pyx_result.power_price = __pyx_state[21]; __pyx_result.pumping_power_rate = __pyx_state[22]; __pyx_result.recovery_feeder = __pyx_state[23]; __pyx_result.recovery_flow_frac = __pyx_state[24]; __pyx_result.restricted_capacity_available = __pyx_state[25]; __pyx_result.turnout = __pyx_state[26]; __pyx_result.turnout_banks = __pyx_state[27]; __pyx_result.turnout_delivery = __pyx_state[28]; __pyx_result.turnout_districts = __pyx_state[29]; __pyx_result.turnout_frac = __pyx_state[30]; __pyx_result.turnout_reservoirs = __pyx_state[31]; __pyx_result.turnout_use = __pyx_state[32]; __pyx_result.unrestricted_access = __pyx_state[33]
- *     if len(__pyx_state) > 34 and hasattr(__pyx_result, '__dict__'):
+ *     __pyx_result.annual_diversion_capacity = __pyx_state[0]; __pyx_result.capacity = __pyx_state[1]; __pyx_result.daily_flow = __pyx_state[2]; __pyx_result.daily_turnout = __pyx_state[3]; __pyx_result.demand = __pyx_state[4]; __pyx_result.epsilon = __pyx_state[5]; __pyx_result.finances = __pyx_state[6]; __pyx_result.flow = __pyx_state[7]; __pyx_result.flow_directions = __pyx_state[8]; __pyx_result.has_expansion = __pyx_state[9]; __pyx_result.is_Canal = __pyx_state[10]; __pyx_result.is_District = __pyx_state[11]; __pyx_result.is_Private = __pyx_state[12]; __pyx_result.is_Reservoir = __pyx_state[13]; __pyx_result.is_Waterbank = __pyx_state[14]; __pyx_result.key = __pyx_state[15]; __pyx_result.locked = __pyx_state[16]; __pyx_result.monthly_power_price = __pyx_state[17]; __pyx_result.name = __pyx_state[18]; __pyx_result.num_sites = __pyx_state[19]; __pyx_result.open_for_delivery = __pyx_state[20]; __pyx_result.ownership_shares = __pyx_state[21]; __pyx_result.power_price = __pyx_state[22]; __pyx_result.pumping_power_rate = __pyx_state[23]; __pyx_result.recovery_feeder = __pyx_state[24]; __pyx_result.recovery_flow_frac = __pyx_state[25]; __pyx_result.restricted_capacity_available = __pyx_state[26]; __pyx_result.turnout = __pyx_state[27]; __pyx_result.turnout_banks = __pyx_state[28]; __pyx_result.turnout_delivery = __pyx_state[29]; __pyx_result.turnout_districts = __pyx_state[30]; __pyx_result.turnout_frac = __pyx_state[31]; __pyx_result.turnout_reservoirs = __pyx_state[32]; __pyx_result.turnout_use = __pyx_state[33]; __pyx_result.unrestricted_access = __pyx_state[34]
+ *     if len(__pyx_state) > 35 and hasattr(__pyx_result, '__dict__'):
  */
 
   /* function exit code */
@@ -9871,6 +10020,7 @@ static PyObject *__pyx_tp_new_11calfews_src_8canal_cy_Canal(PyTypeObject *t, CYT
   p->turnout_delivery = ((PyObject*)Py_None); Py_INCREF(Py_None);
   p->finances = ((PyObject*)Py_None); Py_INCREF(Py_None);
   p->power_price = ((PyObject*)Py_None); Py_INCREF(Py_None);
+  p->monthly_power_price = ((PyObject*)Py_None); Py_INCREF(Py_None);
   return o;
 }
 
@@ -9903,6 +10053,7 @@ static void __pyx_tp_dealloc_11calfews_src_8canal_cy_Canal(PyObject *o) {
   Py_CLEAR(p->turnout_delivery);
   Py_CLEAR(p->finances);
   Py_CLEAR(p->power_price);
+  Py_CLEAR(p->monthly_power_price);
   (*Py_TYPE(o)->tp_free)(o);
 }
 
@@ -9966,6 +10117,9 @@ static int __pyx_tp_traverse_11calfews_src_8canal_cy_Canal(PyObject *o, visitpro
   if (p->power_price) {
     e = (*v)(p->power_price, a); if (e) return e;
   }
+  if (p->monthly_power_price) {
+    e = (*v)(p->monthly_power_price, a); if (e) return e;
+  }
   return 0;
 }
 
@@ -10028,6 +10182,9 @@ static int __pyx_tp_clear_11calfews_src_8canal_cy_Canal(PyObject *o) {
   Py_XDECREF(tmp);
   tmp = ((PyObject*)p->power_price);
   p->power_price = ((PyObject*)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->monthly_power_price);
+  p->monthly_power_price = ((PyObject*)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
@@ -10487,6 +10644,19 @@ static int __pyx_setprop_11calfews_src_8canal_cy_5Canal_power_price(PyObject *o,
   }
 }
 
+static PyObject *__pyx_getprop_11calfews_src_8canal_cy_5Canal_monthly_power_price(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_1__get__(o);
+}
+
+static int __pyx_setprop_11calfews_src_8canal_cy_5Canal_monthly_power_price(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_3__set__(o, v);
+  }
+  else {
+    return __pyx_pw_11calfews_src_8canal_cy_5Canal_19monthly_power_price_5__del__(o);
+  }
+}
+
 static PyObject *__pyx_specialmethod___pyx_pw_11calfews_src_8canal_cy_5Canal_3__next__(PyObject *self, CYTHON_UNUSED PyObject *arg) {return __pyx_pw_11calfews_src_8canal_cy_5Canal_3__next__(self);}
 
 static PyMethodDef __pyx_methods_11calfews_src_8canal_cy_Canal[] = {
@@ -10532,6 +10702,7 @@ static struct PyGetSetDef __pyx_getsets_11calfews_src_8canal_cy_Canal[] = {
   {(char *)"turnout_delivery", __pyx_getprop_11calfews_src_8canal_cy_5Canal_turnout_delivery, __pyx_setprop_11calfews_src_8canal_cy_5Canal_turnout_delivery, (char *)0, 0},
   {(char *)"finances", __pyx_getprop_11calfews_src_8canal_cy_5Canal_finances, __pyx_setprop_11calfews_src_8canal_cy_5Canal_finances, (char *)0, 0},
   {(char *)"power_price", __pyx_getprop_11calfews_src_8canal_cy_5Canal_power_price, __pyx_setprop_11calfews_src_8canal_cy_5Canal_power_price, (char *)0, 0},
+  {(char *)"monthly_power_price", __pyx_getprop_11calfews_src_8canal_cy_5Canal_monthly_power_price, __pyx_setprop_11calfews_src_8canal_cy_5Canal_monthly_power_price, (char *)0, 0},
   {0, 0, 0, 0, 0}
 };
 
@@ -10887,11 +11058,11 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "(tree fragment)":4
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
- *     if __pyx_checksum not in (0xb72b2d3, 0xc66c63d, 0x18f7760):             # <<<<<<<<<<<<<<
+ *     if __pyx_checksum not in (0xcec45d7, 0x6e3d19a, 0xbf57627):             # <<<<<<<<<<<<<<
  *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xb72b2d3, 0xc66c63d, 0x18f7760) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
+ *         raise __pyx_PickleError("Incompatible checksums (0x%x vs (0xcec45d7, 0x6e3d19a, 0xbf57627) = (annual_diversion_capacity, capacity, daily_flow, daily_turnout, demand, epsilon, finances, flow, flow_directions, has_expansion, is_Canal, is_District, is_Private, is_Reservoir, is_Waterbank, key, locked, monthly_power_price, name, num_sites, open_for_delivery, ownership_shares, power_price, pumping_power_rate, recovery_feeder, recovery_flow_frac, restricted_capacity_available, turnout, turnout_banks, turnout_delivery, turnout_districts, turnout_frac, turnout_reservoirs, turnout_use, unrestricted_access))" % __pyx_checksum)
  */
-  __pyx_tuple__2 = PyTuple_Pack(3, __pyx_int_192066259, __pyx_int_208062013, __pyx_int_26179424); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(2, 4, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(3, __pyx_int_216810967, __pyx_int_115593626, __pyx_int_200635943); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(2, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
@@ -10919,9 +11090,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   __pyx_float_1_0 = PyFloat_FromDouble(1.0); if (unlikely(!__pyx_float_1_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_26179424 = PyInt_FromLong(26179424L); if (unlikely(!__pyx_int_26179424)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_192066259 = PyInt_FromLong(192066259L); if (unlikely(!__pyx_int_192066259)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_208062013 = PyInt_FromLong(208062013L); if (unlikely(!__pyx_int_208062013)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_115593626 = PyInt_FromLong(115593626L); if (unlikely(!__pyx_int_115593626)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_200635943 = PyInt_FromLong(200635943L); if (unlikely(!__pyx_int_200635943)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_216810967 = PyInt_FromLong(216810967L); if (unlikely(!__pyx_int_216810967)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
