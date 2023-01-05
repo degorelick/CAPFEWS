@@ -12,6 +12,7 @@ start_time = datetime.now()
 flow_input_source: str = sys.argv[1]  #crss-1, crss-2, etc., or historic
 redo_init = int(sys.argv[2])   ### this should be 0 if we want to use saved initialized model, else 1
 run_sim = int(sys.argv[3])   ### this should be 1 if we want to run sim, else 0 to just do init
+folder = str(sys.argv[4])
 
 config = ConfigObj('runtime_params.ini')
 cluster_mode = bool(strtobool(config['cluster_mode']))
@@ -19,7 +20,10 @@ scratch_dir = config['scratch_dir']
 model_mode = config['model_mode']
 config['flow_input_source'] = flow_input_source
 
-results_folder='results/'+flow_input_source ### folder directory to store results, relative to base calfews directory
+results_folder='results/'+flow_input_source  ### folder directory to store results, relative to base calfews directory
+if folder != '':
+  results_folder=results_folder + '/' + folder
+
 
 if cluster_mode:
   results_folder = scratch_dir + results_folder + '/'
