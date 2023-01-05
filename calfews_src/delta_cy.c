@@ -1363,6 +1363,8 @@ struct __pyx_obj_11calfews_src_8canal_cy_Canal {
   struct __pyx_vtabstruct_11calfews_src_8canal_cy_Canal *__pyx_vtab;
   double epsilon;
   double annual_diversion_capacity;
+  double hoover_power_price;
+  double solar_power_price;
   int is_Canal;
   int is_District;
   int is_Private;
@@ -1396,6 +1398,8 @@ struct __pyx_obj_11calfews_src_8canal_cy_Canal {
   PyObject *finances;
   PyObject *power_price;
   PyObject *monthly_power_price;
+  PyObject *srp_power_price;
+  PyObject *daily_power_price;
 };
 
 

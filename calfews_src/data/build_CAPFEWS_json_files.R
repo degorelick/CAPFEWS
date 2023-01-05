@@ -52,6 +52,11 @@ top_range = apply(Historical_EnergyPrices[,2:9], 1, max)
 low_range = apply(Historical_EnergyPrices[,2:9], 1, min)
 monthly_power_price = data.frame(low = low_range,
                          high = top_range)
+daily_power_price = data.frame(low=c(35,35,35,35,35,35,35,35,35,35,35,35), high=c(70,70,70,70,70,70,70,70,70,70,70,70))
+srp_power_price = data.frame(low=c(41.59,41.59,41.59,41.59,41.59,41.59,41.59,41.59,41.59,41.59,41.59,41.59),
+                             high=c(57.04,57.04,57.04,57.04,57.04,57.04,57.04,57.04,57.04,57.04,57.04,57.04))
+solar_power_price = 24.99 #2022 price for PPA
+hoover_power_price = 43.87 #2022 price 
 
 
 # capacity of turnouts to move water. turnouts can have "normal" "reverse" and "closed" settings
@@ -78,7 +83,11 @@ canal_json = toJSON(list("name" = "CAP",
                          "capacity" = capacities, 
                          "turnout" = turnout,
                          "pumping_power_rate" = pumping_power_rate,
-                         "monthly_power_price" = monthly_power_price), 
+                         "monthly_power_price" = monthly_power_price,
+                         "daily_power_price" = daily_power_price,
+                         "srp_power_price" = srp_power_price,
+                         "hoover_power_price" = hoover_power_price,
+                         "solar_power_price" = solar_power_price), 
                     pretty = TRUE, dataframe = "columns", simplifyDataFrame = TRUE, auto_unbox = TRUE)
 write(canal_json, "../CAPFEWS/calfews_src/canals/CAP_properties.json")
 
