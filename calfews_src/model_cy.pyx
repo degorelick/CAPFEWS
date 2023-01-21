@@ -6799,28 +6799,16 @@ cdef class Model():
       self.capcanal.turnout_delivery['WAD'][t] += self.pleasant.net_pleasant_pumping[t]
 
       ## STEP 12: CALCULATE MONTHLY VARIABLE PUMPING POWER
-      # based on random monthly power price, generated between low and high historical (2014-2021) at Palo Verde hub
-      monthly_power_price = np.random.uniform(low = self.capcanal.monthly_power_price['low'][m-1],
-                                      high = self.capcanal.monthly_power_price['high'][m-1])
-      daily_power_price = np.random.uniform(low = self.capcanal.daily_power_price['low'][m-1],
-                                      high = self.capcanal.daily_power_price['high'][m-1])
-      srp_power_price = np.random.uniform(low = self.capcanal.srp_power_price['low'][m-1],
-                                      high = self.capcanal.srp_power_price['high'][m-1])
-      solar_power_price = self.capcanal.solar_power_price
-      hoover_power_price = self.capcanal.hoover_power_price
-      srp_ppa = self.capcanal.srp_ppa
-      solar_ppa = self.capcanal.solar_ppa
 
-      power_price = monthly_power_price
       # if some colorado river diversion is for pleasant, calculate prices separately
       if self.pleasant.net_pleasant_pumping[t] > 0.0:
         # power cost to divert colorado river into lake pleasant
         # (multiplied by a factor of pleasant elevation to determine pumping power need, in kWH per kAF)
         # (this factor is taken from formula in CAP projection spreadsheets)
-        self.capcanal.finances['pleasant_pumping_cost'][t] = \
+        self.capcanal.finances['pleasant_pumping_power'][t] = \
           self.pleasant.net_pleasant_pumping[t] *  \
           (float(self.capcanal.pumping_power_rate['mead'][self.capcanal.pumping_power_rate['node'].index("WAD")]) +
-           (self.pleasant.elevation[t] - 1526.8) / 0.7702) * self.kAFtoAF * power_price / MWh_KWh
+           (self.pleasant.elevation[t] - 1526.8) / 0.7702) * self.kAFtoAF / MWh_KWh
 
         # power cost to deliver to subcontractors and AMAs
         for turnout in self.capcanal.capacity['node']:
@@ -6828,10 +6816,10 @@ cdef class Model():
           if turnout == 'none':
             continue
 
-          self.capcanal.finances['delivery_pumping_cost'][t] += \
+          self.capcanal.finances['delivery_pumping_power'][t] += \
             self.capcanal.turnout_delivery[turnout][t] * \
             float(self.capcanal.pumping_power_rate['mead'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
-            self.kAFtoAF * power_price / MWh_KWh
+            self.kAFtoAF / MWh_KWh
 
       else:
         # if some deliveries are due to lake pleasant releases, use these releases
@@ -6844,30 +6832,30 @@ cdef class Model():
 
           # if pleasant releases cover full turnout request, use them
           if self.capcanal.turnout_delivery[turnout][t] <= remaining_pleasant_to_deliver:
-            self.capcanal.finances['delivery_pumping_cost'][t] += \
+            self.capcanal.finances['delivery_pumping_power'][t] += \
               self.capcanal.turnout_delivery[turnout][t] * \
               float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
-              self.kAFtoAF * power_price / MWh_KWh
+              self.kAFtoAF / MWh_KWh
             remaining_pleasant_to_deliver -= self.capcanal.turnout_delivery[turnout][t]
 
           # if pleasant releases have been exhausted, let mead diversions take over
           else:
             # remaining pleasant deliveries
-            self.capcanal.finances['delivery_pumping_cost'][t] += \
+            self.capcanal.finances['delivery_pumping_power'][t] += \
               remaining_pleasant_to_deliver * \
               float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
-              self.kAFtoAF * power_price / MWh_KWh
+              self.kAFtoAF / MWh_KWh
 
             # rest are mead deliveries
-            self.capcanal.finances['delivery_pumping_cost'][t] += \
+            self.capcanal.finances['delivery_pumping_power'][t] += \
               (self.capcanal.turnout_delivery[turnout][t] - remaining_pleasant_to_deliver) * \
               float(self.capcanal.pumping_power_rate['pleasant'][self.capcanal.pumping_power_rate['node'].index(turnout)]) * \
-              self.kAFtoAF * power_price / MWh_KWh
+              self.kAFtoAF / MWh_KWh
 
             remaining_pleasant_to_deliver = 0.0
 
-      self.capcanal.finances['total_pumping_cost'][t] = \
-        self.capcanal.finances['delivery_pumping_cost'][t] + self.capcanal.finances['pleasant_pumping_cost'][t]
+      self.capcanal.finances['total_pumping_power'][t] = \
+        self.capcanal.finances['delivery_pumping_power'][t] + self.capcanal.finances['pleasant_pumping_power'][t]
 
       ## STEP 13: CALCULATE MONTHLY VOLUMETRIC WATER DELIVERY RATE REVENUES
       self.set_delivery_rate(t, y, 0.03)
@@ -6933,8 +6921,20 @@ cdef class Model():
               (self.capcanal.finances['storage_omr_charge'][t] + self.capcanal.finances['storage_capital_charge'][t])
 
 
-      ## STEP 14: POWER PURCHASE AGREEMENT CONTRACTS SET FOR UPCOMING YEAR
+      ## STEP 14: POWER PURCHASE AGREEMENT CONTRACTS AND POWER PRICES
+      # based on random monthly power price, generated between low and high historical (2014-2021) at Palo Verde hub
+      monthly_power_price = np.random.uniform(low=self.capcanal.monthly_power_price['low'][m - 1],
+                                              high=self.capcanal.monthly_power_price['high'][m - 1])
+      daily_power_price = np.random.uniform(low=self.capcanal.daily_power_price['low'][m - 1],
+                                            high=self.capcanal.daily_power_price['high'][m - 1])
+      srp_power_price = np.random.uniform(low=self.capcanal.srp_power_price['low'][m - 1],
+                                          high=self.capcanal.srp_power_price['high'][m - 1])
+      solar_power_price = self.capcanal.solar_power_price
+      hoover_power_price = self.capcanal.hoover_power_price
+      srp_ppa = self.capcanal.srp_ppa
+      solar_ppa = self.capcanal.solar_ppa
 
+      power_price = monthly_power_price
 
       ## STEP 15: CAP BUDGET, RESERVE FUND USE, AND WATER RATE SET FOR UPCOMING YEAR
 
@@ -7033,7 +7033,8 @@ cdef class Model():
 
       # hold canal-wide financial accounts here for export
       canal_obj.finances = {}
-      for account in ['delivery_pumping_cost', 'pleasant_pumping_cost', 'total_pumping_cost',
+      for account in ['delivery_pumping_power', 'delivery_pumping_cost', 'pleasant_pumping_power',
+                      'pleasant_pumping_cost', 'total_pumping_power', 'total_pumping_cost',
                       'energy_charge', 'capital_charge', 'fixed_omr_charge', 'storage_omr_charge',
                       'storage_capital_charge', 'stabilization_use', 'total_sales',
                       'stabilization_account', 'property_tax_use']:
