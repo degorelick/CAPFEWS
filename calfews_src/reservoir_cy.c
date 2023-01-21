@@ -1303,6 +1303,8 @@ struct __pyx_obj_11calfews_src_8canal_cy_Canal {
   double hoover_power_price;
   double solar_power_price;
   double srp_ppa;
+  double solar_ppa;
+  double remaining_power;
   int is_Canal;
   int is_District;
   int is_Private;
