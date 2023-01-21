@@ -962,18 +962,18 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "calfews_src\\reservoir_cy.pyx",
-  "calfews_src\\reservoir_cy.pxd",
+  "calfews_src/reservoir_cy.pyx",
+  "calfews_src/reservoir_cy.pxd",
   "stringsource",
-  "calfews_src\\delta_cy.pxd",
-  "calfews_src\\canal_cy.pxd",
-  "calfews_src\\crop_cy.pxd",
-  "calfews_src\\contract_cy.pxd",
-  "calfews_src\\district_cy.pxd",
-  "calfews_src\\private_cy.pxd",
-  "calfews_src\\waterbank_cy.pxd",
-  "calfews_src\\participant_cy.pxd",
-  "calfews_src\\model_cy.pxd",
+  "calfews_src/delta_cy.pxd",
+  "calfews_src/canal_cy.pxd",
+  "calfews_src/crop_cy.pxd",
+  "calfews_src/contract_cy.pxd",
+  "calfews_src/district_cy.pxd",
+  "calfews_src/private_cy.pxd",
+  "calfews_src/waterbank_cy.pxd",
+  "calfews_src/participant_cy.pxd",
+  "calfews_src/model_cy.pxd",
 };
 
 /*--- Type declarations ---*/
@@ -1302,6 +1302,7 @@ struct __pyx_obj_11calfews_src_8canal_cy_Canal {
   double annual_diversion_capacity;
   double hoover_power_price;
   double solar_power_price;
+  double srp_ppa;
   int is_Canal;
   int is_District;
   int is_Private;

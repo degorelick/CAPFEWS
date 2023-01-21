@@ -28,7 +28,7 @@ if folder != '':
 if cluster_mode:
   results_folder = scratch_dir + results_folder + '/'
 else:
-  results_base = 'results/' + results_folder + '/'
+  results_base = results_folder + '/'
 
 ### if initialized main_cy object given, load it in
 save_init = results_folder + '/main_cy_init.pkl'
@@ -62,7 +62,7 @@ if model_mode == 'central_arizona_project':
       pass
 
     ### setup new model
-    main_cy_obj = main_cy.main_cy(results_folder,flow_input_source=flow_input_source)
+    main_cy_obj = main_cy.main_cy(results_folder = results_folder, flow_input_source = flow_input_source)
     a = main_cy_obj.initialize_py_cap()
 
     if a == 0:

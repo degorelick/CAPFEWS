@@ -962,8 +962,8 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "calfews_src\\contract_cy.pyx",
-  "calfews_src\\contract_cy.pxd",
+  "calfews_src/contract_cy.pyx",
+  "calfews_src/contract_cy.pxd",
   "stringsource",
 };
 
