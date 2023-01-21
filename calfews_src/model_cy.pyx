@@ -6603,7 +6603,7 @@ cdef class Model():
         total_excess_demand, pleasant_delivered_releases, cumulative_year_diversions, \
         available_to_pleasant, initial_mead_diversion_estimate, available_excess, \
         excess_request_to_deliver, potential_az_curtailment, power_price, monthly_power_price, \
-        daily_power_price, srp_power_price, srp_ppa, solar_power_price, hoover_power_price, \
+        daily_power_price, srp_power_price, srp_ppa, solar_ppa, solar_power_price, hoover_power_price, \
         total_mui_previous_year, total_fed_previous_year, total_nia_previous_year, total_exc_previous_year, total_delivery_request
       list nia_mitigation_partners, nia_mitigation_tier_percents, lease_providers
       dict excess_demand
@@ -6798,7 +6798,7 @@ cdef class Model():
       # special case for Waddell/Pleasant pumping numbers at Waddell "turnout"
       self.capcanal.turnout_delivery['WAD'][t] += self.pleasant.net_pleasant_pumping[t]
 
-      ## STEP 12: CALCULATE MONTHLY VARIABLE PUMPING POWER COSTS
+      ## STEP 12: CALCULATE MONTHLY VARIABLE PUMPING POWER
       # based on random monthly power price, generated between low and high historical (2014-2021) at Palo Verde hub
       monthly_power_price = np.random.uniform(low = self.capcanal.monthly_power_price['low'][m-1],
                                       high = self.capcanal.monthly_power_price['high'][m-1])
@@ -6809,6 +6809,7 @@ cdef class Model():
       solar_power_price = self.capcanal.solar_power_price
       hoover_power_price = self.capcanal.hoover_power_price
       srp_ppa = self.capcanal.srp_ppa
+      solar_ppa = self.capcanal.solar_ppa
 
       power_price = monthly_power_price
       # if some colorado river diversion is for pleasant, calculate prices separately
