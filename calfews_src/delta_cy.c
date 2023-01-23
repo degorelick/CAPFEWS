@@ -1403,6 +1403,7 @@ struct __pyx_obj_11calfews_src_8canal_cy_Canal {
   PyObject *monthly_power_price;
   PyObject *srp_power_price;
   PyObject *daily_power_price;
+  PyObject *daily_power_price_sell;
 };
 
 

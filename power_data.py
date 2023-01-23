@@ -28,3 +28,5 @@ for s in power_data_total.Product.unique():
         power_frac[s] = power[s]/all_power
     else:
         power_frac[s] = power[s]/remaining_power
+
+pd.DataFrame(power_frac).to_csv('power_frac.csv')

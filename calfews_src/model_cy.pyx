@@ -6603,7 +6603,7 @@ cdef class Model():
         total_excess_demand, pleasant_delivered_releases, cumulative_year_diversions, \
         available_to_pleasant, initial_mead_diversion_estimate, available_excess, \
         excess_request_to_deliver, potential_az_curtailment, power_price, monthly_power_price, \
-        daily_power_price, srp_power_price, srp_ppa, solar_ppa, solar_power_price, hoover_power_price, \
+        daily_power_price, daily_power_price_sell, srp_power_price, srp_ppa, solar_ppa, solar_power_price, hoover_power_price, \
         remaining_power, total_mui_previous_year, total_fed_previous_year, total_nia_previous_year, \
         total_exc_previous_year, total_delivery_request
       list nia_mitigation_partners, nia_mitigation_tier_percents, lease_providers
@@ -6928,35 +6928,55 @@ cdef class Model():
                                               high=self.capcanal.monthly_power_price['high'][m - 1])
       daily_power_price = np.random.uniform(low=self.capcanal.daily_power_price['low'][m - 1],
                                             high=self.capcanal.daily_power_price['high'][m - 1])
+      daily_power_price_sell = np.random.uniform(low=self.capcanal.daily_power_price_sell['low'][m - 1],
+                                            high=self.capcanal.daily_power_price_sell['high'][m - 1])
       srp_power_price = np.random.uniform(low=self.capcanal.srp_power_price['low'][m - 1],
                                           high=self.capcanal.srp_power_price['high'][m - 1])
       solar_power_price = self.capcanal.solar_power_price
       hoover_power_price = self.capcanal.hoover_power_price
-      srp_ppa = self.capcanal.srp_ppa * 30 * 24 #TODO start here! add # days ( just did 30 for now) conversion, MW to MWH
-      solar_ppa = self.capcanal.solar_ppa * 30 * 24
+
+      srp_ppa = self.capcanal.srp_ppa * self.days_in_month[year_index][m-1] * 24
+      solar_ppa = self.capcanal.solar_ppa * self.days_in_month[year_index][m-1] * 24
 
       #calculate power price
       #assume SRP gets used first
-      #TODO check the time scales here
+      #TODO add a power dictionary, store power usage by source there
+
       remaining_power = self.capcanal.finances['total_pumping_power'][t]
       if remaining_power > srp_ppa:
-        self.capcanal.finances['total_pumping_cost'][t] += srp_ppa * srp_power_price
+        self.capcanal.finances['srp_cost'][t] = srp_ppa * srp_power_price
+        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['srp_cost'][t]
         remaining_power =  remaining_power - srp_ppa
-      else: #case where all power comes from srp (rare, or never) 
-        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['total_pumping_power'][t] * srp_power_price
+      else: #case where all power comes from srp (rare, or never)
+        self.capcanal.finances['srp_cost'][t] = self.capcanal.finances['total_pumping_power'][t] * srp_power_price
+        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['srp_cost'][t]
         remaining_power = 0
 
       #solar next
       if remaining_power > solar_ppa:
-        self.capcanal.finances['total_pumping_cost'][t] += solar_ppa * solar_power_price
+        self.capcanal.finances['solar_cost'][t] = solar_ppa * solar_power_price
+        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['solar_cost'][t]
         remaining_power =  remaining_power - solar_ppa
       else:
-        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['total_pumping_power'][t] * solar_power_price
+        self.capcanal.finances['solar_cost'][t] = self.capcanal.finances['total_pumping_power'][t]  * solar_power_price
+        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['solar_cost'][t]
         remaining_power = 0
 
       #the rest is split between daily market, monthly market, and hoover (#TODO, make hoover power a function of tier)
-      #TODO
+      if remaining_power > 0: #fractions from power_frac.csv, made in power_data.py:
+        #hoover
+        self.capcanal.finances['hoover_cost'][t] = 0.068359 * remaining_power * hoover_power_price
+        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['hoover_cost'][t]
+        #monthly
+        self.capcanal.finances['monthly_cost'][t] = 0.568582 * remaining_power * monthly_power_price
+        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['monthly_cost'][t]
+        #day ahead
+        self.capcanal.finances['day_ahead_cost'][t] = 0.363059 * remaining_power * daily_power_price
+        self.capcanal.finances['total_pumping_cost'][t] += self.capcanal.finances['day_ahead_cost'][t]
 
+        #day ahead (sell)
+        self.capcanal.finances['day_ahead_sales'][t] = 0.156088 * remaining_power * daily_power_price_sell
+        self.capcanal.finances['total_pumping_cost'][t] -= self.capcanal.finances['day_ahead_sales'][t]
 
       #TODO pleasant vs delivery pumping power-- would pleasant be more likely to get power from srp first, whereas delivery from elsewhere?
       
@@ -7060,6 +7080,7 @@ cdef class Model():
       canal_obj.finances = {}
       for account in ['delivery_pumping_power', 'delivery_pumping_cost', 'pleasant_pumping_power',
                       'pleasant_pumping_cost', 'total_pumping_power', 'total_pumping_cost',
+                      'srp_cost', 'solar_cost', 'hoover_cost', 'monthly_cost', 'day_ahead_cost', 'day_ahead_sales',
                       'energy_charge', 'capital_charge', 'fixed_omr_charge', 'storage_omr_charge',
                       'storage_capital_charge', 'stabilization_use', 'total_sales',
                       'stabilization_account', 'property_tax_use']:
