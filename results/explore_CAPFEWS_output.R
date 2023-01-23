@@ -5,8 +5,9 @@
 ### -----------------------------------------------------
 
 rm(list=ls()) # clear memory
-setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results') # set directory
-setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results_crss') # set directory
+crss=1
+results_folder = 'full PPAS'
+setwd(paste('/Users/summerstarr/PycharmProjects/CAPFEWS/results/crss-',crss,'/',results_folder,sep=""))
 
 ### read output from hdf5 file ------------------------------------------------
 # to do this, run: install.packages("BiocManager")
@@ -33,11 +34,11 @@ write.table(CO, "results.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 ### export some plots --------------------------------------------------------
 # need results file, read in as "CO" dataframe, from previous section
 library(tidyverse)
-setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results') # set directory
-setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results_crss') # set directory
+#setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results') # set directory
+#setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/CAPFEWS/results_crss') # set directory
 
 CO = read.csv("results.csv", header = TRUE)
-entitlement_totals = read.csv("C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/Data/user_entitlements.csv", header = TRUE)
+entitlement_totals = read.csv("/Users/summerstarr/PycharmProjects/CAPFEWS/calfews_src/data/user_entitlements.csv", header = TRUE)
 
 subcontractor_names = sub("_dailydemand", "", colnames(CO)[grep("dailydemand", colnames(CO))])
 subcontractor_codes = entitlement_totals$Code
