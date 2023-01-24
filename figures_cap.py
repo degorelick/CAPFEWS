@@ -1,10 +1,12 @@
 # By Rachel Kleiman
 # Figure for Central Arizona Project models
 
+
 import pandas as pd
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
+
 from datetime import date
 
 
@@ -141,3 +143,53 @@ plt.ylabel("Unit Price ($/MWH)")
 plt.xlabel("Month")
 plt.title("2022 CAP Power Prices")
 plt.show()
+
+
+
+#####################################################################
+#output of model-- power
+#####################################################################
+years = 8 #until 2030
+time = years * 12
+crss_runs = (1, 6, 13, 16)
+#timeseries comparing crss runs
+scenarios = ['10.2MW_solar_PPA', 'full_PPAS','52.5MW_solar_PPA']
+
+for scenario in scenarios:
+    fig, ax = plt.subplots()
+
+    for crss in crss_runs:
+        output = pd.read_csv('results/crss-' + str(crss) + "/" + scenario + "/results.csv")
+        finances = output[output.filter(like='CAP').columns]
+        del output
+        finances = finances[0:time]
+        (finances.CAP_total_pumping_cost/1e6).plot()
+
+    plt.xlabel('Month')
+    plt.xticks(ticks = range(0,time-1,12), labels = range(2023,2031))
+    plt.ylabel('Total Pumping Cost ($M)')
+    plt.ylim([-2,30])
+    plt.xlim([-5,time+5])
+    plt.legend((1, 6, 13, 16))
+    plt.show()
+    fig.savefig('results/' + scenario + '.png')
+
+#timeseires comparing PPA scenarios
+
+for crss in crss_runs:
+    fig, ax = plt.subplots()
+    for scenario in scenarios:
+        output = pd.read_csv('results/crss-' + str(crss) + "/" + scenario + "/results.csv")
+        finances = output[output.filter(like='CAP').columns]
+        del output
+        finances = finances[0:time]
+        (finances.CAP_total_pumping_cost / 1e6).plot()
+
+    plt.xlabel('Month')
+    plt.xticks(ticks=range(0, time - 1, 12), labels=range(2023, 2031))
+    plt.ylabel('Total Pumping Cost ($M)')
+    plt.ylim([-2, 30])
+    plt.xlim([-5, time + 5])
+    plt.legend(scenarios)
+    plt.show()
+    fig.savefig('results/' + str(crss) + '_scenarios.png')
