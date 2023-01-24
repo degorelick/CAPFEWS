@@ -5,32 +5,33 @@
 ### -----------------------------------------------------
 
 rm(list=ls()) # clear memory
-crss=1
-results_folder = 'full PPAS'
-setwd(paste('/Users/summerstarr/PycharmProjects/CAPFEWS/results/crss-',crss,'/',results_folder,sep=""))
-
-### read output from hdf5 file ------------------------------------------------
-# to do this, run: install.packages("BiocManager")
-# then run: BiocManager::install("rhdf5")
-library(rhdf5)
-CAPFEWS_colnames = c()
-CAPFEWS_names = h5readAttributes("results.hdf5", name = "s", native = TRUE)
-for (item in names(CAPFEWS_names)) {
-  if (grepl("column", item, fixed = TRUE)) {
-    CAPFEWS_colnames = c(CAPFEWS_colnames, CAPFEWS_names[[item]])
+runs <- list(1,6,13,16)
+for (crss in runs) {
+  results_folder = '52.2MW_solar_PPA'
+  setwd(paste('/Users/summerstarr/PycharmProjects/CAPFEWS/results/crss-',crss,'/',results_folder,sep=""))
+  
+  ### read output from hdf5 file ------------------------------------------------
+  # to do this, run: install.packages("BiocManager")
+  # then run: BiocManager::install("rhdf5")
+  library(rhdf5)
+  CAPFEWS_colnames = c()
+  CAPFEWS_names = h5readAttributes("results.hdf5", name = "s", native = TRUE)
+  for (item in names(CAPFEWS_names)) {
+    if (grepl("column", item, fixed = TRUE)) {
+      CAPFEWS_colnames = c(CAPFEWS_colnames, CAPFEWS_names[[item]])
+    }
   }
+  h5closeAll()
+  
+  CAPFEWS_output = H5Fopen("results.hdf5", native = TRUE)
+  CO = as.data.frame(CAPFEWS_output$s)
+  colnames(CO) = CAPFEWS_colnames
+  CO$month_of_simulation = c(1:nrow(CO))
+  h5closeAll() # DO THIS OR CAPFEWS WONT OUTPUT DATA ON NEXT RUN
+  
+  # export as csv
+  write.table(CO, "results.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 }
-h5closeAll()
-
-CAPFEWS_output = H5Fopen("results.hdf5", native = TRUE)
-CO = as.data.frame(CAPFEWS_output$s)
-colnames(CO) = CAPFEWS_colnames
-CO$month_of_simulation = c(1:nrow(CO))
-h5closeAll() # DO THIS OR CAPFEWS WONT OUTPUT DATA ON NEXT RUN
-
-# export as csv
-write.table(CO, "results.csv", sep = ",", row.names = FALSE, col.names = TRUE)
-
 ### export some plots --------------------------------------------------------
 # need results file, read in as "CO" dataframe, from previous section
 library(tidyverse)
