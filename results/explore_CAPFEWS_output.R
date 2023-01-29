@@ -7,7 +7,7 @@
 rm(list=ls()) # clear memory
 runs <- list(1,6,13,16)
 for (crss in runs) {
-  results_folder = '52.5MW_solar_PPA'
+  results_folder = '+100MW_PPA'
   setwd(paste('/Users/summerstarr/PycharmProjects/CAPFEWS/results/crss-',crss,'/',results_folder,sep=""))
   
   ### read output from hdf5 file ------------------------------------------------
