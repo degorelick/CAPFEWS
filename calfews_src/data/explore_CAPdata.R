@@ -5,7 +5,8 @@
 ### -----------------------------------------------------
 
 rm(list=ls()) # clear memory
-setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/Data') # set directory
+#setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/Data') # set directory
+setwd('/Users/summerstarr/PycharmProjects/CAPFEWS/AllCAPData') # set directory
 library(tidyverse)
 
 ### -----------------------------------------------------
