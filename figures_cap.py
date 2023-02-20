@@ -185,6 +185,8 @@ if explore_hoover == 1:
     plt.ylabel('Energy(mwh)')
     plt.show()
 
+
+
     # wait, what is this capacity? correlation between capactiy and mead elevation
     mde = pd.read_csv('AllCAPData/LakeMead_HistoricalMonthlyElevation_2013_to_2022.csv',index_col = 'Year')
     mde = mde[mde.index > 2017]
@@ -203,6 +205,17 @@ if explore_hoover == 1:
     plt.xlabel('Capacity APA Data')
     plt.ylabel('MDE')
     plt.show()
+
+    #rate vs mde
+    c = np.tile(np.arange(1,13),6)
+    fig, ax = plt.subplots()
+    scatter= ax.scatter(mde_hist[0], hoover.iloc[:len(mde_hist)]['$/MWh'], c=c[:len(mde_hist)])
+    plt.xlabel('MDE')
+    plt.ylabel('total energy rate ($/mwh)')
+    ax.legend(*scatter.legend_elements())
+    plt.title('Monthly MDE vs rate')
+    plt.show()
+    fig.savefig('results/hoover/rate_MDE.png')
 
     #just october
     mde_mo = mde.OCT
