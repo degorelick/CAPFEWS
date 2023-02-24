@@ -6,12 +6,12 @@
 
 rm(list=ls()) # clear memory
 #setwd('C:/Users/dgorelic/OneDrive - University of North Carolina at Chapel Hill/UNC/Research/IM3/CAP/Data') # set directory
-setwd('/Users/summerstarr/PycharmProjects/CAPFEWS/AllCAPData') # set directory
+setwd('C:/Users/rkleiman/OneDrive - University of North Carolina at Chapel Hill/CAP/CAPFEWS/AllCAPData') # set directory
 library(tidyverse)
 
 ### -----------------------------------------------------
 ##  Read in annual financial data and clean it
-CAP_annual_historical_finances_profit_loss = readxl::read_xlsx("P&L_RateRecon history_PNNL request.xlsx", sheet = "GF P&L")
+CAP_annual_historical_finances_profit_loss = readxl::read_xlsx("P&L_RateRecon history_PNNL_request_2021_rk.xlsx", sheet = "GF P&L")
 
 # remove empty rows and columns, rename FY headers
 CAP_annual_historical_finances_profit_loss = CAP_annual_historical_finances_profit_loss %>% 
@@ -103,7 +103,7 @@ for (group_set in unique(subset_to_plot$Group)) {
 
 # read data
 CAP_annual_historical_finances_reconciliation = 
-  readxl::read_xlsx(path = "P&L_RateRecon history_PNNL request.xlsx", sheet = "OMR Rec",
+  readxl::read_xlsx(path = "P&L_RateRecon history_PNNL_request_2021_rk.xlsx", sheet = "OMR Rec",
                     trim_ws = FALSE)
 
 # remove empty rows and columns, rename FY headers
@@ -113,7 +113,7 @@ CAP_annual_historical_finances_reconciliation_reduced = CAP_annual_historical_fi
   filter(`Rate Reconciliation` != '(Dollars in Thousands)') %>% 
   rename(Variable = `Rate Reconciliation`,
          '2011' = ...2, '2012' = ...3, '2013' = ...4, '2014' = ...5, '2015' = ...6,
-         '2016' = ...7, '2017' = ...8, '2018' = ...9, '2019' = ...10, '2020' = ...11) 
+         '2016' = ...7, '2017' = ...8, '2018' = ...9, '2019' = ...10, '2020' = ...11, '2021' = ...12) 
 
 # group variables
 CAP_annual_historical_finances_reconciliation_reduced = 
@@ -145,7 +145,7 @@ temp = ggplot(data = CAP_Rec_long) +
   geom_bar(aes(x = FY, y = as.numeric(`Thousand USD`), fill = Group), stat = "identity", color = NA) + 
   facet_wrap(Group ~ Variable, scales = "free_y", ncol = 5) + ylab('Units (see panel subtitles)') +
   theme(axis.text.x = element_text(angle = 90)) + guides(fill = FALSE)
-ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2020_separatedflows.png", 
+ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2021_separatedflows.png", 
        dpi = 400, units = "in", height = 10, width = 18)
 
 # grouped by type and shown different ways to demonstrate proportions
@@ -229,7 +229,7 @@ temp = ggplot(data = plotter) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.3), axis.ticks.x = element_blank()) + 
   ggtitle(label = "CAP Annual Water Rates - Differences between Budgeted and Published Rates", 
           subtitle = "(Positive: Published rate higher than budgeted rate)")
-ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2020_separateflows_rates_differences.jpg", 
+ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2021_separateflows_rates_differences.jpg", 
        dpi = 800, units = "in", height = 3, width = length(unique(plotter$Variable))*1.5)
 
 ## repeat for financial values
