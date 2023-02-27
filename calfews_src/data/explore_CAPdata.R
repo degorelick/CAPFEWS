@@ -108,7 +108,7 @@ CAP_annual_historical_finances_reconciliation =
 
 # remove empty rows and columns, rename FY headers
 CAP_annual_historical_finances_reconciliation_reduced = CAP_annual_historical_finances_reconciliation %>% 
-  select(`Rate Reconciliation`:...11) %>% 
+  select(`Rate Reconciliation`:...12) %>% 
   filter(!is.na(`Rate Reconciliation`)) %>% 
   filter(`Rate Reconciliation` != '(Dollars in Thousands)') %>% 
   rename(Variable = `Rate Reconciliation`,
@@ -133,7 +133,7 @@ CAP_annual_historical_finances_reconciliation_reduced_final =
 
 # export for CAPFEWS model input
 write.table(CAP_annual_historical_finances_reconciliation_reduced_final, 
-            "CAP_annual_rates_2011_to_2020.csv", row.names = FALSE, col.names = TRUE, sep = ",")
+            "CAP_annual_rates_2011_to_2021.csv", row.names = FALSE, col.names = TRUE, sep = ",")
 
 # convert to long format
 CAP_Rec_long = CAP_annual_historical_finances_reconciliation_reduced_final %>%
@@ -158,7 +158,7 @@ temp = ggplot(data = subset_to_plot_delivery) +
   xlab('Fiscal Year') +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.3), axis.ticks.x = element_blank()) + 
   ggtitle("CAP Annual Water Deliveries")
-ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2020_separateflows_deliveries.png", 
+ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2021_separateflows_deliveries.png", 
        dpi = 400, units = "in", height = 5, width = length(unique(subset_to_plot_delivery$Variable))*3)
 
 ## repeat for rates
@@ -179,7 +179,7 @@ temp = ggplot(data = subset_to_plot_rates) +
   xlab('Fiscal Year') +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.3), axis.ticks.x = element_blank()) + 
   ggtitle("CAP Annual Water Rates")
-ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2020_separateflows_rates.png", 
+ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2021_separateflows_rates.png", 
        dpi = 400, units = "in", width = 8, height = length(unique(subset_to_plot_rates$Variable))*3)
 
 # show stacked contributions to total rate
@@ -195,7 +195,7 @@ temp = ggplot(data = plotter) +
   xlab('Fiscal Year') +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.3), axis.ticks.x = element_blank()) + 
   ggtitle("Composition of CAP Annual Water Rates")
-ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2020_cumulativecontribution_rates.png", 
+ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2021_cumulativecontribution_rates.png", 
        dpi = 400, units = "in", width = 8, height = 4)
 
 
@@ -204,10 +204,10 @@ subset_to_plot_rates_wide = subset_to_plot_rates %>%
   pivot_wider(names_from = 'FY', values_from = 'Thousand USD') 
 
 difference_set = subset_to_plot_rates_wide %>% 
-  filter(Group != 'Water Delivery Rate ($/AF)') %>% select(`2011`:`2020`) %>%
+  filter(Group != 'Water Delivery Rate ($/AF)') %>% select(`2011`:`2021`) %>%
   mutate_if(is.character, as.numeric) - 
-  subset_to_plot_rates_wide %>% 
-  filter(Group == 'Water Delivery Rate ($/AF)') %>% select(`2011`:`2020`) %>%
+  subset_to_plot_rates_wide %>%
+  filter(Group == 'Water Delivery Rate ($/AF)') %>% select(`2011`:`2021`) %>%
   mutate_if(is.character, as.numeric)
 difference_set = difference_set %>% 
   mutate(Variable = unique(subset_to_plot_rates_wide$Variable), Group = 'Difference')
@@ -227,8 +227,8 @@ temp = ggplot(data = plotter) +
   facet_grid(Group ~ Variable, drop = TRUE) + ylab('Rate Difference ($/AF)') + guides(fill = FALSE) + 
   xlab('Fiscal Year') +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.3), axis.ticks.x = element_blank()) + 
-  ggtitle(label = "CAP Annual Water Rates - Differences between Budgeted and Published Rates", 
-          subtitle = "(Positive: Published rate higher than budgeted rate)")
+  ggtitle(label = "CAP Annual Water Rates - Differences between Actual and Published Rates", 
+          subtitle = "(Positive: Published rate higher than Actual rate)")
 ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2021_separateflows_rates_differences.jpg", 
        dpi = 800, units = "in", height = 3, width = length(unique(plotter$Variable))*1.5)
 
@@ -242,7 +242,7 @@ temp = ggplot(data = subset_to_plot_financial) +
   scale_y_continuous(labels = scales::dollar_format(prefix="$", suffix = "M")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.3), axis.ticks.x = element_blank()) + 
   ggtitle("CAP Annual Financial Actuals")
-ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2020_separateflows_finances.png", 
+ggsave("visualization/CAP_reconciliation_fiscal_trends_2011_to_2021_separateflows_finances.png", 
        dpi = 400, units = "in", height = 7, width = 18)
 
 
