@@ -17,6 +17,9 @@ cap = pd.read_excel("AllCAPData/power/2021." + month_float + " " + month + " Dai
 #read in daily palo verde, CAISO peak prices, natural gas from EIA
 eia_peak = pd.read_excel("ice_electric-" + str(year) + "final.xlsx")
 eia_peak = eia_peak[eia_peak['Price hub'] == 'Palo Verde Peak']
+eia_peak['Delivery start date'] = pd.to_datetime(eia_peak['Delivery start date'])
+eia_peak['Delivery \nend date'] = pd.to_datetime(eia_peak['Delivery \nend date'])
+
 
 #compare
 #TODO convert date columns to datetime
